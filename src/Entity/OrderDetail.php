@@ -1,0 +1,157 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\OrderDetailRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: OrderDetailRepository::class)]
+class OrderDetail
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 40)]
+    private ?string $orderDetailId = null;
+
+    #[ORM\Column]
+    private ?int $itemNumber = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $label = null;
+
+    #[ORM\Column]
+    private ?float $quantity = null;
+
+    #[ORM\Column]
+    private ?float $oraQuantity = null;
+
+    #[ORM\Column(length: 20)]
+    private ?string $unity = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $oderDeliveryDate = null;
+
+    #[ORM\Column(length: 500, nullable: true)]
+    private ?string $comment = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?order $command = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getOrderDetailId(): ?string
+    {
+        return $this->orderDetailId;
+    }
+
+    public function setOrderDetailId(string $orderDetailId): static
+    {
+        $this->orderDetailId = $orderDetailId;
+
+        return $this;
+    }
+
+    public function getItemNumber(): ?int
+    {
+        return $this->itemNumber;
+    }
+
+    public function setItemNumber(int $itemNumber): static
+    {
+        $this->itemNumber = $itemNumber;
+
+        return $this;
+    }
+
+    public function getLabel(): ?string
+    {
+        return $this->label;
+    }
+
+    public function setLabel(string $label): static
+    {
+        $this->label = $label;
+
+        return $this;
+    }
+
+    public function getQuantity(): ?float
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(float $quantity): static
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getOraQuantity(): ?float
+    {
+        return $this->oraQuantity;
+    }
+
+    public function setOraQuantity(float $oraQuantity): static
+    {
+        $this->oraQuantity = $oraQuantity;
+
+        return $this;
+    }
+
+    public function getUnity(): ?string
+    {
+        return $this->unity;
+    }
+
+    public function setUnity(string $unity): static
+    {
+        $this->unity = $unity;
+
+        return $this;
+    }
+
+    public function getOderDeliveryDate(): ?\DateTimeInterface
+    {
+        return $this->oderDeliveryDate;
+    }
+
+    public function setOderDeliveryDate(?\DateTimeInterface $oderDeliveryDate): static
+    {
+        $this->oderDeliveryDate = $oderDeliveryDate;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): static
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getCommand(): ?order
+    {
+        return $this->command;
+    }
+
+    public function setCommand(?order $command): static
+    {
+        $this->command = $command;
+
+        return $this;
+    }
+}
