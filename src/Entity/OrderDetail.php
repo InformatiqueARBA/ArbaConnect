@@ -10,15 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
 class OrderDetail
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
     #[ORM\Column(length: 40)]
-    private ?string $orderDetailId = null;
+    private ?string $id = null;
 
     #[ORM\Column]
-    private ?int $itemNumber = null;
+    private ?string $itemNumber = null;
 
     #[ORM\Column(length: 100)]
     private ?string $label = null;
@@ -42,24 +38,19 @@ class OrderDetail
     #[ORM\JoinColumn(nullable: false)]
     private ?order $command = null;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function getOrderDetailId(): ?string
+    public function setId(string $Id): static
     {
-        return $this->orderDetailId;
-    }
-
-    public function setOrderDetailId(string $orderDetailId): static
-    {
-        $this->orderDetailId = $orderDetailId;
+        $this->Id = $id;
 
         return $this;
     }
 
-    public function getItemNumber(): ?int
+    public function getItemNumber(): ?string
     {
         return $this->itemNumber;
     }

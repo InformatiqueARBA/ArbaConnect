@@ -11,12 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Order
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column(length: 30)]
-    private ?string $orderNumberId = null;
+    #[ORM\Column (length: 30)]
+    private ?string $id = null;
 
     #[ORM\Column(length: 20)]
     private ?string $orderStatus = null;
@@ -41,21 +37,16 @@ class Order
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Corporation $Corporation = null;
+    private ?Corporation $corporation = null;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function getOrderNumberId(): ?string
+    public function setId(string $Id): static
     {
-        return $this->orderNumberId;
-    }
-
-    public function setOrderNumberId(string $orderNumberId): static
-    {
-        $this->orderNumberId = $orderNumberId;
+        $this->Id = $id;
 
         return $this;
     }
@@ -149,9 +140,9 @@ class Order
         return $this->Corporation;
     }
 
-    public function setCorporation(?Corporation $Corporation): static
+    public function setCorporation(?Corporation $corporation): static
     {
-        $this->Corporation = $Corporation;
+        $this->Corporation = $corporation;
 
         return $this;
     }

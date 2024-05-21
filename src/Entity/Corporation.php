@@ -9,9 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Corporation
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(length: 20)]
+    private ?string $id = null;
 
     #[ORM\Column(length: 60)]
     private ?string $name = null;
@@ -19,9 +18,16 @@ class Corporation
     #[ORM\Column]
     private ?bool $status = null;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
+    }
+
+    public function setId(string $Id): static
+    {
+        $this->Id = $id;
+
+        return $this;
     }
 
     public function getName(): ?string

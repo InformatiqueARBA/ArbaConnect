@@ -9,12 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 class User
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
     #[ORM\Column(length: 20)]
-    private ?string $login = null;
+    private ?string $id = null;
 
     #[ORM\Column(length: 20)]
     private ?string $profil = null;
@@ -35,22 +31,18 @@ class User
     #[ORM\JoinColumn(nullable: false)]
     private ?corporation $corporation = null;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function getLogin(): ?string
+    public function setId(string $Id): static
     {
-        return $this->login;
-    }
-
-    public function setLogin(string $login): static
-    {
-        $this->login = $login;
+        $this->Id = $id;
 
         return $this;
     }
+   
 
     public function getProfil(): ?string
     {
