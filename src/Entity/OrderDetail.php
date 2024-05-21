@@ -13,7 +13,7 @@ class OrderDetail
     #[ORM\Column(length: 40)]
     private ?string $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 40)] 
     private ?string $itemNumber = null;
 
     #[ORM\Column(length: 100)]
@@ -29,7 +29,7 @@ class OrderDetail
     private ?string $unity = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $oderDeliveryDate = null;
+    private ?\DateTimeInterface $oraDeliveryDate = null;
 
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $comment = null;
@@ -110,14 +110,14 @@ class OrderDetail
         return $this;
     }
 
-    public function getOderDeliveryDate(): ?\DateTimeInterface
+    public function getoraDeliveryDate(): ?\DateTimeInterface
     {
-        return $this->oderDeliveryDate;
+        return $this->oraDeliveryDate;
     }
 
-    public function setOderDeliveryDate(?\DateTimeInterface $oderDeliveryDate): static
+    public function setoraDeliveryDate(?\DateTimeInterface $oraDeliveryDate): static
     {
-        $this->oderDeliveryDate = $oderDeliveryDate;
+        $this->oraDeliveryDate = $oraDeliveryDate;
 
         return $this;
     }
