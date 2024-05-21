@@ -16,7 +16,7 @@ class OrderDetail
     #[ORM\Column(length: 40)] 
     private ?string $itemNumber = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 120)]
     private ?string $label = null;
 
     #[ORM\Column]
