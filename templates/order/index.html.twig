@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dates Livraisons{% endblock %}
+
+{% block body %}
+{# TODO: création formulaire #}
+<h1>Dates livraisons page</h1>
+<ul>
+    {% for order in orders %}
+        <li>{{ order.id|e  }} {{ order.seller|e }}  {{ order.orderDate|date("d/m/Y") }}  {{ order.reference|e }}  {{ order.deliveryDate|date("d/m/Y") }}  {{ order.type|e }}</li>
+       
+    {% endfor %}
+</ul>
+
+{% endblock %}
