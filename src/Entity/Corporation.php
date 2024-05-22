@@ -23,9 +23,9 @@ class Corporation
         return $this->id;
     }
 
-    public function setId(string $Id): static
+    public function setId(string $id): static
     {
-        $this->Id = $id;
+        $this->id = $id;
 
         return $this;
     }
@@ -53,5 +53,4 @@ class Corporation
 
         return $this;
     }
-
 }

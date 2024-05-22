@@ -42,7 +42,7 @@ class User
 
         return $this;
     }
-   
+
 
     public function getProfil(): ?string
     {
