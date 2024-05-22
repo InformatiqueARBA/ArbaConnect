@@ -13,7 +13,7 @@ class OrderDetail
     #[ORM\Column(length: 40)]
     private ?string $id = null;
 
-    #[ORM\Column(length: 40)] 
+    #[ORM\Column(length: 40)]
     private ?string $itemNumber = null;
 
     #[ORM\Column(length: 120)]
@@ -43,9 +43,9 @@ class OrderDetail
         return $this->id;
     }
 
-    public function setId(string $Id): static
+    public function setId(string $id): static
     {
-        $this->Id = $id;
+        $this->id = $id;
 
         return $this;
     }

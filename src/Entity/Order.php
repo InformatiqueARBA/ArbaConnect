@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Order
 {
     #[ORM\Id]
-    #[ORM\Column (length: 30)]
+    #[ORM\Column(length: 30)]
     private ?string $id = null;
 
     #[ORM\Column(length: 20)]
@@ -44,9 +44,9 @@ class Order
         return $this->id;
     }
 
-    public function setId(string $Id): static
+    public function setId(string $id): static
     {
-        $this->Id = $id;
+        $this->id = $id;
 
         return $this;
     }
@@ -137,12 +137,12 @@ class Order
 
     public function getCorporation(): ?Corporation
     {
-        return $this->Corporation;
+        return $this->corporation;
     }
 
     public function setCorporation(?Corporation $corporation): static
     {
-        $this->Corporation = $corporation;
+        $this->corporation = $corporation;
 
         return $this;
     }
