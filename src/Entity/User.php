@@ -36,9 +36,9 @@ class User
         return $this->id;
     }
 
-    public function setId(string $Id): static
+    public function setId(string $id): static
     {
-        $this->Id = $id;
+        $this->id = $id;
 
         return $this;
     }
@@ -104,12 +104,12 @@ class User
         return $this;
     }
 
-    public function getCorporation(): ?corporation
+    public function getCorporation(): ?Corporation
     {
         return $this->corporation;
     }
 
-    public function setCorporation(?corporation $corporation): static
+    public function setCorporation(?Corporation $corporation): static
     {
         $this->corporation = $corporation;
 
