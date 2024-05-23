@@ -14,10 +14,7 @@
                 <th><input type="text" placeholder="Date Commande" readonly></th>
                 <th><input type="text" placeholder="Référence" readonly></th>
                 <th><input type="text" placeholder="Date Livraison" readonly></th>
-                <th>
-                    <input type="text" placeholder="Type" readonly>
-                  
-                </th>
+                <th><input type="text" placeholder="Type" readonly></th>
             </tr>
         </thead>
         <tbody>
@@ -28,9 +25,9 @@
                 <td>{{ order.orderDate|date("d/m/Y") }}</td>
                 <td>{{ order.reference|e }}</td>
                 <td>{{ order.deliveryDate|date("d/m/Y") }}</td>
-                <td>{{ order.type|e }}
-                     <a class="btn btn-primary btn-sm" href="{{ path('app_detail_commandes',{id:order.id}) }}">Editer</a>
-                </td>
+                <td>{{ order.type|e }}</td>
+                <td>{{ order.corporation.name ~ '  ' ~ order.corporation.id | e }}</td>
+                <td>  <a class="btn btn-primary btn-sm" href="{{ path('app_detail_commandes',{id:order.id}) }}">Editer</a></td>
                 
             </tr>
             {% endfor %}

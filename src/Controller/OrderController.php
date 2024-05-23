@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Service\CsvGenerator;
 use App\Entity\Order;
+use App\Entity\OrderDetail;
 use App\Form\OrderType;
 use App\Repository\CorporationRepository;
+use App\Repository\OrderDetailRepository;
 use App\Repository\OrderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,12 +30,15 @@ class OrderController extends AbstractController
 
 
     #[Route('/detail-commande/{id}/', name: 'app_detail_commandes')]
-    public function show(OrderRepository $orderRepository, OrderType $orderType, Order $order): Response
+    public function show(OrderRepository $orderRepository, OrderType $orderType, Order $order, OrderDetailRepository $orderDetailRepository, CsvGenerator $csvG): Response
     {
 
 
-        //$order = $orderRepository->find($order);
-        // dd($order->getCorporation()->getId());
+
+        $oderdetail = $orderDetailRepository->findByCommandId($order->getId());
+        // dd($oderdetail);
+        $csvG->deliveryDateCsv($oderdetail);
+        // 
 
 
 
