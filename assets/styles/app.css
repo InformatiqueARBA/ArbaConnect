@@ -1,3 +1,35 @@
-body {
-    background-color: skyblue;
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
+
+.logo_arba {
+	max-width: 200px;
+	height: auto;
+  }
+
+  .nav-color {
+    background-color: rgb(0, 70, 100);
+  }
+  .container{
+   
+    margin-top: 50px;
+    display: flex;
+     width: 500px;
+    height: 100px;
+  
+   }
+   
+   .form{
+    margin: auto;
+    text-align: center;
+   }
+
+   .green-text{
+    color: rgb(130, 170, 55);
+    margin-right: 100px;
+    font-size: 30px;
+   }
