@@ -3,7 +3,11 @@
 {% block title %}Dates Livraisons{% endblock %}
 
 {% block body %}
-{# TODO: création formulaire #}
-<h1>détail commande</h1>
-{{form(form)}}
+
+<h1>Détail commande</h1>
+{{ form_start(form, {'action': path('app_edit', {'id': order.id})}) }}
+    {{ form_widget(form) }}
+{{ form_end(form) }}
+
+
 {% endblock %}

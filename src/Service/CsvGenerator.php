@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\OrderDetail;
+use App\Entity\Order;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class CsvGenerator
@@ -17,11 +18,10 @@ class CsvGenerator
 
 
     // TODO: finaliser le csv.
-    public function deliveryDateCsv(array $orderDetails)
+    public function deliveryDateCsv(Order $order)
     {
-        // dd($orderDetails);
 
-        $orderDetail = $orderDetails[0];
+
 
         $header = [
             'SNOCLI', 'SNOBON', 'SNTA02', 'SNTC07', 'SNTPRO', 'SNTROF', 'SNTAGE', 'SNTDEP',
@@ -32,8 +32,8 @@ class CsvGenerator
             'SENB17', 'SENN05', 'SENC48', 'SENB41'
         ];
 
-        $commandId = $orderDetail->getCommand()->getId();
-        $filePath = $this->csvDirectoryDeliveryDate . 'AC' . $commandId . '.csv';
+        $orderId = $order->getId();
+        $filePath = $this->csvDirectoryDeliveryDate . 'AC' . $orderId . '.csv';
 
 
         $file = fopen($filePath, 'w');
@@ -46,76 +46,59 @@ class CsvGenerator
         fputcsv($file, $header, ';');
 
 
-        // création de la ligne suppression
-        $command = $orderDetail->getCommand();
-        $corporationId = $command->getCorporation()->getId();
+
+
+        $corporationId = $order->getCorporation()->getId();
+        $orderDateString = $order->getOrderDate()->format('d-m-Y');
+        $deliveryDateString = $order->getDeliveryDate()->format('d-m-Y');
+
+
         $data = [
             $corporationId,
-            $commandId . '/D',
-            '4',
-            $commandId,
+            $orderId,
+            '2',
+            '',
             'AC',
-            'R'
+            '', //'R',
+            '', //'AQA',
+            '', //'AQA',
+            '', //substr($orderDateString, 6, 2),
+            '', //substr($orderDateString, 8, 2),
+            '', //substr($orderDateString, 3, 2),
+            '', //substr($orderDateString, 0, 2),
+            $order->getSeller(),
+            substr($deliveryDateString, 6, 2),
+            substr($deliveryDateString, 8, 2),
+            substr($deliveryDateString, 3, 2),
+            substr($deliveryDateString, 0, 2),
+            '', //$order->getReference(),
+            '', //substr($orderDateString, 6, 2),
+            '', //substr($orderDateString, 8, 2),
+            '', //substr($orderDateString, 3, 2),
+            '', //substr($orderDateString, 0, 2),
+            '', //$compteurligneFormatted,
+            '', // '', // TODO: prendre en compte ligne com ajouter à l'entité
+            '', // $orderDetail->getItemNumber(),
+            '', // 'R',
+            '', // '', // TODO: sentyp
+            '', // $orderDetail->getQuantity(),
+            substr($deliveryDateString, 6, 2),
+            substr($deliveryDateString, 8, 2),
+            substr($deliveryDateString, 3, 2),
+            substr($deliveryDateString, 0, 2),
+
+
+
+
+
 
         ];
         fputcsv($file, $data, ';');
 
-
-        // création ligne article
-        $compteurligne = 0;
-        foreach ($orderDetails as $orderDetail) {
-            $command = $orderDetail->getCommand();
-            $corporationId = $command->getCorporation()->getId();
-            $orderDateString = $command->getOrderDate()->format('d-m-Y');
-            $deliveryDateString = $command->getDeliveryDate()->format('d-m-Y');
-            $compteurligne++;
-            // Formatage du compteur de ligne en une chaîne de 3 caractères avec des zéros à gauche
-            $compteurligneFormatted = str_pad($compteurligne, 3, '0', STR_PAD_LEFT);
-            // dd(substr($orderDateString, 6, 2));
-            $data = [
-                $corporationId,
-                'AC' . $commandId,
-                'C',
-                'AC',
-                'R',
-                'AQA',
-                'AQA',
-                substr($orderDateString, 6, 2),
-                substr($orderDateString, 8, 2),
-                substr($orderDateString, 3, 2),
-                substr($orderDateString, 0, 2),
-                'AC',
-                substr($deliveryDateString, 6, 2),
-                substr($deliveryDateString, 8, 2),
-                substr($deliveryDateString, 3, 2),
-                substr($deliveryDateString, 0, 2),
-                $command->getReference(),
-                substr($orderDateString, 6, 2),
-                substr($orderDateString, 8, 2),
-                substr($orderDateString, 3, 2),
-                substr($orderDateString, 0, 2),
-                $compteurligneFormatted,
-                '', // TODO: prendre en compte ligne com ajouter à l'entité
-                $orderDetail->getItemNumber(),
-                'R',
-                '', // TODO: sentyp
-                $orderDetail->getQuantity(),
-                substr($deliveryDateString, 6, 2),
-                substr($deliveryDateString, 8, 2),
-                substr($deliveryDateString, 3, 2),
-                substr($deliveryDateString, 0, 2),
-
-
-
-
-
-
-            ];
-            fputcsv($file, $data, ';');
-        }
         fclose($file);
 
-
-        dd($filePath);
+        /* TODO: Créer le déplacement du fichier
+                Dans un second temps créer une ordere Symfony et la tâche Cron associée
+            */
     }
 }

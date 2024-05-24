@@ -13,6 +13,36 @@
         {% endblock %}
     </head>
     <body>
+
+          <nav class="navbar navbar-expand-lg nav-color">
+            <div class="container-fluid">
+                <!-- Éléments à gauche de la barre de navigation -->
+                <div class="mr-auto">
+                    <img src="{{ asset('images/Logo_ARBA.png') }}" class="logo_arba" alt="Logo ARBA">
+                </div>
+
+                <!-- Bouton pour le menu déroulant sur mobile -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Contenu à droite de la barre de navigation -->
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <span class="navbar-text green-text">Arba Connect</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+     <div class="container my-4">
+
+       {# include pour utiliser les flashs dans toutes les pages  #}
+       {% include 'partials/flash.html.twig' %}
+
         {% block body %}{% endblock %}
+     </div>
     </body>
 </html>

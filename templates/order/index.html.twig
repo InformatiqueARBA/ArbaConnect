@@ -27,7 +27,9 @@
                 <td>{{ order.deliveryDate|date("d/m/Y") }}</td>
                 <td>{{ order.type|e }}</td>
                 <td>{{ order.corporation.name ~ '  ' ~ order.corporation.id | e }}</td>
-                <td>  <a class="btn btn-primary btn-sm" href="{{ path('app_detail_commandes',{id:order.id}) }}">Editer</a></td>
+                 <td>
+                    <a class="btn btn-sm {% if order.orderStatus == 'edited' %}btn-success{% else %}btn-primary{% endif %}" href="{{ path('app_edit', {id: order.id}) }}">Editer</a>
+                </td>
                 
             </tr>
             {% endfor %}
