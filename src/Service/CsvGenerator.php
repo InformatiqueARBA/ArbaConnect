@@ -21,7 +21,7 @@ class CsvGenerator
     public function deliveryDateCsv(Order $order)
     {
 
-
+        $timestamp = date('_H:i');
 
         $header = [
             'SNOCLI', 'SNOBON', 'SNTA02', 'SNTC07', 'SNTPRO', 'SNTROF', 'SNTAGE', 'SNTDEP',
@@ -55,7 +55,7 @@ class CsvGenerator
 
         $data = [
             $corporationId,
-            $orderId,
+            $orderId . $timestamp,
             '2',
             '',
             'AC',
