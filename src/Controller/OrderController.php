@@ -2,19 +2,22 @@
 
 namespace App\Controller;
 
-use App\Service\CsvGenerator;
+use App\Service\CsvGeneratorService;
+use App\Service\OdbcService;
 use App\Entity\Order;
-use App\Entity\OrderDetail;
 use App\Enum\Status;
 use App\Form\OrderType;
 use App\Repository\CorporationRepository;
-use App\Repository\OrderDetailRepository;
 use App\Repository\OrderRepository;
+use App\Service\DataMapperService;
+use App\Service\RequestOdbcService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+
 
 class OrderController extends AbstractController
 {
@@ -30,7 +33,7 @@ class OrderController extends AbstractController
 
 
     #[Route('/detail/{id}/edit', name: 'app_edit')]
-    public function edit(Order $order, Request $request, EntityManagerInterface $em, CsvGenerator $csvG): Response
+    public function edit(Order $order, Request $request, EntityManagerInterface $em, CsvGeneratorService $csvG): Response
     {
 
         $form = $this->createForm(OrderType::class, $order);
@@ -49,7 +52,7 @@ class OrderController extends AbstractController
             // création d'un message flash pour avertir de la modification 
             $this->addFlash('success', 'la date de livraison à bien été modifiée');
 
-            // Appel au service CsvGenerator pour généré le fichier csv RUBIS
+            // Appel au service CsvGeneratorService pour généré le fichier csv RUBIS
             $csvG->deliveryDateCsv($order);
 
             return $this->redirectToRoute('app_dates_livraisons');
@@ -61,5 +64,31 @@ class OrderController extends AbstractController
             'form' => $form,
             'order' => $order
         ]);
+    }
+
+    #[Route('/odbc', name: 'odbc_index')]
+    public function odbc(OdbcService $odbcService, RequestOdbcService $requestOdbcService): JsonResponse
+    {
+        $sql = $requestOdbcService->getCoporations();
+        try {
+            $results = $odbcService->executeQuery($sql);
+            return $this->json($results);
+        } catch (\Exception $e) {
+            return $this->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    #[Route('/mapperCorporation', name: 'mapperCorporation')]
+    public function corporationMapper(DataMapperService $dataMapperService, EntityManagerInterface $em, CorporationRepository $corporationRepository): JsonResponse
+    {
+        $sql = $dataMapperService->corporationMapper($em, $corporationRepository);
+        return $this->json($sql);
+    }
+
+    #[Route('/mapperOrder', name: 'mapperOrder')]
+    public function orderMapper(DataMapperService $dataMapperService, EntityManagerInterface $em, OrderRepository $orderRepository, CorporationRepository $corporationRepository): JsonResponse
+    {
+        $sql = $dataMapperService->orderMapper($em, $orderRepository, $corporationRepository);
+        return $this->json($sql);
     }
 }
