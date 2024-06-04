@@ -26,17 +26,17 @@ class OrderController extends AbstractController
 {
 
     #[Route('/dates-livraisons', name: 'app_dates_livraisons')]
-    public function datesLivraisons(EntityManagerInterface $em, OrderRepository $orderRepository): Response
-    // public function datesLivraisons(DatabaseSwitcherService $databaseSwitcherService): Response
+    // public function datesLivraisons(EntityManagerInterface $em, OrderRepository $orderRepository): Response
+    public function datesLivraisons(DatabaseSwitcherService $databaseSwitcherService): Response
     {
-        $orders = $orderRepository->findAll();
+        // $orders = $orderRepository->findAll();
 
-        // $boolDB = true;
-        // $doctrine = $databaseSwitcherService->getEntityManager($boolDB);
+        $boolDB = true;
+        $doctrine = $databaseSwitcherService->getEntityManager($boolDB);
         // dd($doctrine);
 
 
-        // $orders = $doctrine->getRepository(Order::class);
+        $orders = $doctrine->getRepository(Order::class)->findAll();
         // dd($orders);
 
         // $orders = $em->getRepository(Order::class)->findAll();
@@ -133,13 +133,13 @@ class OrderController extends AbstractController
             $connection->beginTransaction();
 
             // Truncate the user table
-            $connection->executeStatement('DELETE FROM user');
+            $connection->executeStatement('DELETE FROM User');
 
             // Truncate the order table
             $connection->executeStatement('DELETE FROM `order`');
 
             // Truncate the corporation table
-            $connection->executeStatement('DELETE FROM corporation');
+            $connection->executeStatement('DELETE FROM Corporation');
 
             // Commit the transaction if all statements are successful
             $connection->commit();
