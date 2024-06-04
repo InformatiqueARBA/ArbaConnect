@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+// use Doctrine\ORM\EntityRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
+// #[ORM\Entity(repositoryClass: EntityRepository::class)]
 #[ORM\Table(name: '`order`')]
 class Order
 {

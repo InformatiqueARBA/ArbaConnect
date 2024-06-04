@@ -8,13 +8,14 @@ use Doctrine\Persistence\ManagerRegistry;
 class DatabaseSwitcherService
 {
 
+
     private $defaultEntityManager;
     private $customerEntityManager;
 
 
 
 
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(ManagerRegistry $doctrine, EntityManagerInterface $defaultEntityManager, EntityManagerInterface $customerEntityManager)
     {
         $this->defaultEntityManager = $doctrine->getManager('default');
         $this->customerEntityManager = $doctrine->getManager('customer');

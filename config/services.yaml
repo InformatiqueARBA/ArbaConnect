@@ -30,3 +30,9 @@ services:
             $dsn: '%env(ODBC_DSN)%'
             $username: '%env(ODBC_USERNAME)%'
             $password: '%env(ODBC_PASSWORD)%'
+
+    App\Service\DatabaseSwitcherService:
+        arguments:
+            $defaultEntityManager: "@doctrine.orm.default_entity_manager"
+            $customerEntityManager: "@doctrine.orm.customer_entity_manager"
+

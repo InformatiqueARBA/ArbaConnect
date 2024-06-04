@@ -10,9 +10,9 @@ use App\Form\OrderType;
 use App\Repository\CorporationRepository;
 use App\Repository\OrderRepository;
 use App\Repository\UserRepository;
+use App\Service\DatabaseSwitcherService;
 use App\Service\DataMapperService;
 use App\Service\RequestOdbcService;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,9 +26,20 @@ class OrderController extends AbstractController
 {
 
     #[Route('/dates-livraisons', name: 'app_dates_livraisons')]
-    public function datesLivraisons(OrderRepository $orderRepository): Response
+    public function datesLivraisons(EntityManagerInterface $em, OrderRepository $orderRepository): Response
+    // public function datesLivraisons(DatabaseSwitcherService $databaseSwitcherService): Response
     {
         $orders = $orderRepository->findAll();
+
+        // $boolDB = true;
+        // $doctrine = $databaseSwitcherService->getEntityManager($boolDB);
+        // dd($doctrine);
+
+
+        // $orders = $doctrine->getRepository(Order::class);
+        // dd($orders);
+
+        // $orders = $em->getRepository(Order::class)->findAll();
 
         return $this->render('order/index.html.twig', [
             'orders' => $orders
