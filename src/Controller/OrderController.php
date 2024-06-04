@@ -9,9 +9,12 @@ use App\Enum\Status;
 use App\Form\OrderType;
 use App\Repository\CorporationRepository;
 use App\Repository\OrderRepository;
+use App\Repository\UserRepository;
 use App\Service\DataMapperService;
 use App\Service\RequestOdbcService;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +24,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class OrderController extends AbstractController
 {
+
     #[Route('/dates-livraisons', name: 'app_dates_livraisons')]
     public function datesLivraisons(OrderRepository $orderRepository): Response
     {
@@ -30,6 +34,10 @@ class OrderController extends AbstractController
             'orders' => $orders
         ]);
     }
+
+
+
+
 
 
     #[Route('/detail/{id}/edit', name: 'app_edit')]
@@ -66,6 +74,12 @@ class OrderController extends AbstractController
         ]);
     }
 
+
+
+
+
+
+
     #[Route('/odbc', name: 'odbc_index')]
     public function odbc(OdbcService $odbcService, RequestOdbcService $requestOdbcService): JsonResponse
     {
@@ -78,17 +92,56 @@ class OrderController extends AbstractController
         }
     }
 
+
+
+
+
+
     #[Route('/mapperCorporation', name: 'mapperCorporation')]
-    public function corporationMapper(DataMapperService $dataMapperService, EntityManagerInterface $em, CorporationRepository $corporationRepository): JsonResponse
+    public function corporationMapper(DataMapperService $dataMapperService): JsonResponse
     {
-        $sql = $dataMapperService->corporationMapper($em, $corporationRepository);
+        $sql = $dataMapperService->corporationMapper();
         return $this->json($sql);
     }
 
     #[Route('/mapperOrder', name: 'mapperOrder')]
-    public function orderMapper(DataMapperService $dataMapperService, EntityManagerInterface $em, OrderRepository $orderRepository, CorporationRepository $corporationRepository): JsonResponse
+    public function orderMapper(DataMapperService $dataMapperService): JsonResponse
     {
-        $sql = $dataMapperService->orderMapper($em, $orderRepository, $corporationRepository);
+        $sql = $dataMapperService->orderMapper();
         return $this->json($sql);
+    }
+
+    #[Route('/testDelete', name: 'delete')]
+    public function delete(DataMapperService $dataMapperService, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
+    {
+        // Get the connection from the entity manager
+        $connection = $entityManager->getConnection();
+
+        try {
+            // Start the transaction
+            $connection->beginTransaction();
+
+            // Truncate the user table
+            $connection->executeStatement('DELETE FROM user');
+
+            // Truncate the order table
+            $connection->executeStatement('DELETE FROM `order`');
+
+            // Truncate the corporation table
+            $connection->executeStatement('DELETE FROM corporation');
+
+            // Commit the transaction if all statements are successful
+            $connection->commit();
+        } catch (\Exception $e) {
+            // Rollback the transaction in case of error
+            $connection->rollBack();
+            throw $e;
+        }
+
+        $dataMapperService->corporationMapper();
+        $dataMapperService->orderMapper();
+        $dataMapperService->userMapper();
+
+        return new Response('yo');
     }
 }

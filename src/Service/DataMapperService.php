@@ -4,8 +4,10 @@ namespace App\Service;
 
 use App\Entity\Corporation;
 use App\Entity\Order;
+use App\Entity\User;
 use App\Repository\CorporationRepository;
 use App\Repository\OrderRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 //class permettant de Requêter Rubis et de persister les données dans la BDD applicative
@@ -17,11 +19,16 @@ class DataMapperService
 
     private $requestOdbcService;
     private $odbcService;
+    private $em;
+    private $corporationRepository;
 
-    public function __construct(RequestOdbcService $requestOdbcService, OdbcService $odbcService)
+
+    public function __construct(RequestOdbcService $requestOdbcService, OdbcService $odbcService, EntityManagerInterface $em, CorporationRepository $corporationRepository)
     {
         $this->requestOdbcService = $requestOdbcService;
         $this->odbcService = $odbcService;
+        $this->em = $em;
+        $this->corporationRepository = $corporationRepository;
     }
 
 
@@ -29,29 +36,29 @@ class DataMapperService
 
 
 
+
+
+
+
     //fonction pour peupler la table corporation de la BDD ACDB
-    public function corporationMapper(EntityManagerInterface $em, CorporationRepository $corporationRepository): void
+    public function corporationMapper(): void
     {
         $sql = $this->requestOdbcService->getCoporations();
 
         $results = $this->odbcService->executeQuery($sql);
+        // dd($results);
 
         foreach ($results as $result) {
 
-            $corporation = $corporationRepository->findOneBy(['id' => $result['ID']]);
-
-            if (!$corporation) {
-                $corporation = new Corporation();
-                $corporation->setId($result['ID']);
-            }
-
+            $corporation = new Corporation();
+            $corporation->setId($result['ID']);
             $corporation->setName($result['NAME']);
             $corporation->setStatus($result['STATUS']);
 
-            $em->persist($corporation);
+            $this->em->persist($corporation);
         }
 
-        $em->flush();
+        $this->em->flush();
     }
 
 
@@ -60,21 +67,17 @@ class DataMapperService
 
 
     //fonction pour peupler la table order de la BDD ACDB
-    public function orderMapper(EntityManagerInterface $em, OrderRepository $orderRepository, CorporationRepository $corporationRepository): void
+    public function orderMapper(): void
     {
         $sql = $this->requestOdbcService->getOrders();
         $results = $this->odbcService->executeQuery($sql);
 
         foreach ($results as $result) {
 
-            $order = $orderRepository->findOneBy(['id' => $result['ID']]);
-            $corporation = $corporationRepository->findOneBy(['id' => $result['CORPORATIONID']]);
+            $corporation = $this->corporationRepository->findOneBy(['id' => $result['CORPORATIONID']]);
 
-            if (!$order) {
-                $order = new Order();
-                $order->setId($result['ID']);
-            }
-
+            $order = new Order();
+            $order->setId($result['ID']);
             //formattage des dates pour mariaDB
             $orderDate = \DateTime::createFromFormat('Y-m-d', $result['ORDERDATE']);
             $deliveryDate = \DateTime::createFromFormat('Y-m-d', $result['DELIVERYDATE']);
@@ -88,9 +91,39 @@ class DataMapperService
             $order->setSeller($result['SELLER']);
             $order->setComment($result['COMMENT']);
 
-            $em->persist($order);
+            $this->em->persist($order);
         }
 
-        $em->flush();
+        $this->em->flush();
+    }
+
+
+
+    //fonction pour peupler la table order de la BDD ACDB
+    public function userMapper(): void
+    {
+        $sql = $this->requestOdbcService->getUsers();
+        $results = $this->odbcService->executeQuery($sql);
+
+        foreach ($results as $result) {
+
+
+            $corporation = $this->corporationRepository->findOneBy(['id' => $result['CORPORATIONID']]);
+
+            $user = new User();
+            $user->setId($result['ID']);
+            $user->setCorporation($corporation);
+            $user->setProfil($result['PROFIL']);
+            $user->setPassword($result['PASSWORD']);
+            $user->setMail($result['MAIL']);
+            $user->setFirstName($result['FIRSTNAME']);
+            $user->setLastName($result['LASTNAME']);
+
+
+
+            $this->em->persist($user);
+        }
+
+        $this->em->flush();
     }
 }
