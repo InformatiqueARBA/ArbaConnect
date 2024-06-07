@@ -2,19 +2,13 @@
 
 namespace App\Repository;
 
-use App\Entity\Corporation;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityRepository;
 
 /**
- * @extends ServiceEntityRepository<Corporation>
+ * @extends EntityRepository
  */
-class CorporationRepository extends ServiceEntityRepository
+class CorporationRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Corporation::class);
-    }
 
     //    /**
     //     * @return Corporation[] Returns an array of Corporation objects

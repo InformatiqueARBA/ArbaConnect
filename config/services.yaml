@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     csv_directory_delivery_date: '%kernel.project_dir%/public/csv/delivery_date/'
+    variables_app_directory: '%kernel.project_dir%/public/variables_app/'
 
 services:
     # default configuration for services in *this* file
@@ -35,4 +36,25 @@ services:
         arguments:
             $defaultEntityManager: "@doctrine.orm.default_entity_manager"
             $customerEntityManager: "@doctrine.orm.customer_entity_manager"
+
+    App\Repository\CorporationRepository:
+        factory: ['@doctrine', getRepository]
+        arguments:
+            - App\Entity\Corporation
+
+    App\Repository\OrderRepository:
+        factory: ['@doctrine', getRepository]
+        arguments:
+            - App\Entity\Order
+
+    App\Repository\OrderDetailRepository:
+        factory: ['@doctrine', getRepository]
+        arguments:
+            - App\Entity\OrderDetail
+
+    App\Repository\UserRepository:
+        factory: ['@doctrine', getRepository]
+        arguments:
+            - App\Entity\User
+
 

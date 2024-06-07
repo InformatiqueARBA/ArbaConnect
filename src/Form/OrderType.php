@@ -39,7 +39,6 @@ class OrderType extends AbstractType
             ])
             ->add('type', null, [
                 'disabled' => true,
-                'label' => 'N° de bon',
                 'attr' => ['style' => 'display:none;'],
                 'label' => false
             ])
@@ -50,20 +49,16 @@ class OrderType extends AbstractType
             ->add('comment', null, [
                 'disabled' => true,
                 'label' => 'Commentaire'
-
             ])
-            ->add('corporation', EntityType::class, [
-                'class' => Corporation::class,
-                'choice_label' => 'id',
+            ->add('corporation', CorporationType::class, [
+                'label' => false,
                 'disabled' => true,
-                'label' => 'N° de bon', 'attr' => ['style' => 'display:none;'],
-                'label' => false
+                'attr' => ['style' => 'display:none;'],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'modifier',
             ]);
     }
-
 
     public function configureOptions(OptionsResolver $resolver): void
     {

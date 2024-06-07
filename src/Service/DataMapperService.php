@@ -5,10 +5,6 @@ namespace App\Service;
 use App\Entity\Corporation;
 use App\Entity\Order;
 use App\Entity\User;
-use App\Repository\CorporationRepository;
-use App\Repository\OrderRepository;
-use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 
 //class permettant de Requêter Rubis et de persister les données dans la BDD applicative
 //fait appel au service RequestOdbcService pour obtenir les requêtes
@@ -20,26 +16,21 @@ class DataMapperService
     private $requestOdbcService;
     private $odbcService;
     private $em;
-    private $corporationRepository;
 
 
-    public function __construct(RequestOdbcService $requestOdbcService, OdbcService $odbcService, EntityManagerInterface $em, CorporationRepository $corporationRepository)
+
+    public function __construct(RequestOdbcService $requestOdbcService, OdbcService $odbcService, DatabaseSwitcherService $databaseSwitcherService)
     {
         $this->requestOdbcService = $requestOdbcService;
         $this->odbcService = $odbcService;
-        $this->em = $em;
-        $this->corporationRepository = $corporationRepository;
+        $this->em = $databaseSwitcherService->getEntityManager();
     }
 
 
 
 
 
-
-
-
-
-
+    
     //fonction pour peupler la table corporation de la BDD ACDB
     public function corporationMapper(): void
     {
@@ -74,7 +65,7 @@ class DataMapperService
 
         foreach ($results as $result) {
 
-            $corporation = $this->corporationRepository->findOneBy(['id' => $result['CORPORATIONID']]);
+            $corporation = $this->em->getRepository(Corporation::class)->findOneBy(['id' => $result['CORPORATIONID']]);
 
             $order = new Order();
             $order->setId($result['ID']);
@@ -108,7 +99,7 @@ class DataMapperService
         foreach ($results as $result) {
 
 
-            $corporation = $this->corporationRepository->findOneBy(['id' => $result['CORPORATIONID']]);
+            $corporation = $this->em->getRepository(Corporation::class)->findOneBy(['id' => $result['CORPORATIONID']]);
 
             $user = new User();
             $user->setId($result['ID']);

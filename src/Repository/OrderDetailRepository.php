@@ -2,30 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\OrderDetail;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityRepository;
 
 /**
- * @extends ServiceEntityRepository<OrderDetail>
+ * @extends EntityRepository
  */
-class OrderDetailRepository extends ServiceEntityRepository
+class OrderDetailRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, OrderDetail::class);
-    }
 
-
-
-    public function findByCommandId($commandId): array
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.command = :commandId')
-            ->setParameter('commandId', $commandId)
-            ->getQuery()
-            ->getResult();
-    }
+    // public function findByCommandId($commandId): array
+    // {
+    //     return $this->createQueryBuilder('o')
+    //         ->andWhere('o.command = :commandId')
+    //         ->setParameter('commandId', $commandId)
+    //         ->getQuery()
+    //         ->getResult();
+    // }
 
     //    /**
     //     * @return OrderDetail[] Returns an array of OrderDetail objects

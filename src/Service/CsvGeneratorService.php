@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\OrderDetail;
 use App\Entity\Order;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
