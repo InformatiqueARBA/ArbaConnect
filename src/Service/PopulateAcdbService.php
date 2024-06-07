@@ -62,13 +62,11 @@ class PopulateAcdbService
         $this->dataMapperService->orderMapper();
         $this->dataMapperService->userMapper();
 
-        $file = fopen($filePath, "a");
+        // r+ :Ouvre en lecture et écriture et place le pointeur de fichier au début du fichier.
+        $file = fopen($filePath, "r+");
         $dbByDefault = file_get_contents($filePath);
 
-        $file = fopen($filePath, "w");
-
-
-        if ($dbByDefault == '0') {
+        if ($dbByDefault == 0) {
             fwrite($file, 1);
         } else {
             fwrite($file, 0);
