@@ -35,7 +35,9 @@ class PopulateAcdbService
 
 
         // Get the connection from the entity manager
-        $connection = $this->databaseSwitcherService->getEntityManager()->getConnection();
+        $connection = $this->databaseSwitcherService->getEntityManagerPopulate()->getConnection();
+        // $dbByDefault = file_get_contents($filePath);
+        //dd($connection);
 
         try {
             // Start the transaction
@@ -66,10 +68,10 @@ class PopulateAcdbService
         $file = fopen($filePath, "r+");
         $dbByDefault = file_get_contents($filePath);
 
-        if ($dbByDefault == 0) {
-            fwrite($file, 1);
-        } else {
+        if ($dbByDefault == 1) {
             fwrite($file, 0);
+        } else {
+            fwrite($file, 1);
         }
         fclose($file);
     }

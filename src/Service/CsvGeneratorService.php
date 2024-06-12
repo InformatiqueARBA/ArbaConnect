@@ -3,16 +3,21 @@
 namespace App\Service;
 
 use App\Entity\Order;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class CsvGeneratorService
 {
     private $csvDirectoryDeliveryDate;
+    private $csvToRubisService;
+    private $csvSaveDirectory;
 
 
-    public function __construct(ParameterBagInterface $params)
+    public function __construct(ParameterBagInterface $params, CsvToRubisService $csvToRubisService)
     {
         $this->csvDirectoryDeliveryDate = $params->get('csv_directory_delivery_date');
+        $this->csvSaveDirectory = $params->get('csv_save_directory');
+        $this->csvToRubisService = $csvToRubisService;
     }
 
 
@@ -32,6 +37,7 @@ class CsvGeneratorService
 
 
         $filePath = $this->csvDirectoryDeliveryDate . 'AC' . $orderId . '.csv';
+        $fileName = basename($filePath);
 
 
         $file = fopen($filePath, 'w');
@@ -60,7 +66,21 @@ class CsvGeneratorService
         ];
         fputcsv($file, $data, ';');
 
-        fclose($file);
+        // Copie le CSV sur le QDLS RUBIS
+        //TODO: Déplacer vers le dossier spécifique & mise en place de l'autowire
+        $this->csvToRubisService->sendCsvToRubis($this->csvDirectoryDeliveryDate, $fileName);
+
+        // Déplace le CSV vers le dossier de sauvegarde
+        $destinationDir = '/home/dave/Documents/ArbaConnect/save/csv/'; //$this->csvSaveDirectory;
+        $destinationPath = $destinationDir . $fileName;
+
+        if (rename($filePath, $destinationPath)) {
+            echo "File moved successfully to $destinationPath.\n";
+        } else {
+            throw new \Exception('Failed to move the file to: ' . $destinationPath);
+        }
+
+        //TODO: Gérer la durée de conservation des fichiers sauvegardés 90 jours ?
 
         /* TODO: Créer le déplacement du fichier
                 Dans un second temps créer une ordere Symfony et la tâche Cron associée

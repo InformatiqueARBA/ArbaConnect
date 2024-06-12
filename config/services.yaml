@@ -6,6 +6,8 @@
 parameters:
     csv_directory_delivery_date: '%kernel.project_dir%/public/csv/delivery_date/'
     variables_app_directory: '%kernel.project_dir%/public/variables_app/'
+    csv_save_directory: '/home/dave/Documents/ArbaConnect/save/csv/'
+    
 
 services:
     # default configuration for services in *this* file
@@ -57,4 +59,5 @@ services:
         arguments:
             - App\Entity\User
 
-
+    App\Scheduler\PopulateAcdbProvider:
+        tags: ["scheduler.provider"]

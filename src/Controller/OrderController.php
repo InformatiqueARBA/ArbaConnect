@@ -8,6 +8,7 @@ use App\Service\OdbcService;
 use App\Entity\Order;
 use App\Enum\Status;
 use App\Form\OrderType;
+use App\Scheduler\Message\WriteInFileMessage;
 use App\Service\DatabaseSwitcherService;
 use App\Service\PopulateAcdbService;
 use App\Service\RequestOdbcService;
@@ -18,6 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 
@@ -38,9 +40,10 @@ class OrderController extends AbstractController
 
     #[Route('/dates-livraisons', name: 'app_dates_livraisons')]
     // public function datesLivraisons(EntityManagerInterface $em, OrderRepository $orderRepository): Response
-    public function datesLivraisons(): Response
+    public function datesLivraisons(DatabaseSwitcherService $databaseSwitcherService): Response
     {
-        $em = $this->em;
+        $em = $databaseSwitcherService->getEntityManager();
+        //$em = $this->em;
 
         //pour afficher la DB-------------------------
         $connection = $em->getConnection();
@@ -61,10 +64,10 @@ class OrderController extends AbstractController
 
 
     #[Route('/detail/{id}/edit', name: 'app_edit')]
-    public function edit(Request $request, CsvGeneratorService $csvG, String $id): Response
+    public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService): Response
     {
-
-        $em = $this->em;
+        $em = $databaseSwitcherService->getEntityManager();
+        //$em = $this->em;
         $order = $em->getRepository(Order::class)->find($id);
 
         $form = $this->createForm(OrderType::class, $order);

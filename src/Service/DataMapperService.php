@@ -23,14 +23,14 @@ class DataMapperService
     {
         $this->requestOdbcService = $requestOdbcService;
         $this->odbcService = $odbcService;
-        $this->em = $databaseSwitcherService->getEntityManager();
+        $this->em = $databaseSwitcherService->getEntityManagerPopulate();
     }
 
 
 
 
 
-    
+
     //fonction pour peupler la table corporation de la BDD ACDB
     public function corporationMapper(): void
     {

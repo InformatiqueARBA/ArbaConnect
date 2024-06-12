@@ -8,6 +8,7 @@ class RequestOdbcService
 
 
     //Retourne la liste des comptes nécessitant la création d'un accès à l'application
+    // le CLIW00 est setté manuellement dans rubis pour les rôles supérieur à user
     public function getUsers(): String
     {
         $sql = "
