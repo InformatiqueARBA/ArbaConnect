@@ -32,8 +32,8 @@ try {
     // Start the transaction
     $connection->beginTransaction();
 
-    // Truncate the user table
-    $connection->executeStatement('DELETE FROM user');
+    // Truncate the member table
+    $connection->executeStatement('DELETE FROM member');
 
     // Truncate the order table
     $connection->executeStatement('DELETE FROM `order`');
@@ -51,4 +51,4 @@ try {
 
 $dataMapperService->corporationMapper();
 $dataMapperService->orderMapper();
-$dataMapperService->userMapper();
+$dataMapperService->MemberMapper();

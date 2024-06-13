@@ -7,9 +7,9 @@ use Doctrine\ORM\EntityRepository;
 /**
  * @extends EntityRepository
  */
-class UserRepository extends EntityRepository
+class MemberRepository extends EntityRepository
 {
-    
+
     //    public function findByExampleField($value): array
     //    {
     //        return $this->createQueryBuilder('u')

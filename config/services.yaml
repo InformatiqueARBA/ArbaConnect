@@ -54,10 +54,10 @@ services:
         arguments:
             - App\Entity\OrderDetail
 
-    App\Repository\UserRepository:
+    App\Repository\MemberRepository:
         factory: ['@doctrine', getRepository]
         arguments:
-            - App\Entity\User
+            - App\Entity\Member
 
     App\Scheduler\PopulateAcdbProvider:
         tags: ["scheduler.provider"]

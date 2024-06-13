@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Entity\Corporation;
 use App\Entity\Order;
-use App\Entity\User;
+use App\Entity\Member;
 
 //class permettant de Requêter Rubis et de persister les données dans la BDD applicative
 //fait appel au service RequestOdbcService pour obtenir les requêtes
@@ -91,9 +91,9 @@ class DataMapperService
 
 
     //fonction pour peupler la table order de la BDD ACDB
-    public function userMapper(): void
+    public function MemberMapper(): void
     {
-        $sql = $this->requestOdbcService->getUsers();
+        $sql = $this->requestOdbcService->getMembers();
         $results = $this->odbcService->executeQuery($sql);
 
         foreach ($results as $result) {
@@ -101,18 +101,18 @@ class DataMapperService
 
             $corporation = $this->em->getRepository(Corporation::class)->findOneBy(['id' => $result['CORPORATIONID']]);
 
-            $user = new User();
-            $user->setId($result['ID']);
-            $user->setCorporation($corporation);
-            $user->setProfil($result['PROFIL']);
-            $user->setPassword($result['PASSWORD']);
-            $user->setMail($result['MAIL']);
-            $user->setFirstName($result['FIRSTNAME']);
-            $user->setLastName($result['LASTNAME']);
+            $Member = new Member();
+            $Member->setId($result['ID']);
+            $Member->setCorporation($corporation);
+            $Member->setProfil($result['PROFIL']);
+            $Member->setPassword($result['PASSWORD']);
+            $Member->setMail($result['MAIL']);
+            $Member->setFirstName($result['FIRSTNAME']);
+            $Member->setLastName($result['LASTNAME']);
 
 
 
-            $this->em->persist($user);
+            $this->em->persist($Member);
         }
 
         $this->em->flush();

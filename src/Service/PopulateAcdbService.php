@@ -43,8 +43,8 @@ class PopulateAcdbService
             // Start the transaction
             $connection->beginTransaction();
 
-            // Truncate the user table
-            $connection->executeStatement('DELETE FROM User');
+            // Truncate the member table
+            $connection->executeStatement('DELETE FROM Member');
 
             // Truncate the order table
             $connection->executeStatement('DELETE FROM `order`');
@@ -62,7 +62,7 @@ class PopulateAcdbService
 
         $this->dataMapperService->corporationMapper();
         $this->dataMapperService->orderMapper();
-        $this->dataMapperService->userMapper();
+        $this->dataMapperService->MemberMapper();
 
         // r+ :Ouvre en lecture et écriture et place le pointeur de fichier au début du fichier.
         $file = fopen($filePath, "r+");
