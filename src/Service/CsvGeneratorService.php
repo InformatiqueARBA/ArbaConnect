@@ -2,8 +2,7 @@
 
 namespace App\Service;
 
-use App\Entity\Order;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use App\Entity\Acdb\Order;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class CsvGeneratorService

@@ -2,9 +2,9 @@
 
 namespace App\Service;
 
-use App\Entity\Corporation;
-use App\Entity\Order;
-use App\Entity\Member;
+use App\Entity\Acdb\Corporation;
+use App\Entity\Acdb\Member;
+use App\Entity\Acdb\Order;
 
 //class permettant de Requêter Rubis et de persister les données dans la BDD applicative
 //fait appel au service RequestOdbcService pour obtenir les requêtes

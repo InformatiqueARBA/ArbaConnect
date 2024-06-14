@@ -6,6 +6,8 @@ doctrine:
                 url: '%env(resolve:DATABASE_URL)%' 
             customer:
                 url: '%env(resolve:CUSTOMER_DATABASE_URL)%'
+            security:
+                url: '%env(resolve:SECURITY_DATABASE_URL)%'
                 
 
     orm:
@@ -21,7 +23,7 @@ doctrine:
                     Main:
                         type: attribute
                         is_bundle: false
-                        dir: '%kernel.project_dir%/src/Entity'
+                        dir: '%kernel.project_dir%/src/Entity/Acdb'
                         prefix: 'App\Entity'
                         alias: Main
             customer:
@@ -30,10 +32,19 @@ doctrine:
                     Customer:
                         type: attribute
                         is_bundle: false
-                        dir: '%kernel.project_dir%/src/Entity'
-                        prefix: 'App\Entity'
+                        dir: '%kernel.project_dir%/src/Entity/Acdb'
+                        prefix: 'App\Entity\Acdb'
                         alias: customer
-
+            security:
+                connection: security
+                mappings:
+                    Security:
+                        type: attribute
+                        is_bundle: false
+                        dir: '%kernel.project_dir%/src/Entity/Security'
+                        prefix: 'App\Entity\Security'
+                        alias: Security
+                        
 
 when@prod:
     doctrine:

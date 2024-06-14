@@ -1,0 +1,3 @@
+em: default
+migrations_paths:
+    'DoctrineMigrations\Default': 'migrations/Default'

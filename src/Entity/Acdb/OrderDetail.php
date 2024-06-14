@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Acdb;
 
 use App\Repository\OrderDetailRepository;
 use Doctrine\DBAL\Types\Types;

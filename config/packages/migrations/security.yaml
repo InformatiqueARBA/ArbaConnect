@@ -1,0 +1,4 @@
+em: security
+migrations_paths:
+    'DoctrineMigrations\Security': 'migrations/Security'
+

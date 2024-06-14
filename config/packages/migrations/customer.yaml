@@ -1,0 +1,3 @@
+em: customer
+migrations_paths:
+    'DoctrineMigrations\Customer': 'migrations/Customer'
