@@ -1,6 +1,6 @@
 doctrine:
     dbal:
-        default_connection: 
+        default_connection: default
         connections:
             default:
                 url: '%env(resolve:DATABASE_URL)%' 
@@ -17,6 +17,15 @@ doctrine:
         controller_resolver:
             auto_mapping: true
         entity_managers:
+            security:
+                connection: security
+                mappings:
+                    Security:
+                        type: attribute
+                        is_bundle: false
+                        dir: '%kernel.project_dir%/src/Entity/Security'
+                        prefix: 'App\Entity\Security'
+                        alias: Security        
             default:
                 connection: default
                 mappings:
@@ -35,15 +44,6 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Entity/Acdb'
                         prefix: 'App\Entity\Acdb'
                         alias: customer
-            security:
-                connection: security
-                mappings:
-                    Security:
-                        type: attribute
-                        is_bundle: false
-                        dir: '%kernel.project_dir%/src/Entity/Security'
-                        prefix: 'App\Entity\Security'
-                        alias: Security
                         
 
 when@prod:

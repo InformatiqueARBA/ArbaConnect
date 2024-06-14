@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Corporation;
+use App\Entity\Acdb\Corporation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

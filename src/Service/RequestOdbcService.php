@@ -113,4 +113,30 @@ class RequestOdbcService
     ";
         return $sql;
     }
+
+
+
+
+    //TODO: Implémenter l'automatisation de l'update User (messenger/scheduler)
+    //Retourne la liste des comptes nécessitant la création d'un accès à l'application
+    // le CLIW00 est setté manuellement dans rubis pour les rôles supérieur à user
+    public function getUsers(): String
+    {
+        $sql = "
+        select 
+            '016'||trim(NOCLI) login
+            ,trim(RENDI) mail
+            ,trim(NOCLI) enterprise   
+            ,'ROLE_USER' role         
+            ,'password' password
+        from
+        AQAGESTCOM.ACLIENP1 CLI
+        where
+           CLDI1 in ('AD')
+            and ETCLE != 'S'
+        order by
+            NOCLI
+        ";
+        return $sql;
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Acdb\Corporation;
 use App\Entity\Acdb\Member;
 use App\Entity\Acdb\Order;
+use Doctrine\ORM\EntityManagerInterface;
 
 //class permettant de Requêter Rubis et de persister les données dans la BDD applicative
 //fait appel au service RequestOdbcService pour obtenir les requêtes

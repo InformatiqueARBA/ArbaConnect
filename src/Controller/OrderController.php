@@ -2,27 +2,26 @@
 
 namespace App\Controller;
 
-
+use App\Entity\Acdb\Order;
+use App\Entity\Security\User;
 use App\Service\CsvGeneratorService;
 use App\Service\OdbcService;
-use App\Entity\Order;
 use App\Enum\Status;
 use App\Form\OrderType;
-use App\Scheduler\Message\WriteInFileMessage;
 use App\Service\DatabaseSwitcherService;
+use App\Service\DataMapperSecurityService;
 use App\Service\PopulateAcdbService;
 use App\Service\RequestOdbcService;
-
-
-
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-
+ #[IsGranted('ROLE_USER')]
 class OrderController extends AbstractController
 {
 
@@ -43,7 +42,6 @@ class OrderController extends AbstractController
     public function datesLivraisons(DatabaseSwitcherService $databaseSwitcherService): Response
     {
         $em = $databaseSwitcherService->getEntityManager();
-        //$em = $this->em;
 
         //pour afficher la DB-------------------------
         $connection = $em->getConnection();
@@ -67,7 +65,6 @@ class OrderController extends AbstractController
     public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService): Response
     {
         $em = $databaseSwitcherService->getEntityManager();
-        //$em = $this->em;
         $order = $em->getRepository(Order::class)->find($id);
 
         $form = $this->createForm(OrderType::class, $order);
@@ -130,5 +127,19 @@ class OrderController extends AbstractController
         $populateAcdbService->populateAcdb();
 
         return $this->redirectToRoute('app_dates_livraisons');
+    }
+
+
+
+
+
+
+    #[Route('/userUpdate', name: 'userUpdate')]
+    public function deuxdex(DataMapperSecurityService $dataMapperSecurityService, UserPasswordHasherInterface $hacher): Response
+    {
+        $dataMapperSecurityService->userMapper($hacher);
+
+        return new Response('Users are up to date.');
+      
     }
 }
