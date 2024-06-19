@@ -12,16 +12,15 @@ use App\Service\DatabaseSwitcherService;
 use App\Service\DataMapperSecurityService;
 use App\Service\PopulateAcdbService;
 use App\Service\RequestOdbcService;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
- #[IsGranted('ROLE_USER')]
+#[IsGranted('ROLE_USER')]
 class OrderController extends AbstractController
 {
 
@@ -55,6 +54,35 @@ class OrderController extends AbstractController
             'DB' => $databaseName,
         ]);
     }
+
+
+    #[Route('/dates-livraisons2', name: 'app_dates_livraisons2')]
+    public function datesLivraisons2(DatabaseSwitcherService $databaseSwitcherService, Security $security): Response
+    {
+        $em = $databaseSwitcherService->getEntityManager();
+        $user = $security->getUser();
+
+        // Check if user is an instance of User class
+        if (!$user instanceof User) {
+            throw new \LogicException('The user is not valid.');
+        }
+
+        $enterprise = $user->getEnterprise();
+
+        // Display the DB name
+        $connection = $em->getConnection();
+        $databaseName = $connection->getDatabase();
+
+        // $orders = $em->getRepository(Order::class)->findBy(['corporationId' => $enterprise]);
+        $orders = $em->getRepository(Order::class)->findByCorporationId($enterprise);
+
+
+        return $this->render('order/index.html.twig', [
+            'orders' => $orders,
+            'DB' => $databaseName,
+        ]);
+    }
+
 
 
 
@@ -104,6 +132,8 @@ class OrderController extends AbstractController
 
 
 
+
+
     #[Route('/odbc', name: 'odbc_index')]
     public function odbc(OdbcService $odbcService, RequestOdbcService $requestOdbcService): JsonResponse
     {
@@ -135,11 +165,19 @@ class OrderController extends AbstractController
 
 
     #[Route('/userUpdate', name: 'userUpdate')]
-    public function deuxdex(DataMapperSecurityService $dataMapperSecurityService, UserPasswordHasherInterface $hacher): Response
+    public function deuxdex(DataMapperSecurityService $dataMapperSecurityService): Response
     {
-        $dataMapperSecurityService->userMapper($hacher);
+        $dataMapperSecurityService->userMapper();
 
         return new Response('Users are up to date.');
-      
     }
+
+
+    // #[Route('/create', name: 'userUpdate')]
+    // public function deuxdex(DataMapperSecurityService $dataMapperSecurityService): Response
+    // {
+    //     $dataMapperSecurityService->userMapper();
+
+    //     return new Response('Users are up to date.');
+    // }
 }

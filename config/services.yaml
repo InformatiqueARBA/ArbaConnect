@@ -61,3 +61,6 @@ services:
 
     App\Scheduler\PopulateAcdbProvider:
         tags: ["scheduler.provider"]
+
+    App\Scheduler\DataMapperSecurityProvider:
+        tags: ["scheduler.provider"]

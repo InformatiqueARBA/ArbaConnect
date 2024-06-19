@@ -36,8 +36,7 @@ class PopulateAcdbService
 
         // Get the connection from the entity manager
         $connection = $this->databaseSwitcherService->getEntityManagerPopulate()->getConnection();
-        // $dbByDefault = file_get_contents($filePath);
-        //dd($connection);
+        // dd($connection);
 
         try {
             // Start the transaction

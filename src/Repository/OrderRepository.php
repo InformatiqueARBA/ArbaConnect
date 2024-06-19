@@ -10,6 +10,16 @@ use Doctrine\ORM\EntityRepository;
 class OrderRepository extends EntityRepository
 {
 
+    public function findByCorporationId(string $corporationId): array
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.corporation = :corpId')
+            ->setParameter('corpId', $corporationId)
+            ->orderBy('o.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    public function findByExampleField($value): array
     //    {
     //        return $this->createQueryBuilder('o')

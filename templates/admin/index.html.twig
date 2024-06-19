@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!
+{% endblock %}
+
+{% block body %}
+	<h1>ADMIN PAGE</h1>
+	<div>
+		{{ form_start(form, {'action': path('admin_dashboard')})  }}
+		{{ form_widget(form) }}
+		{{ form_end(form) }}
+	</div>
+
+{% endblock %}
