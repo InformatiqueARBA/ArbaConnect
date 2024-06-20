@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Security\User;
 use App\Form\PasswordType;
 use App\Form\UserType;
+use App\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,5 +44,18 @@ class AdminController extends AbstractController
         return $this->render('admin/index.html.twig', [
             'form' => $form //Attenton on a viré le Createview()
         ]);
+    }
+
+    #[Route('/mail', name: 'app_mail')]
+    public function mail(MailerService $mailer)
+    {
+        $to = 'boitedetestsam@gmail.com';
+        $subject = 'ARBA | We did it !';
+        $content = 'Hello World';
+
+
+        $mailer->sendMail($to, $subject, $content);
+
+        return new Response('Juan was here :)');
     }
 }

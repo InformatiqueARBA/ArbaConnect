@@ -3,3 +3,13 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+request_password_reset:
+    path: /forgotten-password
+    controller: App\Controller\PasswordController::app_forgotten_password
+    methods: [POST]
+
+change_password:
+    path: /change-password
+    controller: App\Controller\PasswordController::app_change_password
+    methods: [GET, POST]
