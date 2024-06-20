@@ -17,7 +17,7 @@
 			</div>
 		{% endif %}
 
-		<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+		<h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos identifiants</h1>
 		<label for="inputLogin">Login</label>
 		<input type="text" value="{{ last_username }}" name="login" id="inputLogin" class="form-control" autocomplete="username" required autofocus>
 		<label for="inputPassword">Password</label>
@@ -28,12 +28,16 @@
 		<div class="checkbox mb-3">
 			<label>
 				<input type="checkbox" name="_remember_me">
-				Remember me
+				Se souvenir de moi
 			</label>
 		</div>
 
 		<button class="btn btn-lg btn-primary" type="submit">
-			Sign in
+			Connexion
 		</button>
 	</form>
+	<div>
+		<a href="{{ path('app_forgotten_password') }}">1ère connexion / mot de passe</a>
+	</div>
+
 {% endblock %}

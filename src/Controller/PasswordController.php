@@ -16,8 +16,13 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/*
+    Gestion des mots de passe utilisateur
+*/
+
 class PasswordController extends AbstractController
 {
+    // Gère les demande de changement de mot de passe : Avec le login renseigné, envoi un mail d'accès avec token à la page de changement password
     #[Route(path: '/forgotten-password', name: 'app_forgotten_password')]
     public function forgottenPassword(Request $request, ManagerRegistry $managerRegistry, SessionInterface $session, MailerService $mailer, JWTService $jwtService): Response
     {
@@ -32,23 +37,23 @@ class PasswordController extends AbstractController
             $user = $em->getRepository(User::class)->findUserByLogin($login);
 
             if ($user) {
-                $email = 'boitedetestsam@gmail.com'; //$email = $user->getMail(); TODO: À réactiver quand tout est OK.
+                $email = 'boitedetestsam@gmail.com'; //TODO: utiliser le mail de l'utilisateur 1x en prod $user->getMail();
                 $session->set('emailSent', true);
                 $session->set('email', $email);
 
                 // Générer un token JWT
                 $token = $jwtService->generateToken(['user_id' => $user->getLogin()]);
-                //dd($token);
 
                 // Créer le lien de réinitialisation avec le token
                 $resetUrl = $this->generateUrl('app_change_password', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
 
+                //Génération du mail & injection du lien sécurisé
                 $email = 'boitedetestsam@gmail.com';
                 $subject = 'ARBA | Changement de mot de passe';
                 $content =  "Bonjour, <br><br> Voici le lien pour réinitialiser votre mot de passe : <br> <a href=$resetUrl> ARBA.COOP</a>";
+
+                //Expédition du mail
                 $mailer->sendMail($email, $subject, $content);
-
-
                 $this->addFlash('success', "Un email a été envoyé à l'adresse: $email");
             } else {
                 $session->set('emailSent', false);
@@ -59,6 +64,7 @@ class PasswordController extends AbstractController
             return $this->redirectToRoute('app_forgotten_password');
         }
 
+        //Initialise les variables à faux pour que la vue affiche le formulaire au 1er passage
         $emailSent = $session->get('emailSent', false);
         $email = $session->get('email', '');
 
@@ -70,39 +76,41 @@ class PasswordController extends AbstractController
     }
 
 
+    // Récupère le nouveau mot de passe pour mise à jour en DB
     #[Route(path: '/change-password', name: 'app_change_password')]
     public function changePassword(Request $request, ManagerRegistry $managerRegistry, UserPasswordHasherInterface $hasher, JWTService $jwtService)
     {
         $em = $managerRegistry->getManager('security');
         $form = $this->createForm(ChangePasswordType::class);
         $form->handleRequest($request);
-        $login = '016016';
 
         //TODO: imposer un mot de passe différent du précédant et definir pattern à respecter
         if ($form->isSubmitted() && $form->isValid()) {
 
-
+            // Extraction du password
             $data = $form->getData();
             $password = $data['new_password'];
 
+            //Extraction du token sécurisé
             $token = $request->query->get('token');
 
+            //Déclanche le process si token existant
             if (!$token) {
                 $this->addFlash('warning', 'Token manquant.');
                 return $this->redirectToRoute('app_home');
             }
-            //dd($token);
+            //Contrôle la validité du délai & de l'origine de la demande
             try {
                 $claims = $jwtService->validateToken($token);
             } catch (\Exception $e) {
                 $this->addFlash('warning', 'Token non valide ou expiré.');
                 return $this->redirectToRoute('app_home');
             }
-
+            //Récupère l'ID de l'utilisateur
             $userId = $claims['data']['user_id'];
-            //dd($userId);
             $user = $em->getRepository(User::class)->findUserByLogin($userId);
 
+            //MaJ du password
             if ($user) {
                 $user->setPassword($hasher->hashPassword($user, $password));
                 $em->flush();
@@ -116,8 +124,7 @@ class PasswordController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
         return $this->render('password/changePassword.html.twig', [
-            'form' => $form,
-            'login' => $login
+            'form' => $form
         ]);
     }
 }

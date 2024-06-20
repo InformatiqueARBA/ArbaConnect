@@ -5,6 +5,10 @@ namespace App\Service;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
+/*
+Service sollicité pour l'envoi des mails
+*/
+
 class MailerService
 {
     private $mailer;
