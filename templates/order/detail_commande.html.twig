@@ -4,11 +4,11 @@
 {% endblock %}
 
 {% block body %}
-
-	<h1>Détail commande</h1>
-	{{ form_start(form, {'action': path('app_edit', {'id': order.id}   )} )   }}
-	{{ form_widget(form) }}
-	{{ form_end(form) }}
-
-
+	<div class="content-container">
+		<h3>Détail commande
+			{{ order.id }}</h3>
+		{{ form_start(form, {'attr': {'class': 'change-delivery-date-form'}, 'action': path('app_edit', {'id': order.id})}) }}
+		{{ form_widget(form) }}
+		{{ form_end(form) }}
+	</div>
 {% endblock %}
