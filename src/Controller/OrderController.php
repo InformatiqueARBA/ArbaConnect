@@ -56,8 +56,8 @@ class OrderController extends AbstractController
     }
 
 
-    #[Route('/dates-livraisons2', name: 'app_dates_livraisons2')]
-    public function datesLivraisons2(DatabaseSwitcherService $databaseSwitcherService, Security $security): Response
+    #[Route('/dates-livraisons-adherent', name: 'app_dates_livraisons_adherent')]
+    public function datesLivraisonsAdherent(DatabaseSwitcherService $databaseSwitcherService, Security $security): Response
     {
         $em = $databaseSwitcherService->getEntityManager();
         $user = $security->getUser();
@@ -115,7 +115,7 @@ class OrderController extends AbstractController
             // Appel au service CsvGeneratorService pour généré le fichier csv RUBIS
             $csvG->deliveryDateCsv($order);
 
-            return $this->redirectToRoute('app_dates_livraisons');
+            return $this->redirectToRoute('app_dates_livraisons_adherent');
         }
 
 

@@ -4,39 +4,55 @@
 {% endblock %}
 
 {% block body %}
-	{# TODO: création formulaire #}
-	<h1>Dates livraisons page
-		{{ DB }}
-	</h1>
-	<ul>
-		<table>
-			<thead>
+	<div class="container-fluid my-4 delivery-dates-container">
+		<h3>Dates livraisons adhérent</h3>
+		{# <h1>Dates livraisons page
+							{{ DB }}</h1> #}
+		<table class="table table-hover centered-table">
+			<thead class="table-light">
 				<tr>
-					<th><input type="text" placeholder="N° Commande" readonly></th>
-					<th><input type="text" placeholder="Utilisateur" readonly></th>
-					<th><input type="text" placeholder="Date Commande" readonly></th>
-					<th><input type="text" placeholder="Référence" readonly></th>
-					<th><input type="text" placeholder="Date Livraison" readonly></th>
-					<th><input type="text" placeholder="Type" readonly></th>
+					<th>
+						<div class="mb-2"><input type="text" class="form-control" placeholder="N° Commande" readonly style="text-align: center;"></div>
+					</th>
+					<th>
+						<div class="mb-2"><input type="text" class="form-control" placeholder="Utilisateur" readonly style="text-align: center;"></div>
+					</th>
+					<th>
+						<div class="mb-2"><input type="text" class="form-control" placeholder="Date Commande" readonly style="text-align: center;"></div>
+					</th>
+					<th>
+						<div class="mb-2"><input type="text" class="form-control" placeholder="Référence" readonly style="text-align: center;"></div>
+					</th>
+					<th>
+						<div class="mb-2"><input type="text" class="form-control" placeholder="Date Livraison" readonly style="text-align: center;"></div>
+					</th>
+					<th>
+						<div class="mb-2"><input type="text" class="form-control" placeholder="Type" readonly style="text-align: center;"></div>
+					</th>
+					<th>
+						<div class="mb-2"><input type="text" class="form-control" placeholder="Corporation" readonly style="text-align: center;"></div>
+					</th>
+					<th>
+						<div class="mb-2"><input type="text" class="form-control" placeholder="Action" readonly style="text-align: center;"></div>
+					</th>
 				</tr>
 			</thead>
 			<tbody>
 				{% for order in orders %}
 					<tr>
-						<td>{{ order.id|e }}</td>
-						<td>{{ order.seller|e }}</td>
-						<td>{{ order.orderDate|date("d/m/Y") }}</td>
-						<td>{{ order.reference|e }}</td>
-						<td>{{ order.deliveryDate|date("d/m/Y") }}</td>
-						<td>{{ order.type|e }}</td>
-						<td>{{ order.corporation.name ~ '  ' ~ order.corporation.id | e }}</td>
-						<td>
+						<td class="text-center">{{ order.id|e }}</td>
+						<td class="text-center">{{ order.seller|e }}</td>
+						<td class="text-center">{{ order.orderDate|date("d/m/Y") }}</td>
+						<td class="text-center">{{ order.reference|e }}</td>
+						<td class="text-center">{{ order.deliveryDate|date("d/m/Y") }}</td>
+						<td class="text-center">{{ order.type|e }}</td>
+						<td class="text-center">{{ order.corporation.name ~ '  ' ~ order.corporation.id | e }}</td>
+						<td class="text-center">
 							<a class="btn btn-sm {% if order.orderStatus == 'edited' %}btn-success{% else %}btn-primary{% endif %}" href="{{ path('app_edit', {id: order.id}) }}">Editer</a>
 						</td>
-
 					</tr>
 				{% endfor %}
 			</tbody>
 		</table>
-	</ul>
+	</div>
 {% endblock %}

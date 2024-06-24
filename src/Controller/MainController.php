@@ -16,6 +16,6 @@ class MainController extends AbstractController
         // return $this->render('main/index.html.twig', [
         //     'controller_name' => 'MainController',
         // ]);
-        return $this->redirectToRoute('app_dates_livraisons');
+        return $this->redirectToRoute('app_dates_livraisons_adherent');
     }
 }
