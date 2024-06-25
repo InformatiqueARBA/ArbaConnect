@@ -6,48 +6,48 @@
 {% block body %}
 	<div class="container-fluid my-4 delivery-dates-container">
 		<h3>Dates livraisons adhérent</h3>
-		{# <h1>Dates livraisons page
-							{{ DB }}</h1> #}
-		<table class="table table-hover centered-table">
+
+		<table id="orders-table" class="table table-hover centered-table">
 			<thead class="table-light">
 				<tr>
 					<th>
-						<div class="mb-2"><input type="text" class="form-control" placeholder="N° Commande" readonly style="text-align: center;"></div>
+						<div class="mb-2"><input type="text" id="filter-order-id" class="form-control" data-column="0" placeholder="N° Commande" style="text-align: center;"></div>
 					</th>
 					<th>
-						<div class="mb-2"><input type="text" class="form-control" placeholder="Utilisateur" readonly style="text-align: center;"></div>
+						<div class="mb-2"><input type="text" id="filter-seller" class="form-control" data-column="1" placeholder="Utilisateur" style="text-align: center;"></div>
 					</th>
 					<th>
-						<div class="mb-2"><input type="text" class="form-control" placeholder="Date Commande" readonly style="text-align: center;"></div>
+						<div class="mb-2"><input type="text" id="filter-order-date" class="form-control" data-column="2" placeholder="Date Commande" style="text-align: center;"></div>
 					</th>
 					<th>
-						<div class="mb-2"><input type="text" class="form-control" placeholder="Référence" readonly style="text-align: center;"></div>
+						<div class="mb-2"><input type="text" id="filter-reference" class="form-control" data-column="3" placeholder="Référence" style="text-align: center;"></div>
 					</th>
 					<th>
-						<div class="mb-2"><input type="text" class="form-control" placeholder="Date Livraison" readonly style="text-align: center;"></div>
+						<div class="mb-2"><input type="text" id="filter-delivery-date" class="form-control" data-column="4" placeholder="Date Livraison" style="text-align: center;"></div>
 					</th>
 					<th>
-						<div class="mb-2"><input type="text" class="form-control" placeholder="Type" readonly style="text-align: center;"></div>
+						<div class="mb-2"><input type="text" id="filter-type" class="form-control" data-column="5" placeholder="Type" style="text-align: center;"></div>
 					</th>
 					<th>
-						<div class="mb-2"><input type="text" class="form-control" placeholder="Corporation" readonly style="text-align: center;"></div>
+						<div class="mb-2"><input type="text" id="filter-corporation" class="form-control" data-column="6" placeholder="Corporation" style="text-align: center;"></div>
 					</th>
 					<th>
-						<div class="mb-2"><input type="text" class="form-control" placeholder="Action" readonly style="text-align: center;"></div>
+						<div class="mb-2"><input type="text" id="filter-action" class="form-control" data-column="7" placeholder="Action" style="text-align: center;"></div>
 					</th>
 				</tr>
 			</thead>
 			<tbody>
 				{% for order in orders %}
 					<tr>
-						<td class="text-center">{{ order.id|e }}</td>
-						<td class="text-center">{{ order.seller|e }}</td>
-						<td class="text-center">{{ order.orderDate|date("d/m/Y") }}</td>
-						<td class="text-center">{{ order.reference|e }}</td>
-						<td class="text-center">{{ order.deliveryDate|date("d/m/Y") }}</td>
-						<td class="text-center">{{ order.type|e }}</td>
-						<td class="text-center">{{ order.corporation.name ~ '  ' ~ order.corporation.id | e }}</td>
-						<td class="text-center">
+						<td>{{ order.id|e }}</td>
+						<td>{{ order.seller|e }}</td>
+						<td>{{ order.orderDate|date("d/m/Y") }}</td>
+						<td>{{ order.reference|e }}</td>
+						<td>{{ order.deliveryDate|date("d/m/Y") }}</td>
+						<td>{{ order.type|e }}</td>
+						<td>{{ order.corporation.name }}
+							{{ order.corporation.id }}</td>
+						<td>
 							<a class="btn btn-sm {% if order.orderStatus == 'edited' %}btn-success{% else %}btn-primary{% endif %}" href="{{ path('app_edit', {id: order.id}) }}">Editer</a>
 						</td>
 					</tr>
@@ -55,4 +55,6 @@
 			</tbody>
 		</table>
 	</div>
+
+	<script src="{{ asset('order_index.js') }}"></script>
 {% endblock %}
