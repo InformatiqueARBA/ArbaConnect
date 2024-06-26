@@ -12,6 +12,7 @@ use App\Service\DatabaseSwitcherService;
 use App\Service\DataMapperSecurityService;
 use App\Service\PopulateAcdbService;
 use App\Service\RequestOdbcService;
+use App\Service\TourCodeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -170,6 +171,13 @@ class OrderController extends AbstractController
         $dataMapperSecurityService->userMapper();
 
         return new Response('Users are up to date.');
+    }
+    #[Route('/code', name: 'code')]
+    public function code(TourCodeService $tourCodeService): Response
+    {
+        $tourCodeService->getCodeTour();
+
+        return new Response('code ok!');
     }
 
 

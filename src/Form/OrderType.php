@@ -1,11 +1,11 @@
 <?php
+// OrderType.php
 
 namespace App\Form;
 
 use App\Entity\Acdb\Order;
-use App\Entity\Corporation;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -33,9 +33,14 @@ class OrderType extends AbstractType
                 'disabled' => true,
                 'label' => 'Date de commande'
             ])
-            ->add('deliveryDate', null, [
-                'widget' => 'single_text',
-                'label' => 'Date de livraison'
+            ->add('deliveryDate', TextType::class, [
+                'mapped' => false, // Ne pas mapper directement sur l'entité
+                'label' => 'Date de livraison',
+                'attr' => [
+                    'class' => 'form-control custom-typography flatpickr-input',
+                    'placeholder' => 'Sélectionner une date',
+                    'data-date-format' => 'd-m-Y',
+                ]
             ])
             ->add('type', null, [
                 'disabled' => true,
@@ -56,7 +61,8 @@ class OrderType extends AbstractType
                 'attr' => ['style' => 'display:none;'],
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'modifier',
+                'label' => 'Modifier',
+                'attr' => ['class' => 'btn btn-primary']
             ]);
     }
 

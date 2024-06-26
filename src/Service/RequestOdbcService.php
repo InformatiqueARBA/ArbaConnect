@@ -140,4 +140,17 @@ class RequestOdbcService
         ";
         return $sql;
     }
+
+    public function getTourCodes(): String
+    {
+        $sql = "
+        select 
+            trim(CTTOU) TOURCODE
+            ,CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CTDLS,CTDLA), '-'),CTDLM),'-'),CTDLJ) as DELIVERYDATE
+        from
+        AQAGESTCOM.ACALTOP1
+        where
+             TIMESTAMP_FORMAT(CONCAT(CONCAT(CONCAT(CTDLS, CTDLA), CTDLM), CTDLJ), 'YYYYMMDD') > CURRENT_DATE + 2 DAYS";
+        return $sql;
+    }
 }

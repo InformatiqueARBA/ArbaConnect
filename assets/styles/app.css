@@ -49,3 +49,11 @@
 #orders-table td {
   text-align: center;
 }
+
+.workday-1 {
+  background-color: lightgreen !important;
+}
+
+.workday-2 {
+  background-color: lightblue !important;
+}
