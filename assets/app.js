@@ -1,4 +1,11 @@
 import './bootstrap.js';
+import 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+import './order_detail.js';
+import './order_index.js';
+
+
+let csvFilePath = '/csv/tour_code/tour_code.csv';
 /*
  * Welcome to your app's main JavaScript file!
  *
