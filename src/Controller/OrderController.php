@@ -104,6 +104,7 @@ class OrderController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // changement du statut de la commande en EDITED TODO: pour le moment le bouton
             // change de couleur et devient vert de façon permanente (voir si pertinant )
+            // dd($order);
 
             $order->setOrderStatus(Status::EDITED);
 

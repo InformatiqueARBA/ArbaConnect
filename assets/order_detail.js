@@ -47,7 +47,7 @@ loadCSVFile(csvFilePath, function (csvContent) {
 
     // Appliquer les couleurs aux jours dans flatpickr en fonction de deliveryDates
     flatpickr(".flatpickr-input", {
-        dateFormat: "d-m-Y",
+        dateFormat: "d/m/Y",
         minDate: "today",
         maxDate: new Date().fp_incr(365),
         locale: {
@@ -97,7 +97,7 @@ loadCSVFile(csvFilePath, function (csvContent) {
         },
         onDayCreate: function (dObj, dStr, fp, dayElem) {
             const date = new Date(dayElem.dateObj);
-            const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+            const formattedDate = date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
 
             if (deliveryDates[formattedDate] === 'S') {
                 dayElem.classList.add('workday-1');
