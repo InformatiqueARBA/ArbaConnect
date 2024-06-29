@@ -32,8 +32,7 @@
 
 		<div class="form-group">
 			{{ form_label(form.deliveryDate, 'Date de livraison', {'label_attr': {'class': 'custom-typography'}}) }}
-			{# {{ form_widget(form.deliveryDate, {'attr': {'class': 'form-control custom-typography flatpickr-input', 'placeholder': 'Sélectionner une date', 'data-date-format': 'd/m/Y'}}) }} #}
-			{{ form_widget(form.deliveryDate, {'attr': { 'placeholder': 'Sélectionner une date', 'data-date-format': 'd/m/Y'}}) }}
+			{{ form_widget(form.deliveryDate, {'attr': {'class': 'form-control custom-typography flatpickr-input', 'placeholder': 'Sélectionner une date', 'data-date-format': 'd/m/Y'}}) }}
 		</div>
 
 		<div class="form-group">
@@ -61,8 +60,6 @@
 		{{ form_end(form) }}
 	</div>
 
-
 	<script src="{{ asset('order_detail.js') }}"></script>
-
 
 {% endblock %}

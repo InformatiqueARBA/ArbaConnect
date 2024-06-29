@@ -97,7 +97,7 @@ loadCSVFile(csvFilePath, function (csvContent) {
         },
         onDayCreate: function (dObj, dStr, fp, dayElem) {
             const date = new Date(dayElem.dateObj);
-            const formattedDate = date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + ('0' + date.getDate()).slice(-2);
+            const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
 
             if (deliveryDates[formattedDate] === 'S') {
                 dayElem.classList.add('workday-1');

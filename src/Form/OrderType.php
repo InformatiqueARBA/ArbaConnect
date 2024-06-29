@@ -55,15 +55,40 @@ class OrderType extends AbstractType
             //     ]
             // ])
 
+
+            // ->add('deliveryDate', DateType::class, [
+            //     'widget' => 'single_text',
+            //     'html5' => true,
+            //     'label' => 'Date de livraison',
+            //     'attr' => [
+            //         'class' => 'form-control custom-typography flatpickr-input',
+            //         'placeholder' => 'Sélectionner une date',
+            //     ]
+            // ])
+
             ->add('deliveryDate', DateType::class, [
                 'widget' => 'single_text',
-                'html5' => true,
+                'html5' => false, // Disable HTML5 date input
                 'label' => 'Date de livraison',
+                'format' => 'dd/MM/yyyy', // Format to display
+                'input' => 'datetime', // Ensure it works with DateTimeInterface
                 'attr' => [
-                    'class' => 'form-control custom-typography',
+                    'class' => 'form-control custom-typography flatpickr-input',
                     'placeholder' => 'Sélectionner une date',
+                    'data-date-format' => 'd/m/Y',
                 ]
             ])
+
+            //ok calendrier de base
+            // ->add('deliveryDate', DateType::class, [
+            //     'widget' => 'single_text',
+            //     // 'html5' => true,
+            //     'label' => 'Date de livraison',
+            //     'attr' => [
+            //         'class' => 'form-control custom-typography',
+            //         'placeholder' => 'Sélectionner une date',
+            //     ]
+            // ])
             ->add('type', null, [
                 'disabled' => true,
                 'attr' => ['style' => 'display:none;'],
