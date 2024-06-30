@@ -62,7 +62,7 @@
 
 	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 		<script>
-			var tourCode = "{{ app.user.tourCode }}";
+			var tc = "{{ app.user.tourCode }}";
 		</script>
 	{% endif %}
 
