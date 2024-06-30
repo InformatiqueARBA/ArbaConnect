@@ -106,14 +106,24 @@ loadCSVFile(csvFilePath, function (csvContent) {
         },
         disable: [
             function (date) {
+                const day = date.getDay();
                 const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
-                if (tc === 'S') {
-                    // Disable 'N' days if tc is 'S'
-                    return deliveryDates[formattedDate] === 'N';
-                } else if (tc === 'N') {
-                    // Disable 'S' days if tc is 'N'
-                    return deliveryDates[formattedDate] === 'S';
+
+                // Disable weekends
+                if (day === 0 || day === 6) {
+                    return true;
                 }
+
+                // Disable 'N' days if tc is 'S'
+                if (tc === 'S' && deliveryDates[formattedDate] === 'N') {
+                    return true;
+                }
+
+                // Disable 'S' days if tc is 'N'
+                if (tc === 'N' && deliveryDates[formattedDate] === 'S') {
+                    return true;
+                }
+
                 return false;
             }
         ]
