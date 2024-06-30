@@ -20,10 +20,6 @@ var csvFilePath = '/csv/tour_code/tour_code.csv';
 
 // Appeler la fonction pour charger le fichier CSV
 loadCSVFile(csvFilePath, function (csvContent) {
-    // Afficher le contenu du fichier CSV pour vérification (facultatif)
-    console.log('Contenu du fichier CSV :');
-    console.log(csvContent);
-
     // Traitement du contenu CSV
     let lines = csvContent.split('\n');
     let deliveryDates = {};
@@ -41,11 +37,7 @@ loadCSVFile(csvFilePath, function (csvContent) {
         }
     }
 
-    // Afficher le tableau deliveryDates pour vérification (facultatif)
-    console.log('Contenu de deliveryDates :');
-    console.log(deliveryDates);
-
-    // Appliquer les couleurs aux jours dans flatpickr en fonction de deliveryDates
+    // Initialisation de Flatpickr avec les options nécessaires
     flatpickr(".flatpickr-input", {
         dateFormat: "d/m/Y",
         minDate: "today",
@@ -99,12 +91,20 @@ loadCSVFile(csvFilePath, function (csvContent) {
             const date = new Date(dayElem.dateObj);
             const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
 
-            if (deliveryDates[formattedDate] === 'S') {
-                dayElem.classList.add('workday-1');
-            } else if (deliveryDates[formattedDate] === 'N') {
-                dayElem.classList.add('workday-2');
-            }
+            // Désactiver tous les jours par défaut
+            dayElem.classList.add('disabled-day');
+            dayElem.classList.add('disabled');
+
+            // Activer les jours selon le tourCode et les dates de livraison
+            // if (tourCode === 'S' && deliveryDates[formattedDate] === 'S') {
+            //     dayElem.classList.remove('disabled-day');
+            //     dayElem.classList.remove('disabled');
+            //     dayElem.classList.add('workday-1');
+            // } else if (tourCode === 'N' && deliveryDates[formattedDate] === 'N') {
+            //     dayElem.classList.remove('disabled-day');
+            //     dayElem.classList.remove('disabled');
+            //     dayElem.classList.add('workday-2');
+            // }
         }
     });
 });
-

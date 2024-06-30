@@ -130,6 +130,7 @@ class RequestOdbcService
             ,'ROLE_USER' role         
             ,'0000' password
             ,trim(ETCLE) status
+            ,trim(TOUCL) tour_code
         from
         AQAGESTCOM.ACLIENP1 CLI
         where

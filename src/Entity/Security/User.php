@@ -28,6 +28,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, nullable: true)]
     private ?string $status = null;
 
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $tourCode = null;
+
     /**
      * @var list<string> The user roles
      */
@@ -92,6 +95,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setStatus(string $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getTourCode(): ?string
+    {
+        return $this->tourCode;
+    }
+
+    public function setTourCode(string $tourCode): static
+    {
+        $this->tourCode = $tourCode;
 
         return $this;
     }

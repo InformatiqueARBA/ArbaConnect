@@ -60,6 +60,13 @@
 		{{ form_end(form) }}
 	</div>
 
+	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+		<script>
+			var tourCode = "{{ app.user.tourCode }}";
+		</script>
+	{% endif %}
+
+
 	<script src="{{ asset('order_detail.js') }}"></script>
 
 {% endblock %}

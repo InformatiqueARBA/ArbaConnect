@@ -61,11 +61,12 @@ body {
 
 
 .workday-1 {
-  background-color: lightgreen !important;
+  background-color: lightblue !important;
+
 }
 
 .workday-2 {
-  background-color: lightblue !important;
+  background-color: lightgreen !important;
 }
 
 /* Importer la police Get Show depuis votre répertoire de polices */

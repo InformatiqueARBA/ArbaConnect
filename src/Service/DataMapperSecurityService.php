@@ -52,7 +52,7 @@ class DataMapperSecurityService
             foreach ($results as $result) {
                 // récupère les User de la DB SECURITY
                 $existingUser = $this->em->getRepository(User::class)->findOneBy(['login' => $result['LOGIN']]);
-
+                dd($result);
                 // si nouvel utilisateur et status non supendu insertion en base
                 if (!$existingUser && $result['STATUS'] != 'S') {
                     $user = new User();
@@ -61,6 +61,7 @@ class DataMapperSecurityService
                     $user->setEnterprise($result['ENTERPRISE']);
                     $user->setRoles([]);
                     $user->setStatus($result['STATUS']);
+                    $user->setTourCode($result['TOUR_CODE']);
                     $user->setPassword($this->hasher->hashPassword($user, '0000'));
 
                     $this->em->persist($user);
