@@ -6,8 +6,12 @@
   padding: 0;
 }
 
+body {
+  background-color: #f2f6eb;
+}
+
 .logo_arba {
-  max-width: 200px;
+  max-width: 150px;
   height: auto;
 }
 
@@ -24,6 +28,9 @@
 
 }
 
+
+
+
 .form {
   margin: auto;
   text-align: center;
@@ -31,8 +38,8 @@
 
 .green-text {
   color: rgb(130, 170, 55);
-  margin-right: 100px;
-  font-size: 30px;
+  font-size: 45px;
+  font-family: 'Get Show', sans-serif;
 }
 
 /* css page detail commande edit */
@@ -50,10 +57,45 @@
   text-align: center;
 }
 
+
+
+
 .workday-1 {
   background-color: lightgreen !important;
 }
 
 .workday-2 {
   background-color: lightblue !important;
+}
+
+/* Importer la police Get Show depuis votre répertoire de polices */
+@font-face {
+  font-family: 'Get Show';
+  src: url('../fonts/Get_Show.otf') format('truetype');
+  /* ajustez le chemin selon l'emplacement de votre fichier */
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Utiliser la police Get Show pour les éléments nécessaires */
+.get-show-text {
+  font-family: 'Get Show', sans-serif;
+  /* Appliquer Get Show à ces éléments */
+}
+
+.rounded-circle {
+  display: inline-block;
+  width: auto;
+  /* largeur automatique pour s'adapter au contenu */
+  padding: 10px;
+  /* espace intérieur autour du texte */
+  border-radius: 50%;
+  /* rend le bord circulaire pour créer un cercle */
+  background-color: #28a745;
+  /* couleur de fond du cercle (vert pour votre cas) */
+  color: #fff;
+  /* couleur du texte à l'intérieur du cercle */
+  font-size: 30px;
+  /* taille de la police */
+  font-family: 'Get Show', sans-serif;
 }
