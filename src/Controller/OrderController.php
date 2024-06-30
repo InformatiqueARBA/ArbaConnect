@@ -12,6 +12,7 @@ use App\Service\DatabaseSwitcherService;
 use App\Service\DataMapperSecurityService;
 use App\Service\PopulateAcdbService;
 use App\Service\RequestOdbcService;
+use App\Service\SendARService;
 use App\Service\TourCodeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -91,7 +92,7 @@ class OrderController extends AbstractController
 
 
     #[Route('/detail/{id}/edit', name: 'app_edit')]
-    public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService): Response
+    public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService, SendARService $sendARService): Response
     {
         $em = $databaseSwitcherService->getEntityManager();
         $order = $em->getRepository(Order::class)->find($id);
@@ -107,6 +108,20 @@ class OrderController extends AbstractController
             // dd($order);
 
             $order->setOrderStatus(Status::EDITED);
+
+            //------------------------------------------
+
+            $nobon = $order->getId();
+
+            $date = $order->getDeliveryDate();
+            $formattedDate = $date->format('d/m/Y');
+
+            $sendARService->sendAR($nobon, $formattedDate);
+
+
+            //------------------------------------------
+
+
 
             //persistance en DB
             $em->persist($order);
@@ -174,6 +189,7 @@ class OrderController extends AbstractController
 
         return new Response('Users are up to date.');
     }
+
     #[Route('/code', name: 'code')]
     public function code(TourCodeService $tourCodeService): Response
     {

@@ -26,8 +26,20 @@ class MailerService
             ->from('informatique@arba.coop')
             ->to($to)
             ->subject($subject)
-            ->text($content)
-            ->html('<p>' . $content . '</p>');
+            ->html($content);
+
+        $this->mailer->send($email);
+    }
+
+
+    public function sendMailWithAttachment(String $from, String $to, String $subject, String $html, String $attachmentPath)
+    {
+        $email = (new Email())
+            ->from($from)
+            ->to($to)
+            ->subject($subject)
+            ->html($html)
+            ->attachFromPath($attachmentPath);
 
         $this->mailer->send($email);
     }
