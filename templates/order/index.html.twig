@@ -28,9 +28,11 @@
 					<th>
 						<div class="mb-2"><input type="text" id="filter-type" class="form-control" data-column="5" placeholder="Type" style="text-align: center;"></div>
 					</th>
-					<th>
-						<div class="mb-2"><input type="text" id="filter-corporation" class="form-control" data-column="6" placeholder="Corporation" style="text-align: center;"></div>
-					</th>
+					{% if not is_granted('ROLE_USER') %}
+						<th>
+							<div class="mb-2"><input type="text" id="filter-corporation" class="form-control" data-column="6" placeholder="Corporation" style="text-align: center;"></div>
+						</th>
+					{% endif %}
 					<th>
 						<div class="mb-2"><input type="text" id="filter-action" class="form-control" data-column="7" placeholder="Action" style="text-align: center;"></div>
 					</th>
@@ -45,8 +47,10 @@
 						<td>{{ order.reference|e }}</td>
 						<td>{{ order.deliveryDate|date("d/m/Y") }}</td>
 						<td>{{ order.type|e }}</td>
-						<td>{{ order.corporation.name }}
-							{{ order.corporation.id }}</td>
+						{% if not is_granted('ROLE_USER') %}
+							<td>{{ order.corporation.name }}
+								{{ order.corporation.id }}</td>
+						{% endif %}
 						<td>
 							<a class="btn btn-sm {% if order.orderStatus == 'edited' %}btn-success{% else %}btn-primary{% endif %}" href="{{ path('app_edit', {id: order.id}) }}">Editer</a>
 						</td>

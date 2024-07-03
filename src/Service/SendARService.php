@@ -43,7 +43,7 @@ class SendARService
 
 
             $from = 'informatique@arba.coop';
-            $to = 'kchartier@arba.coop';
+            $to = 'boitedetestsam@gmail.com';
             $subject = 'ARBA | votre AR de commande modifié';
             $html = '<p>Bonjour,<br><br>
                         Veuillez trouver ci-joint votre AR de commande modifié <br><br><p>';

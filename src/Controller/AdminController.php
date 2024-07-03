@@ -15,7 +15,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('ROLE_ADMIN')]
 class AdminController extends AbstractController
 {
     #[Route('/admin', name: 'admin_dashboard')]
@@ -42,20 +41,7 @@ class AdminController extends AbstractController
         }
 
         return $this->render('admin/index.html.twig', [
-            'form' => $form //Attenton on a viré le Createview()
+            'form' => $form
         ]);
-    }
-
-    #[Route('/mail', name: 'app_mail')]
-    public function mail(MailerService $mailer)
-    {
-        $to = 'boitedetestsam@gmail.com';
-        $subject = 'ARBA | We did it !';
-        $content = 'Hello World';
-
-
-        $mailer->sendMail($to, $subject, $content);
-
-        return new Response('Juan was here :)');
     }
 }

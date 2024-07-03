@@ -20,7 +20,7 @@
 				<div class="mr-auto text-center">
 					<!-- Utilisation de 'text-center' pour centrer le contenu -->
 					{# <img src="{{ asset('images/Logo_ARBA.png') }}" class="logo_arba" alt="Logo ARBA">
-															<br> #}
+																				<br> #}
 					<!-- Retour à la ligne -->
 						<span class="ms-2 green-text"> Arba Connect</span>
 				</div>
@@ -45,7 +45,9 @@
 			</div>
 		</nav>
 
-		<div class="container-fluid my-4"> {% block body %}{% endblock %}
-			</div>
-		</body>
-	</html>
+		<div class="container-fluid my-4">
+			{% include 'partials/flash.html.twig' %}
+			{% block body %}{% endblock %}
+		</div>
+	</body>
+</html>

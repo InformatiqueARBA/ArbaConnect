@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('ROLE_USER')]
 class OrderController extends AbstractController
 {
 
@@ -38,7 +37,7 @@ class OrderController extends AbstractController
 
 
 
-    #[Route('/dates-livraisons', name: 'app_dates_livraisons')]
+    #[Route('/commandes/dates-livraisons', name: 'app_dates_livraisons')]
     // public function datesLivraisons(EntityManagerInterface $em, OrderRepository $orderRepository): Response
     public function datesLivraisons(DatabaseSwitcherService $databaseSwitcherService): Response
     {
@@ -58,7 +57,7 @@ class OrderController extends AbstractController
     }
 
 
-    #[Route('/dates-livraisons-adherent', name: 'app_dates_livraisons_adherent')]
+    #[Route('/commandes/dates-livraisons-adherent', name: 'app_dates_livraisons_adherent')]
     public function datesLivraisonsAdherent(DatabaseSwitcherService $databaseSwitcherService, Security $security): Response
     {
         $em = $databaseSwitcherService->getEntityManager();
@@ -91,7 +90,7 @@ class OrderController extends AbstractController
 
 
 
-    #[Route('/detail/{id}/edit', name: 'app_edit')]
+    #[Route('/commandes/detail/{id}/edit', name: 'app_edit')]
     public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService, SendARService $sendARService): Response
     {
         $em = $databaseSwitcherService->getEntityManager();
@@ -152,7 +151,7 @@ class OrderController extends AbstractController
 
 
 
-    #[Route('/odbc', name: 'odbc_index')]
+    #[Route('/commandes/odbc', name: 'odbc_index')]
     public function odbc(OdbcService $odbcService, RequestOdbcService $requestOdbcService): JsonResponse
     {
         $sql = $requestOdbcService->getCoporations();
@@ -169,7 +168,7 @@ class OrderController extends AbstractController
 
 
 
-    #[Route('/testDelete', name: 'delete')]
+    #[Route('/commandes/testDelete', name: 'delete')]
     public function delete(PopulateAcdbService $populateAcdbService): Response
     {
         $populateAcdbService->populateAcdb();
@@ -182,7 +181,7 @@ class OrderController extends AbstractController
 
 
 
-    #[Route('/userUpdate', name: 'userUpdate')]
+    #[Route('/commandes/userUpdate', name: 'userUpdate')]
     public function deuxdex(DataMapperSecurityService $dataMapperSecurityService): Response
     {
         $dataMapperSecurityService->userMapper();
@@ -190,20 +189,11 @@ class OrderController extends AbstractController
         return new Response('Users are up to date.');
     }
 
-    #[Route('/code', name: 'code')]
+    #[Route('/commandes/code', name: 'code')]
     public function code(TourCodeService $tourCodeService): Response
     {
         $tourCodeService->getCodeTour();
 
         return new Response('code ok!');
     }
-
-
-    // #[Route('/create', name: 'userUpdate')]
-    // public function deuxdex(DataMapperSecurityService $dataMapperSecurityService): Response
-    // {
-    //     $dataMapperSecurityService->userMapper();
-
-    //     return new Response('Users are up to date.');
-    // }
 }

@@ -100,7 +100,8 @@ class OrderType extends AbstractType
             ])
             ->add('comment', null, [
                 'disabled' => true,
-                'label' => 'Commentaire'
+                'label' => false,
+                'attr' => ['style' => 'display:none;'],
             ])
             ->add('corporation', CorporationType::class, [
                 'label' => false,

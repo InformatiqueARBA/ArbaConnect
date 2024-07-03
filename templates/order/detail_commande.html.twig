@@ -5,8 +5,7 @@
 
 {% block body %}
 	<div class="content-container">
-		<h3>Détail commande
-			{{ order.id }}</h3>
+		<h3>Détail commande</h3>
 
 		{{ form_start(form, {'attr': {'class': 'change-delivery-date-form'}, 'action': path('app_edit', {'id': order.id})}) }}
 
@@ -16,7 +15,6 @@
 		</div>
 
 		<div class="form-group">
-			{{ form_label(form.orderStatus, 'Statut de la commande', {'label_attr': {'class': 'custom-typography'}}) }}
 			{{ form_widget(form.orderStatus, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
 		</div>
 
@@ -36,7 +34,6 @@
 		</div>
 
 		<div class="form-group">
-			{{ form_label(form.type, 'Type', {'label_attr': {'class': 'custom-typography'}}) }}
 			{{ form_widget(form.type, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
 		</div>
 
@@ -45,19 +42,16 @@
 			{{ form_widget(form.seller, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
 		</div>
 
-		<div class="form-group">
-			{{ form_label(form.comment, 'Commentaire', {'label_attr': {'class': 'custom-typography'}}) }}
-			{{ form_widget(form.comment, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
-		</div>
-
-		<div class="form-group">
-			{{ form_label(form.corporation, 'Corporation', {'label_attr': {'class': 'custom-typography'}}) }}
-			{{ form_widget(form.corporation, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
-		</div>
+		{% if  is_granted('ROLE_USER') %}
+			<div class="form-group">
+				{{ form_widget(form.corporation, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
+			</div>
+		{% endif %}
 
 		{{ form_widget(form._token) }}
 
 		{{ form_end(form) }}
+		<a href="{{ path('app_dates_livraisons_adherent') }}" class="btn btn-primary">Retour</a>
 	</div>
 
 	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
