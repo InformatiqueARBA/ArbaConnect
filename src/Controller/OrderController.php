@@ -37,8 +37,7 @@ class OrderController extends AbstractController
 
 
 
-    #[Route('/commandes/dates-livraisons', name: 'app_dates_livraisons')]
-    // public function datesLivraisons(EntityManagerInterface $em, OrderRepository $orderRepository): Response
+    #[Route('/arba', name: 'app_dates_livraisons')]
     public function datesLivraisons(DatabaseSwitcherService $databaseSwitcherService): Response
     {
         $em = $databaseSwitcherService->getEntityManager();
@@ -189,7 +188,7 @@ class OrderController extends AbstractController
         return new Response('Users are up to date.');
     }
 
-    #[Route('/commandes/code', name: 'code')]
+    #[Route('/arba/commandes/code', name: 'code')]
     public function code(TourCodeService $tourCodeService): Response
     {
         $tourCodeService->getCodeTour();

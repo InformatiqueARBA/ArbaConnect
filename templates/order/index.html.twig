@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container-fluid my-4 delivery-dates-container">
+	<div class="container-fluid my-4 delivery-dates-container sfp-regular-text">
 		<h3>Dates livraisons adhérent</h3>
 
 		<table id="orders-table" class="table table-hover centered-table">
@@ -28,14 +28,16 @@
 					<th>
 						<div class="mb-2"><input type="text" id="filter-type" class="form-control" data-column="5" placeholder="Type" style="text-align: center;"></div>
 					</th>
-					{% if not is_granted('ROLE_USER') %}
+					{% if is_granted('ROLE_ARBA') %}
 						<th>
 							<div class="mb-2"><input type="text" id="filter-corporation" class="form-control" data-column="6" placeholder="Corporation" style="text-align: center;"></div>
 						</th>
 					{% endif %}
-					<th>
-						<div class="mb-2"><input type="text" id="filter-action" class="form-control" data-column="7" placeholder="Action" style="text-align: center;"></div>
-					</th>
+					{% if is_granted('ROLE_USER') %}
+						<th>
+							<div class="mb-2"><input type="text" id="filter-action" class="form-control" data-column="7" placeholder="Action" style="text-align: center;"></div>
+						</th>
+					{% endif %}
 				</tr>
 			</thead>
 			<tbody>
@@ -47,13 +49,31 @@
 						<td>{{ order.reference|e }}</td>
 						<td>{{ order.deliveryDate|date("d/m/Y") }}</td>
 						<td>{{ order.type|e }}</td>
-						{% if not is_granted('ROLE_USER') %}
+						{% if is_granted('ROLE_ARBA') %}
 							<td>{{ order.corporation.name }}
 								{{ order.corporation.id }}</td>
 						{% endif %}
-						<td>
-							<a class="btn btn-sm {% if order.orderStatus == 'edited' %}btn-success{% else %}btn-primary{% endif %}" href="{{ path('app_edit', {id: order.id}) }}">Editer</a>
-						</td>
+						{# {% if is_granted('ROLE_USER') %}
+																																																																																																	<td>
+																																																																																																		<a class="btn btn-sm {% if order.orderStatus == 'edited' %}btn-success{% else %}btn-primary{% endif %}" href="{{ path('app_edit', {id: order.id}) }}">Editer</a>
+																																																																																																	</td>
+																																																																																																{% endif %} #}
+						{% if is_granted('ROLE_USER') %}
+							<td>
+								{% if order.orderStatus == 'editable' %}
+									<a class="btn btn-sm btn-primary" href="{{ path('app_edit', {id: order.id}) }}">Modifier</a>
+								{% elseif order.orderStatus == 'edited' %}
+									<a class="btn btn-sm btn-success" href="{{ path('app_edit', {id: order.id}) }}">Modifiée</a>
+								{% elseif order.orderStatus == 'printed' %}
+									<span class="btn btn-sm btn-warning">En préparation</span>
+								{% elseif order.orderStatus == 'done' %}
+									<span class="btn btn-sm btn-info">Livrée</span>
+								{% elseif order.orderStatus == 'cancelled' %}
+									<span class="btn btn-sm btn-danger">Annulée</span>
+								{% endif %}
+							</td>
+						{% endif %}
+
 					</tr>
 				{% endfor %}
 			</tbody>
@@ -61,5 +81,4 @@
 	</div>
 
 	<script src="{{ asset('order_index.js') }}"></script>
-
 {% endblock %}

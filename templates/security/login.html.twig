@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	<form method="post">
+	<form method="post" class="w-25 mx-auto mt-form">
 		{% if error %}
 			<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
 		{% endif %}
@@ -17,27 +17,46 @@
 			</div>
 		{% endif %}
 
-		<h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos identifiants</h1>
-		<label for="inputLogin">Login</label>
-		<input type="text" value="{{ last_username }}" name="login" id="inputLogin" class="form-control" autocomplete="username" required autofocus>
-		<label for="inputPassword">Password</label>
-		<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+		<div class="light-blue-bg ">
+			<div class='form-login'>
+				<h1 class="blue-arba h3 mb-3 sfp-regular-text">Merci de vous identifier</h1>
+				<div class="form-group position-relative mb-3">
+					<div class="input-group">
+						<span class="input-group-text">
+							<img src="{{ asset('images/person_login.svg') }}" alt="Person Login" class="login-icon">
+						</span>
+						<input type="text" value="{{ last_username }}" name="login" id="inputLogin" class="form-control" autocomplete="username" required autofocus>
+					</div>
+				</div>
 
-		<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+				<div class="form-group position-relative mb-3">
+					<div class="input-group">
+						<span class="input-group-text">
+							<img src="{{ asset('images/key_login.svg') }}" alt="Key Login" class="login-icon">
+						</span>
+						<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+					</div>
+				</div>
 
-		<div class="checkbox mb-3">
-			<label>
-				<input type="checkbox" name="_remember_me">
-				Se souvenir de moi
-			</label>
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+				<div class="d-flex justify-content-end mb-3">
+					<button class="btn btn-lg custom-btn w-100" type="submit">
+						Connexion
+					</button>
+				</div>
+
+				<div class="checkbox mb-3 blue-arba sfp-regular-text">
+					<label>
+						<input type="checkbox" name="_remember_me">
+						Se souvenir de moi
+					</label>
+				</div>
+			</div>
 		</div>
-
-		<button class="btn btn-lg btn-primary" type="submit">
-			Connexion
-		</button>
 	</form>
-	<div>
-		<a href="{{ path('app_forgotten_password') }}">1ère connexion / mot de passe</a>
+	<div class="text-center mt-2">
+		<a href="{{ path('app_forgotten_password') }}" class="underline-blue-link sfp-regular-text">1ère connexion / mot de passe oublié</a>
 	</div>
-
+	<img src="{{ asset('images/doigt_leve.svg') }}" class="bottom-left-image" alt="Doigt levé">
 {% endblock %}

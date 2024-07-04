@@ -11,12 +11,14 @@
 		{# si formulaire sousmis on reste sur la page et on affiche uniquement le flash #}
 
 	{% else %}
-		<h1>Insérer l'identifiant</h1>
+		<div class="light-blue-bg ">
+			<h1 class="sfp-regular-text">Insérer l'identifiant</h1>
 
-		<div>
-			{{ form_start(form, {'action': path('app_forgotten_password')}) }}
-			{{ form_widget(form) }}
-			{{ form_end(form) }}
-		</div>
-	{% endif %}
+			<div>
+				{{ form_start(form, {'action': path('app_forgotten_password')}) }}
+				{{ form_widget(form) }}
+				{{ form_end(form) }}
+			</div>
+		{% endif %}
+	</div>
 {% endblock %}
