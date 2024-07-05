@@ -152,6 +152,18 @@ body {
 .custom-btn {
   background-color: rgb(130, 170, 55);
   color: #f2f6eb;
+  border: 2px solid transparent;
+  /* Ajout d'une bordure par défaut transparente */
+  transition: border-color 0.3s ease;
+  /* Transition douce pour la bordure */
+}
+
+.custom-btn:hover,
+.custom-btn:focus {
+  border-color: rgb(0, 70, 100);
+  background-color: rgb(0, 70, 100);
+  color: rgb(130, 170, 55);
+  /* Couleur de la bordure au survol */
 }
 
 /* div de couleur bleue lair autour du form login */
