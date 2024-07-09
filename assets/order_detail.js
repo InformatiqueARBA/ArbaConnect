@@ -114,6 +114,11 @@ loadCSVFile(csvFilePath, function (csvContent) {
                     return true;
                 }
 
+                // Disable dates that do not exist in deliveryDates
+                if (!deliveryDates.hasOwnProperty(formattedDate)) {
+                    return true;
+                }
+
                 // Disable 'N' days if tc is 'S'
                 if (tc === 'S' && deliveryDates[formattedDate] === 'N') {
                     return true;

@@ -5,7 +5,8 @@
 
 {% block body %}
 	<div class="container-fluid my-4 delivery-dates-container sfp-regular-text">
-		<h3>Dates livraisons</h3>
+		<h3>Dates livraisons
+			{{DB}}</h3>
 
 		<table id="orders-table" class="table table-hover centered-table">
 			<thead class="table-light">
@@ -35,7 +36,7 @@
 					{% endif %}
 					{% if is_granted('ROLE_USER') %}
 						<th>
-							<div class="mb-2"><input type="text" id="filter-action" class="form-control" data-column="7" placeholder="Action" style="text-align: center;"></div>
+							<div class="mb-2"><input type="text" id="filter-action" class="form-control" data-column="{% if is_granted('ROLE_ARBA') %}7{% else %}6{% endif %}" placeholder="Action" style="text-align: center;"></div>
 						</th>
 					{% endif %}
 				</tr>
@@ -53,11 +54,7 @@
 							<td>{{ order.corporation.name }}
 								{{ order.corporation.id }}</td>
 						{% endif %}
-						{# {% if is_granted('ROLE_USER') %}
-																																																																																																							<td>
-																																																																																																								<a class="btn btn-sm {% if order.orderStatus == 'edited' %}btn-success{% else %}btn-primary{% endif %}" href="{{ path('app_edit', {id: order.id}) }}">Editer</a>
-																																																																																																							</td>
-																																																																																																						{% endif %} #}
+
 						{% if is_granted('ROLE_USER') %}
 							<td>
 								{% if order.orderStatus == 'editable' %}

@@ -26,6 +26,7 @@ framework:
             Symfony\Component\Notifier\Message\SmsMessage: async
             App\Scheduler\Message\PopulateAcdbMessage: async
             App\Scheduler\Message\DataMapperSecurityMessage: async
+            App\Scheduler\Message\TourCodeMessage: async
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async

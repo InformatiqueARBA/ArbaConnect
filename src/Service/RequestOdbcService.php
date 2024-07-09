@@ -59,7 +59,10 @@ class RequestOdbcService
             ,case 
                 when ENT_CMD.ENTB40 = 'ORA' THEN ENT_CMD.ENTB40 
                 else ENT_CMD.TYVTE END as TYPE
-            ,ENT_CMD.LIVSB as SELLER
+            ,case
+            when ENT_CMD.LIVSB = 'EOL' then 'EOLAS'
+            when ENT_CMD.LIVSB = 'DFE' then 'DFIWEB'
+            else 'ARBA' end as SELLER
             ,trim(ENT_CMD.COMED) as COMMENT 
 
         from

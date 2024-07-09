@@ -3,6 +3,13 @@ import 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import './order_detail.js';
 import './order_index.js';
+import 'bootstrap';
+import '@popperjs/core';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+
+
 
 
 let csvFilePath = '/csv/tour_code/tour_code.csv';
