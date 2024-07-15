@@ -43,6 +43,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\Column(length: 180, nullable: true)]
+    private ?string $mail_AR = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -169,5 +172,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getMailAR(): ?string
+    {
+        return $this->mail_AR;
+    }
+
+    public function setMailAR(?string $mail_AR): static
+    {
+        $this->mail_AR = $mail_AR;
+
+        return $this;
     }
 }

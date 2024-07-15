@@ -21,7 +21,6 @@ class SendARService
         $formattedDateEncoded = urlencode($formattedDate);
 
         // Construction de l'URL
-        // dd("http://10.211.19.120/ar/edition_pdf_AR_ARBACONNECT.php?NOBON=$nobonEncoded&DATE=$formattedDateEncoded");
         $url = "http://10.211.19.120/ar/edition_pdf_AR_ARBACONNECT.php?NOBON=$nobonEncoded&DATE=$formattedDateEncoded";
 
         try {
@@ -43,6 +42,7 @@ class SendARService
 
 
             $from = 'informatique@arba.coop';
+            // TODO: changerle destinataire
             $to = 'boitedetestsam@gmail.com';
             $subject = 'ARBA | votre AR de commande modifié';
             $html = '<p>Bonjour,<br><br>

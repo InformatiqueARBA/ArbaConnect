@@ -90,13 +90,18 @@ class OrderController extends AbstractController
 
 
     #[Route('/commandes/detail/{id}/edit', name: 'app_edit')]
-    public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService, SendARService $sendARService): Response
+    public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService, SendARService $sendARService, Security $security): Response
     {
         $em = $databaseSwitcherService->getEntityManager();
         $order = $em->getRepository(Order::class)->find($id);
 
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
+
+
+        //TODO: decommmenter les 2 lignes et assigné $mail_AR à la variable $to de la fonction $sendARService->sendAR($nobon, $formattedDate, $to); pour envoi à ADh
+        $user = $security->getUser();
+        $mail_AR = $user->getMailAR();
 
 
 
@@ -113,8 +118,8 @@ class OrderController extends AbstractController
 
             $date = $order->getDeliveryDate();
             $formattedDate = $date->format('d/m/Y');
-
-            $sendARService->sendAR($nobon, $formattedDate);
+            $to = '';
+            $sendARService->sendAR($nobon, $formattedDate, $to);
 
 
             //------------------------------------------

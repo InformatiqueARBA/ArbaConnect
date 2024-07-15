@@ -129,6 +129,7 @@ class RequestOdbcService
         select 
             '016'||trim(NOCLI) login
             ,trim(RENDI) mail
+            ,trim(COMC1) mail_AR 
             ,trim(NOCLI) enterprise   
             ,'ROLE_USER' role         
             ,'0000' password

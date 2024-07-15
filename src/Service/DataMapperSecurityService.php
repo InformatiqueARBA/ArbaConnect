@@ -52,12 +52,13 @@ class DataMapperSecurityService
             foreach ($results as $result) {
                 // récupère les User de la DB SECURITY
                 $existingUser = $this->em->getRepository(User::class)->findOneBy(['login' => $result['LOGIN']]);
-                dd($result);
+
                 // si nouvel utilisateur et status non supendu insertion en base
                 if (!$existingUser && $result['STATUS'] != 'S') {
                     $user = new User();
                     $user->setLogin($result['LOGIN']);
                     $user->setMail($result['MAIL']);
+                    $user->setMailAR($result['MAIL_AR']);
                     $user->setEnterprise($result['ENTERPRISE']);
                     $user->setRoles([]);
                     $user->setStatus($result['STATUS']);
@@ -68,6 +69,9 @@ class DataMapperSecurityService
                     // màj si changement de mail
                 } elseif ($existingUser && $result['STATUS'] != 'S' && $result['MAIL'] != $existingUser->getMail()) {
                     $existingUser->setMail($result['MAIL']);
+                    // màj si changement de mail AR
+                } elseif ($existingUser && $result['STATUS'] != 'S' && $result['MAIL_AR'] != $existingUser->getMailAR()) {
+                    $existingUser->setMailAR($result['MAIL_AR']);
                     // si suspendu Rubis suppression de l'utilisateur
                 } elseif ($existingUser && $result['STATUS'] == 'S') {
                     $this->em->remove($existingUser);

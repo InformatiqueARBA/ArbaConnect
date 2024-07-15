@@ -4,11 +4,12 @@ namespace App\Service;
 
 use Exception;
 
+/*service qui envoie les csv sur le QDLS Rubis*/
+
 class CsvToRubisService
 {
     public function sendCsvToRubis($filePath, $fileName)
     {
-        // dd($filePath, $fileName); // Debug: affiche les chemins et noms de fichiers reçus
 
         // Se connecter au serveur FTP
         $ftp_server = "10.211.200.1";
@@ -29,7 +30,7 @@ class CsvToRubisService
 
             ftp_pasv($ftp_conn, true);
 
-            // Changer de répertoire sur le serveur FTP
+            // TODO: Changer de répertoire sur le serveur FTP
             $remote_directory = "/QDLS/AQA/TEST/";
             $remote_file = $remote_directory . $fileName;
 
