@@ -20,8 +20,8 @@ class ChangePasswordType extends AbstractType
                 'invalid_message' => 'The password fields must match.',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
-                'first_options'  => ['label' => 'Nouveau Mot de Passe'],
-                'second_options' => ['label' => 'Confirmez Mot de Passe'],
+                'first_options'  => ['label' => 'Nouveau mot de passe'],
+                'second_options' => ['label' => 'Confirmation mot de passe'],
                 'constraints' => [
                     new Assert\NotBlank([
                         'message' => 'Please enter a password',

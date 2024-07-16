@@ -40,7 +40,7 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_dashboard');
         }
 
-        return $this->render('admin/index.html.twig', [
+        return $this->render('admin/admin.html.twig', [
             'form' => $form
         ]);
     }

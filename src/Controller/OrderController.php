@@ -8,6 +8,7 @@ use App\Service\CsvGeneratorService;
 use App\Service\OdbcService;
 use App\Enum\Status;
 use App\Form\OrderType;
+use App\Message\SendARMessage;
 use App\Service\DatabaseSwitcherService;
 use App\Service\DataMapperSecurityService;
 use App\Service\PopulateAcdbService;
@@ -19,8 +20,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 class OrderController extends AbstractController
 {
@@ -49,7 +51,7 @@ class OrderController extends AbstractController
 
         $orders = $em->getRepository(Order::class)->findAll();
 
-        return $this->render('order/index.html.twig', [
+        return $this->render('order/liste_commandes.html.twig', [
             'orders' => $orders,
             'DB' => $databaseName,
         ]);
@@ -57,10 +59,10 @@ class OrderController extends AbstractController
 
 
     #[Route('/commandes/dates-livraisons-adherent', name: 'app_dates_livraisons_adherent')]
-    public function datesLivraisonsAdherent(DatabaseSwitcherService $databaseSwitcherService, Security $security): Response
+    public function datesLivraisonsAdherent(DatabaseSwitcherService $databaseSwitcherService): Response
     {
         $em = $databaseSwitcherService->getEntityManager();
-        $user = $security->getUser();
+        $user = $this->getUser();
 
         // Check if user is an instance of User class
         if (!$user instanceof User) {
@@ -68,6 +70,7 @@ class OrderController extends AbstractController
         }
 
         $enterprise = $user->getEnterprise();
+
 
         // Display the DB name
         $connection = $em->getConnection();
@@ -77,7 +80,7 @@ class OrderController extends AbstractController
         $orders = $em->getRepository(Order::class)->findByCorporationId($enterprise);
 
 
-        return $this->render('order/index.html.twig', [
+        return $this->render('order/liste_commandes.html.twig', [
             'orders' => $orders,
             'DB' => $databaseName,
         ]);
@@ -90,7 +93,7 @@ class OrderController extends AbstractController
 
 
     #[Route('/commandes/detail/{id}/edit', name: 'app_edit')]
-    public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService, SendARService $sendARService, Security $security): Response
+    public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService, MessageBusInterface $bus): Response
     {
         $em = $databaseSwitcherService->getEntityManager();
         $order = $em->getRepository(Order::class)->find($id);
@@ -99,9 +102,8 @@ class OrderController extends AbstractController
         $form->handleRequest($request);
 
 
-        //TODO: decommmenter les 2 lignes et assigné $mail_AR à la variable $to de la fonction $sendARService->sendAR($nobon, $formattedDate, $to); pour envoi à ADh
-        $user = $security->getUser();
-        $mail_AR = $user->getMailAR();
+
+
 
 
 
@@ -118,8 +120,20 @@ class OrderController extends AbstractController
 
             $date = $order->getDeliveryDate();
             $formattedDate = $date->format('d/m/Y');
-            $to = '';
-            $sendARService->sendAR($nobon, $formattedDate, $to);
+
+
+            $user = $this->getUser();
+
+
+            if (!$user instanceof User) {
+                throw new \LogicException('The user is not valid.');
+            }
+
+            $mail_AR = $user->getMailAR();
+
+
+            // $sendARService->sendAR($nobon, $formattedDate, $mail_AR);
+            $bus->dispatch(new SendARMessage($nobon, $formattedDate, $mail_AR));
 
 
             //------------------------------------------

@@ -27,6 +27,7 @@ framework:
             App\Scheduler\Message\PopulateAcdbMessage: async
             App\Scheduler\Message\DataMapperSecurityMessage: async
             App\Scheduler\Message\TourCodeMessage: async
+            App\Message\SendARMessage: async
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async

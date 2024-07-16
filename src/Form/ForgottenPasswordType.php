@@ -13,9 +13,12 @@ class ForgottenPasswordType extends AbstractType
     {
         $builder
             ->add('login', null, [
-                'label' => 'Identifiant'])
+                'label' => false,
+
+            ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Envoyer']);
+                'label' => 'Envoyer'
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

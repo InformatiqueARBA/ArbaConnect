@@ -1,0 +1,39 @@
+.content-container {
+    position: relative;
+    padding-bottom: 5px;
+    /* Adjust as needed */
+}
+
+.form-container {
+    width: 40%;
+    margin: 0 auto;
+    /* Center the form */
+}
+
+
+.bottom-left-image-douchette {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    width: 300px;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .bottom-left-image-douchette {
+        display: none;
+        /* Adjust as needed */
+    }
+
+    .content-container {
+        padding-bottom: 100px;
+        /* Adjust as needed */
+    }
+
+    .form-container {
+        width: 100%;
+        /* Full width on small screens */
+        padding: 0 15px;
+        /* Add some padding */
+    }
+}

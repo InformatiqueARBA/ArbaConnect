@@ -20,5 +20,7 @@ let csvFilePath = '/csv/tour_code/tour_code.csv';
  * which should already be in your base.html.twig.
  */
 import './styles/app.css';
+import './styles/style_login_page.css';
+import './styles/style_detail_commande_page.css';
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');

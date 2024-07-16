@@ -15,9 +15,9 @@ class DataMapperSecurityProvider implements ScheduleProviderInterface
     { {
             return (new Schedule())->add(
                 // RecurringMessage::every('5 seconds', new WriteInFileMessage(2))
-                RecurringMessage::cron('*/1 * * * *', new DataMapperSecurityMessage())
+                RecurringMessage::cron('30 23 * * *', new DataMapperSecurityMessage())
+                // RecurringMessage::cron('*/1 * * * *', new DataMapperSecurityMessage())
             );
         }
-        
     }
 }

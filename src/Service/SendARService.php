@@ -13,8 +13,9 @@ class SendARService
 
 
 
-    public function sendAR($nobon, $formattedDate)
+    public function sendAR($nobon, $formattedDate, $to)
     {
+
 
         // Encodage des paramètres de l'URL
         $nobonEncoded = urlencode($nobon);
@@ -42,7 +43,7 @@ class SendARService
 
 
             $from = 'informatique@arba.coop';
-            // TODO: changerle destinataire
+            // TODO: changer le destinataire il suffit de supprimer la ligne suivante
             $to = 'boitedetestsam@gmail.com';
             $subject = 'ARBA | votre AR de commande modifié';
             $html = '<p>Bonjour,<br><br>

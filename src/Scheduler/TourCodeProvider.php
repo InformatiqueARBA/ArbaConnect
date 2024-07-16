@@ -2,7 +2,7 @@
 
 namespace App\Scheduler;
 
-use App\Scheduler\Message\PopulateAcdbMessage;
+
 use App\Scheduler\Message\TourCodeMessage;
 use Symfony\Component\Scheduler\Attribute\AsSchedule;
 use Symfony\Component\Scheduler\RecurringMessage;
@@ -17,7 +17,9 @@ class TourCodeProvider implements ScheduleProviderInterface
             return (new Schedule())->add(
                 // RecurringMessage::every('5 seconds', new WriteInFileMessage(2))
                 // config : 23h30 tous les jours
+                // RecurringMessage::cron('*/1 * * * *', new TourCodeMessage())
                 RecurringMessage::cron('30 23 * * *', new TourCodeMessage())
+
             );
         }
     }
