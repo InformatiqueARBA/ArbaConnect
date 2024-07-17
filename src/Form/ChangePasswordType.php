@@ -17,24 +17,36 @@ class ChangePasswordType extends AbstractType
         $builder
             ->add('new_password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'Le mot de passe ne correspond pas',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
                 'first_options'  => ['label' => 'Nouveau mot de passe'],
                 'second_options' => ['label' => 'Confirmation mot de passe'],
                 'constraints' => [
                     new Assert\NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Merci de saisir un mot de passe',
                     ]),
                     new Assert\Length([
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'min' => 4,
+                        'minMessage' => 'Votre mot de passe doit faire au moins {{ limit }} caractères',
                         'max' => 4096,
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/\d/',
+                        'message' => 'Votre mot de passe doit contenir au moins un chiffre.',
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/[\W]/',
+                        'message' => 'Votre mot de passe doit contenir au moins un caractère spécial.',
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/[a-zA-Z]/',
+                        'message' => 'Votre mot de passe doit contenir au moins une lettre.',
                     ]),
                 ],
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Enregister',
+                'label' => 'Enregistrer',
                 'attr' => ['class' => 'btn btn-primary'],
             ]);
     }

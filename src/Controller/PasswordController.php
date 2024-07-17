@@ -78,11 +78,15 @@ class PasswordController extends AbstractController
 
     // Récupère le nouveau mot de passe pour mise à jour en DB
     #[Route(path: '/change-password', name: 'app_change_password')]
-    public function changePassword(Request $request, ManagerRegistry $managerRegistry, UserPasswordHasherInterface $hasher, JWTService $jwtService)
+    public function changePassword(Request $request, ManagerRegistry $managerRegistry, UserPasswordHasherInterface $hasher, JWTService $jwtService, SessionInterface $session)
     {
         $em = $managerRegistry->getManager('security');
         $form = $this->createForm(ChangePasswordType::class);
         $form->handleRequest($request);
+
+        // on sette emailSent à false car cette variable sert à modifier l'affichage
+        // dans  la vue loginForgottenPass.html.twig (si ce n'est pas fait l'utilisateur ne peut pas appuyer une seconde fois sur  mot de passe oublié)
+        $session->set('emailSent', false);
 
         //TODO: imposer un mot de passe différent du précédant et definir pattern à respecter
         if ($form->isSubmitted() && $form->isValid()) {
