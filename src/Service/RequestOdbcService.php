@@ -52,6 +52,10 @@ class RequestOdbcService
             ,trim(CLI.NOCLI) as CORPORATIONID
             ,case
                 when ENT_CMD.ENPRM = 'AC' THEN 'edited' 
+                when trim(ENT_CMD.ENT30) = 'P' THEN 'prepared' 
+                when trim(ENT_CMD.ENT30) in ('R/P','R/F') THEN 'not editable' -- CMD partiellement préparée/facturée
+                when trim(ENT_CMD.ENT30)= 'F' THEN 'delivred' 
+                when trim(ENT_CMD.ETSEE) = 'ANN' THEN 'canceled'
                 else 'editable'end as ORDERSTATUS
             ,trim(ENT_CMD.RFCSB) as REFERENCE
             ,CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(ENT_CMD.DSECS, ENT_CMD.DSECA), '-'),ENT_CMD.DSECM),'-'),ENT_CMD.DSECJ) as ORDERDATE
@@ -63,8 +67,7 @@ class RequestOdbcService
             when ENT_CMD.LIVSB = 'EOL' then 'EOLAS'
             when ENT_CMD.LIVSB = 'DFE' then 'DFIWEB'
             else 'ARBA' end as SELLER
-            ,trim(ENT_CMD.COMED) as COMMENT 
-
+            ,trim(ENT_CMD.COMED) as COMMENT -- TODO: À supprimer/modifier ce champ sur la V2
         from
             AQAGESTCOM.AENTBOP1 ENT_CMD
         inner join
@@ -72,20 +75,33 @@ class RequestOdbcService
         inner join
             AQAGESTCOM.ADETBOP1 DET_CMD ON DET_CMD.NOBON = ENT_CMD.NOBON
 
-        where
-			CLDI1 = 'AD' -- ADH uniquement
+        where /*Récu*/
+
+            (CLDI1 = 'AD' -- ADH uniquement
             and CLI.NOCLI != 'FICTIF'
-			and SURCL ='000' -- Client normal
             and ETCLE != 'S' -- ADH ACTIF
+            and ETSBE != 'ANN' -- LIGNE ACTIVE
+            and CODAR != '' -- Hors ligne commentaire
+            and DTZAB != 'O' -- Hors ligne reprise/avoir
 			and ETSEE != 'ANN' -- BON ACTIF
 			and ENT30 like '%R%' -- Bon à préparer
-			and ETSBE != 'ANN' -- LIGNE ACTIVE
-            and CODAR != '' -- Hors ligne commentaire
 			and DET27 ='R' -- Ligne à préparer
-			and PREDI = 'N' -- Bon préparation non édité
-			and DTZAB != 'O' -- Hors ligne reprise/avoir
-        ORDER by
-            ID 
+			and PREDI ='N' -- Bon préparation non édité
+            )
+
+        OR
+
+			(CLDI1 = 'AD' -- ADH uniquement
+            and CLI.NOCLI != 'FICTIF'
+            and ETCLE != 'S' -- ADH ACTIF
+            and CODAR != '' -- Hors ligne commentaire
+            and DTZAB != 'O' -- Hors ligne reprise/avoir
+            and TIMESTAMP_FORMAT(CONCAT(CONCAT(CONCAT(DSECS, DSECA), DSECM), DSECJ), 'YYYYMMDD') >= CURRENT_DATE - 3 MONTHS
+            and ENT_CMD.FACSB != 'OUI')
+            
+
+            ORDER by
+            ID
         ";
         return $sql;
     }

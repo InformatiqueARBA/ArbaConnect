@@ -15,7 +15,7 @@
 						<div class="mb-2"><input type="text" id="filter-order-id" class="form-control" data-column="0" placeholder="N° Commande" style="text-align: center;"></div>
 					</th>
 					<th>
-						<div class="mb-2"><input type="text" id="filter-seller" class="form-control" data-column="1" placeholder="Utilisateur" style="text-align: center;"></div>
+						<div class="mb-2"><input type="text" id="filter-seller" class="form-control" data-column="1" placeholder="Canal" style="text-align: center;"></div>
 					</th>
 					<th>
 						<div class="mb-2"><input type="text" id="filter-order-date" class="form-control" data-column="2" placeholder="Date Commande" style="text-align: center;"></div>
@@ -31,7 +31,7 @@
 					</th>
 					{% if is_granted('ROLE_ARBA') %}
 						<th>
-							<div class="mb-2"><input type="text" id="filter-corporation" class="form-control" data-column="6" placeholder="Corporation" style="text-align: center;"></div>
+							<div class="mb-2"><input type="text" id="filter-corporation" class="form-control" data-column="6" placeholder="Entreprise" style="text-align: center;"></div>
 						</th>
 					{% endif %}
 					{% if is_granted('ROLE_USER') %}
@@ -55,21 +55,51 @@
 								{{ order.corporation.id }}</td>
 						{% endif %}
 
+						{# {% if is_granted('ROLE_USER') %}
+																																																																																																																																																	<td>
+																																																																																																																																																		{% if order.orderStatus == 'editable' %}
+																																																																																																																																																			<a class="btn btn-sm btn-primary" href="{{ path('app_edit', {id: order.id}) }}">Modifier</a>
+																																																																																																																																																		{% elseif order.orderStatus == 'edited' %}
+																																																																																																																																																			<a class="btn btn-sm btn-success" href="{{ path('app_edit', {id: order.id}) }}">Modifiée</a>
+																																																																																																																																																		{% elseif order.orderStatus == 'not editable' %}
+																																																																																																																																																			<span class="btn btn-sm btn-warning">Non modifiable</span>
+																																																																																																																																																		{% elseif order.orderStatus == 'prepared' %}
+																																																																																																																																																			<span class="btn btn-sm btn-secondary">Préparée</span>
+																																																																																																																																																		{% elseif order.orderStatus == 'delivred' %}
+																																																																																																																																																			<span class="btn btn-sm btn-info">Livrée</span>
+																																																																																																																																																		{% elseif order.orderStatus == 'canceled' %}
+																																																																																																																																																			<span class="btn btn-sm btn-danger">Annulée</span>
+																																																																																																																																																		{% endif %}
+																																																																																																																																																	</td>
+																																																																																																																																																{% endif %} #}
 						{% if is_granted('ROLE_USER') %}
-							<td>
-								{% if order.orderStatus == 'editable' %}
-									<a class="btn btn-sm btn-primary" href="{{ path('app_edit', {id: order.id}) }}">Modifier</a>
-								{% elseif order.orderStatus == 'edited' %}
-									<a class="btn btn-sm btn-success" href="{{ path('app_edit', {id: order.id}) }}">Modifiée</a>
-								{% elseif order.orderStatus == 'printed' %}
-									<span class="btn btn-sm btn-warning">En préparation</span>
-								{% elseif order.orderStatus == 'done' %}
-									<span class="btn btn-sm btn-info">Livrée</span>
-								{% elseif order.orderStatus == 'cancelled' %}
-									<span class="btn btn-sm btn-danger">Annulée</span>
-								{% endif %}
-							</td>
+							{% if order.orderStatus == 'editable' %}
+								<td class="text-dark" style="background-color: rgba(0, 70, 100,0.8); ">
+									<a style='color: rgb(130, 170, 55);' href="{{ path('app_edit', {id: order.id}) }}">Modifier</a>
+								</td>
+							{% elseif order.orderStatus == 'edited' %}
+								<td class="text-dark" style="background-color: rgba(130, 170, 55,0.8); ">
+									<a style='color: #f2f6eb;' class="btn btn-sm btn-sucess" href="{{ path('app_edit', {id: order.id}) }}">Modifiée</a>
+								</td>
+							{% elseif order.orderStatus == 'prepared' %}
+								<td class="text-dark" style="background-color: rgba(128, 128, 128, 0.5);">
+									Préparée
+								</td>
+							{% elseif order.orderStatus == 'delivred' %}
+								<td class="text-dark" style="background-color: rgba(0, 128, 128, 0.5);">
+									Livrée
+								</td>
+							{% elseif order.orderStatus == 'canceled' %}
+								<td class="text-dark" style="background-color: rgba(255, 0, 0, 0.5);">
+									Annulée
+								</td>
+							{% else %}
+								<td class="text-dark" style="background-color: rgba(255, 165, 0, 0.5);">
+									Non modifiable
+								</td>
+							{% endif %}
 						{% endif %}
+
 
 					</tr>
 				{% endfor %}

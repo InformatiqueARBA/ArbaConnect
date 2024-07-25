@@ -2,20 +2,24 @@
 
 namespace App\Service;
 
+use Psr\Log\LoggerInterface;
+
 class SendARService
 {
-    private $mailerService;
 
-    public function __construct(MailerService $mailerService)
+    private $mailerService;
+    private $logger;
+
+    public function __construct(MailerService $mailerService, LoggerInterface $logger)
     {
         $this->mailerService = $mailerService;
+        $this->logger = $logger;
     }
-
 
 
     public function sendAR($nobon, $formattedDate, $to)
     {
-
+        $this->logger->info("Starting sendAR process for $nobon at $formattedDate");
 
         // Encodage des paramètres de l'URL
         $nobonEncoded = urlencode($nobon);
@@ -32,12 +36,23 @@ class SendARService
                 throw new \Exception("Failed to download PDF from $url.");
             }
 
-            // Chemin où enregistrer le fichier PDF téléchargé
+            // Chemin où enregistrer le fichier PDF téléchargé (fichier supprimé après envoi)
             $pdfPath = "/var/www/ArbaConnect/public/pdf/ar/$nobon.pdf";
+
+            // Chemin où le fichier PDF est sauvegardé pendant 90 jours TODO: créer script ou service pour supprimmer quand sup à 90jours
+            $savePdfPath = "/home/dave/Documents/ArbaConnect/save/pdf/ar_dl/$nobon.pdf";
+
+
+
 
             // Enregistrement du fichier PDF
             if (file_put_contents($pdfPath, $pdfContent) === false) {
                 throw new \Exception("Failed to save PDF to $pdfPath.");
+            }
+
+            // Enregistrement du fichier PDF
+            if (file_put_contents($savePdfPath, $pdfContent) === false) {
+                throw new \Exception("Failed to save PDF to $savePdfPath.");
             }
 
 
@@ -51,11 +66,15 @@ class SendARService
 
             $attachmentPath = "/var/www/ArbaConnect/public/pdf/ar/$nobon.pdf";
             $this->mailerService->sendMailWithAttachment($from, $to, $subject, $html, $attachmentPath);
+            $this->logger->info("Mail sent successfully to $to");
             // création d'un message flash pour avertir de la modification
 
+            // Suppression du fichier PDF après l'envoi de l'email
+            if (file_exists($pdfPath)) {
+                unlink($pdfPath);
+            }
         } catch (\Exception $e) {
-            // Gestion des erreurs
-
+            $this->logger->error("Error in sendAR process: " . $e->getMessage());
         }
     }
 }

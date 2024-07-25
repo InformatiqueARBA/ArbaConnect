@@ -8,6 +8,7 @@ parameters:
     variables_app_directory: '%kernel.project_dir%/public/variables_app/'
     csv_save_directory: '/home/dave/Documents/ArbaConnect/save/csv/'
     jwt_secret: '%env(JWT_SECRET)%'
+  
     
 services:
     # default configuration for services in *this* file

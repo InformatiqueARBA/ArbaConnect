@@ -29,7 +29,7 @@ class ChangePasswordType extends AbstractType
                     new Assert\Length([
                         'min' => 4,
                         'minMessage' => 'Votre mot de passe doit faire au moins {{ limit }} caractères',
-                        'max' => 4096,
+                        'max' => 50,
                     ]),
                     new Assert\Regex([
                         'pattern' => '/\d/',
@@ -42,6 +42,10 @@ class ChangePasswordType extends AbstractType
                     new Assert\Regex([
                         'pattern' => '/[a-zA-Z]/',
                         'message' => 'Votre mot de passe doit contenir au moins une lettre.',
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/[A-Z]/',
+                        'message' => 'Votre mot de passe doit contenir au moins une majuscule.',
                     ]),
                 ],
             ])

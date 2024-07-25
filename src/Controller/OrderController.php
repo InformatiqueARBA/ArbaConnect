@@ -93,7 +93,7 @@ class OrderController extends AbstractController
 
 
     #[Route('/commandes/detail/{id}/edit', name: 'app_edit')]
-    public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService, MessageBusInterface $bus): Response
+    public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService, MessageBusInterface $bus, SendARService $sendARService): Response
     {
         $em = $databaseSwitcherService->getEntityManager();
         $order = $em->getRepository(Order::class)->find($id);
@@ -206,6 +206,8 @@ class OrderController extends AbstractController
 
         return new Response('Users are up to date.');
     }
+
+
 
     #[Route('/arba/commandes/code', name: 'code')]
     public function code(TourCodeService $tourCodeService): Response
