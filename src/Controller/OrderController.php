@@ -151,7 +151,13 @@ class OrderController extends AbstractController
             // Appel au service CsvGeneratorService pour généré le fichier csv RUBIS
             $csvG->deliveryDateCsv($order);
 
-            return $this->redirectToRoute('app_dates_livraisons_adherent');
+            if (in_array('ROLE_ADMIN', $user->getRoles())) {
+
+                return $this->redirectToRoute('app_dates_livraisons');
+            } else {
+
+                return $this->redirectToRoute('app_dates_livraisons_adherent');
+            }
         }
 
 
@@ -219,29 +225,25 @@ class OrderController extends AbstractController
     }
 
 
-    #[Route('/arba/aradh', name: 'code')]
-    public function ARADH(SendARService $sendARService): Response
-    {
-        $tab = [
-            952732, 952734, 952806, 952807, 952808, 952832, 953122, 953154, 953525,
-            953560, 953600, 953744, 953824, 953825, 953912, 954096, 954097, 954157, 954412, 954466,
-            955558, 956509, 956535, 956540, 956574, 956678, 956846, 956847, 956848, 957072, 957073,
-            957075, 957084, 957168, 957207, 957223, 957231, 957808, 957816, 957897, 957937, 958035,
-            958158, 958250, 958329, 958473, 958496, 958535, 958536, 958551, 958656, 958776, 958864,
-            958936, 959168, 959220, 959221, 959416, 959483, 959505, 959507, 959565, 959654, 959655,
-            959656, 959673, 959675, 959695, 959724, 959743, 959843, 959847, 959991, 960107, 960130,
-            960212, 960291, 960482, 960483, 960805
-        ];
+    // #[Route('/arba/aradh', name: 'code')]
+    // public function ARADH(SendARService $sendARService): Response
+    // {
+    //     $tab = [
+    //         952732, 952734, 952806, 952807, 952808, 952832, 953122, 953154, 953525,
+    //         953560, 953600, 953744, 953824, 953825, 953912, 954096, 954097, 954157, 954412, 954466,
+    //         955558, 956509, 956535, 956540, 956574, 956678, 956846, 956847, 956848, 957072, 957073,
+    //         957075, 957084, 957168, 957207, 957223, 957231, 957808, 957816, 957897, 957937, 958035,
+    //         958158, 958250, 958329, 958473, 958496, 958535, 958536, 958551, 958656, 958776, 958864,
+    //         958936, 959168, 959220, 959221, 959416, 959483, 959505, 959507, 959565, 959654, 959655,
+    //         959656, 959673, 959675, 959695, 959724, 959743, 959843, 959847, 959991, 960107, 960130,
+    //         960212, 960291, 960482, 960483, 960805
+    //     ];
+    //     foreach ($tab as $value) {
+    //         $to = 'mcpa@9business.fr';
+    //         $sendARService->sendAR2($value, $to); // Assurez-vous que sendAR2 accepte ces arguments.
+    //     }
 
+    //     return new Response('code ok!');
+    // }
 
-
-
-
-        foreach ($tab as $value) {
-            $to = 'mcpa@9business.fr';
-            $sendARService->sendAR2($value, $to); // Assurez-vous que sendAR2 accepte ces arguments.
-        }
-
-        return new Response('code ok!');
-    }
 }

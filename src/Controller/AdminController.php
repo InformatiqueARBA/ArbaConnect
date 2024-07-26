@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Security\User;
+use App\Form\CommentType;
 use App\Form\PasswordType;
 use App\Form\UserType;
 use App\Service\MailerService;
@@ -24,6 +25,9 @@ class AdminController extends AbstractController
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
 
+        $formComment = $this->createForm(CommentType::class);
+        $formComment->handleRequest($request);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -40,8 +44,18 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_dashboard');
         }
 
+        if ($formComment->isSubmitted() && $formComment->isValid()) {
+            $commentContent = $formComment->get('content')->getData();
+            // dd($commentContent);
+            $this->addFlash('success', 'Le commentaire a été soumis avec succès.');
+            return $this->render('partials/infos.html.twig', [
+                'comment' => $commentContent,
+            ]);
+        }
+
         return $this->render('admin/admin.html.twig', [
-            'form' => $form
+            'form' => $form,
+            'formComment' => $formComment
         ]);
     }
 }
