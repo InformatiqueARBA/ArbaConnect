@@ -1,4 +1,7 @@
 {
+    "artgris/maintenance-bundle": {
+        "version": "1.2.4"
+    },
     "doctrine/doctrine-bundle": {
         "version": "2.12",
         "recipe": {

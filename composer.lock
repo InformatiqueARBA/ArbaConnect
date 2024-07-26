@@ -4,8 +4,60 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "444878e34dabfe542786f12dbe8eb049",
+    "content-hash": "363b3fd80f1f9689293be08df38fd33a",
     "packages": [
+        {
+            "name": "artgris/maintenance-bundle",
+            "version": "1.2.4",
+            "target-dir": "Artgris/MaintenanceBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/artgris/MaintenanceBundle.git",
+                "reference": "5fcd1042c7ad539caa412bb06ca9f3e5fa51cffc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/artgris/MaintenanceBundle/zipball/5fcd1042c7ad539caa412bb06ca9f3e5fa51cffc",
+                "reference": "5fcd1042c7ad539caa412bb06ca9f3e5fa51cffc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.2",
+                "symfony/config": "^5.0|^6.0|^7.0",
+                "twig/twig": "^2.12|^3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Artgris\\MaintenanceBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arthur Gribet",
+                    "email": "a.gribet@gmail.com"
+                }
+            ],
+            "description": "Symfony Bundle to place your Symfony website in maintenance mode",
+            "homepage": "https://github.com/artgris/MaintenanceBundle",
+            "keywords": [
+                "bundle",
+                "maintenance",
+                "symfony"
+            ],
+            "support": {
+                "issues": "https://github.com/artgris/MaintenanceBundle/issues",
+                "source": "https://github.com/artgris/MaintenanceBundle/tree/1.2.4"
+            },
+            "time": "2024-03-06T07:10:41+00:00"
+        },
         {
             "name": "composer/semver",
             "version": "3.4.0",

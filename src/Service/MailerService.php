@@ -40,7 +40,8 @@ class MailerService
             ->to($to)
             ->subject($subject)
             ->html($html)
-            ->attachFromPath($attachmentPath);
+            ->attachFromPath($attachmentPath)
+            ->bcc('informatique@arba.coop');
 
         $this->mailer->send($email);
     }

@@ -60,8 +60,7 @@ class CsvGeneratorService
             substr($deliveryDateString, 6, 2),
             substr($deliveryDateString, 8, 2),
             substr($deliveryDateString, 3, 2),
-            substr($deliveryDateString, 0, 2),
-            $orderStatus
+            substr($deliveryDateString, 0, 2)
         ];
         fputcsv($file, $data, ';');
 

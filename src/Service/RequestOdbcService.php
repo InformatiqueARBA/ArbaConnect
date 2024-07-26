@@ -30,7 +30,7 @@ class RequestOdbcService
         AQAGESTCOM.ACLIENP1 CLI
         where
            CLDI1 in ('AD','SAL')
-            and NOCLI != 'FICTIF'
+            --and NOCLI != 'FICTIF'
             and ETCLE != 'S'
         order by
             NOCLI
@@ -51,11 +51,11 @@ class RequestOdbcService
             ENT_CMD.NOBON as ID 
             ,trim(CLI.NOCLI) as CORPORATIONID
             ,case
-                when ENT_CMD.ENPRM = 'AC' THEN 'edited' 
+                when trim(ENT_CMD.ETSEE) = 'ANN' THEN 'canceled'
                 when trim(ENT_CMD.ENT30) = 'P' THEN 'prepared' 
                 when trim(ENT_CMD.ENT30) in ('R/P','R/F') THEN 'not editable' -- CMD partiellement préparée/facturée
                 when trim(ENT_CMD.ENT30)= 'F' THEN 'delivred' 
-                when trim(ENT_CMD.ETSEE) = 'ANN' THEN 'canceled'
+                when ENT_CMD.ENPRM = 'AC' THEN 'edited' 
                 else 'editable'end as ORDERSTATUS
             ,trim(ENT_CMD.RFCSB) as REFERENCE
             ,CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(ENT_CMD.DSECS, ENT_CMD.DSECA), '-'),ENT_CMD.DSECM),'-'),ENT_CMD.DSECJ) as ORDERDATE
@@ -78,7 +78,7 @@ class RequestOdbcService
         where /*Récu*/
 
             (CLDI1 = 'AD' -- ADH uniquement
-            and CLI.NOCLI != 'FICTIF'
+            --and CLI.NOCLI != 'FICTIF'
             and ETCLE != 'S' -- ADH ACTIF
             and ETSBE != 'ANN' -- LIGNE ACTIVE
             and CODAR != '' -- Hors ligne commentaire
@@ -92,7 +92,7 @@ class RequestOdbcService
         OR
 
 			(CLDI1 = 'AD' -- ADH uniquement
-            and CLI.NOCLI != 'FICTIF'
+            --and CLI.NOCLI != 'FICTIF'
             and ETCLE != 'S' -- ADH ACTIF
             and CODAR != '' -- Hors ligne commentaire
             and DTZAB != 'O' -- Hors ligne reprise/avoir
@@ -125,7 +125,7 @@ class RequestOdbcService
     AQAGESTCOM.ACLIENP1 CLI
     where
 		CLDI1 in ('AD','SAL')
-	    and NOCLI != 'FICTIF'
+	    --and NOCLI != 'FICTIF'
 	    and ETCLE != 'S'
     order by
         NOCLI

@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<h1>Yo ta page n'existe pas mec!</h1>
+	<h1>Erreur 404</h1>
 
 	<p>
-		The requested page couldn't be located. Checkout for any URL
-				        misspelling or
-		<a href="{{ path('homepage') }}">return to the homepage</a>.
+		La page demandée n'existe pas.<br>
+		En cas d'erreur, veuillez contacter le service développement : developpement@arba.coop
+		<br>
+		<a href="{{ path('app_home') }}">Retour à la page d'accueil</a>.
 	</p>
 {% endblock %}
