@@ -19,28 +19,25 @@
 						<div class="mb-2"><input type="text" id="filter-order-id" class="form-control" data-column="0" placeholder="N° Commande" style="text-align: center;"></div>
 					</th>
 					<th>
-						<div class="mb-2"><input type="text" id="filter-seller" class="form-control" data-column="1" placeholder="Canal" style="text-align: center;"></div>
+						<div class="mb-2"><input type="text" id="filter-order-date" class="form-control" data-column="1" placeholder="Date Commande" style="text-align: center;"></div>
 					</th>
 					<th>
-						<div class="mb-2"><input type="text" id="filter-order-date" class="form-control" data-column="2" placeholder="Date Commande" style="text-align: center;"></div>
+						<div class="mb-2"><input type="text" id="filter-reference" class="form-control" data-column="2" placeholder="Référence" style="text-align: center;"></div>
 					</th>
 					<th>
-						<div class="mb-2"><input type="text" id="filter-reference" class="form-control" data-column="3" placeholder="Référence" style="text-align: center;"></div>
+						<div class="mb-2"><input type="text" id="filter-delivery-date" class="form-control" data-column="3" placeholder="Date Livraison" style="text-align: center;"></div>
 					</th>
 					<th>
-						<div class="mb-2"><input type="text" id="filter-delivery-date" class="form-control" data-column="4" placeholder="Date Livraison" style="text-align: center;"></div>
-					</th>
-					<th>
-						<div class="mb-2"><input type="text" id="filter-type" class="form-control" data-column="5" placeholder="Type" style="text-align: center;"></div>
+						<div class="mb-2"><input type="text" id="filter-type" class="form-control" data-column="4" placeholder="Type" style="text-align: center;"></div>
 					</th>
 					{% if is_granted('ROLE_ARBA') %}
 						<th>
-							<div class="mb-2"><input type="text" id="filter-corporation" class="form-control" data-column="6" placeholder="Entreprise" style="text-align: center;"></div>
+							<div class="mb-2"><input type="text" id="filter-corporation" class="form-control" data-column="5" placeholder="Entreprise" style="text-align: center;"></div>
 						</th>
 					{% endif %}
 					{% if is_granted('ROLE_USER') %}
 						<th>
-							<div class="mb-2"><input type="text" id="filter-action" class="form-control" data-column="{% if is_granted('ROLE_ARBA') %}7{% else %}6{% endif %}" placeholder="Action" style="text-align: center;"></div>
+							<div class="mb-2"><input type="text" id="filter-action" class="form-control" data-column="{% if is_granted('ROLE_ARBA') %}6{% else %}5{% endif %}" placeholder="Action" style="text-align: center;"></div>
 						</th>
 					{% endif %}
 				</tr>
@@ -49,7 +46,6 @@
 				{% for order in orders %}
 					<tr>
 						<td>{{ order.id|e }}</td>
-						<td>{{ order.seller|e }}</td>
 						<td>{{ order.orderDate|date("d/m/Y") }}</td>
 						<td>{{ order.reference|e }}</td>
 						<td>{{ order.deliveryDate|date("d/m/Y") }}</td>
@@ -59,23 +55,7 @@
 								{{ order.corporation.id }}</td>
 						{% endif %}
 
-						{# {% if is_granted('ROLE_USER') %}
-																																																																																																																																																							<td>
-																																																																																																																																																								{% if order.orderStatus == 'editable' %}
-																																																																																																																																																									<a class="btn btn-sm btn-primary" href="{{ path('app_edit', {id: order.id}) }}">Modifier</a>
-																																																																																																																																																								{% elseif order.orderStatus == 'edited' %}
-																																																																																																																																																									<a class="btn btn-sm btn-success" href="{{ path('app_edit', {id: order.id}) }}">Modifiée</a>
-																																																																																																																																																								{% elseif order.orderStatus == 'not editable' %}
-																																																																																																																																																									<span class="btn btn-sm btn-warning">Non modifiable</span>
-																																																																																																																																																								{% elseif order.orderStatus == 'prepared' %}
-																																																																																																																																																									<span class="btn btn-sm btn-secondary">Préparée</span>
-																																																																																																																																																								{% elseif order.orderStatus == 'delivred' %}
-																																																																																																																																																									<span class="btn btn-sm btn-info">Livrée</span>
-																																																																																																																																																								{% elseif order.orderStatus == 'canceled' %}
-																																																																																																																																																									<span class="btn btn-sm btn-danger">Annulée</span>
-																																																																																																																																																								{% endif %}
-																																																																																																																																																							</td>
-																																																																																																																																																						{% endif %} #}
+
 						{% if is_granted('ROLE_USER') %}
 							{% if order.orderStatus == 'editable' %}
 								<td class="text-dark" style="background-color: rgba(0, 70, 100,0.8); ">

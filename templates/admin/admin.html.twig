@@ -22,10 +22,10 @@
 		{{ form_end(form) }}
 	</div>
 	<div class="comment-form-container mt-4">
-		{{ form_start(formComment) }}
-		{{ form_row(formComment.content) }}
-		{{ form_widget(formComment.submit, {'attr': {'class': 'custom-btn custom-submit-class w-100 mt-3'}}) }}
-		{{ form_end(formComment) }}
+		{{ form_start(formACComment) }}
+		{{ form_row(formACComment.comment) }}
+		{{ form_widget(formACComment.submit, {'attr': {'class': 'custom-btn custom-submit-class w-100 mt-3'}}) }}
+		{{ form_end(formACComment) }}
 	</div>
 
 {% endblock %}

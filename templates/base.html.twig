@@ -18,9 +18,10 @@
 		<nav class="navbar navbar-expand-lg nav-color sticky-top">
 			<div class="container-fluid">
 				<div class="mr-auto text-center">
-					<a class="text-decoration-none" href="{{ path('app_home') }}">
-						<span class="ms-2 green-text">ArbaConnect</span>
-						{# <img src="{{ asset('images/Logo ARBA RVB.svg') }}" alt=""> #}
+					<a
+						class="text-decoration-none" href="{{ path('app_home') }}">
+						{# <span class="ms-2 green-text">ArbaConnect</span> #}
+						<img class="logo_arba" src="{{ asset('images/arba_connect_vert.png') }}" alt="">
 					</a>
 					{% if app.user and is_granted('ROLE_ADMIN') %}
 						<a class="text-decoration-none ms-4" href="{{ path('admin_dashboard') }}">

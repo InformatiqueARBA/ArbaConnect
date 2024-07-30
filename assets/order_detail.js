@@ -32,10 +32,11 @@ loadCSVFile(csvFilePath, function (csvContent) {
         let line = lines[i].trim();
         if (line) {
             let parts = line.split(';');
-            if (parts.length === 2) {
+            if (parts.length === 3) {
                 let tourCode = parts[0].trim();
                 let deliveryDate = parts[1].trim();
-                deliveryDates[deliveryDate] = tourCode;
+                let limitDate = parts[2].trim();
+                deliveryDates[deliveryDate] = { tourCode: tourCode, limitDate: limitDate };
             }
         }
     }
@@ -98,17 +99,19 @@ loadCSVFile(csvFilePath, function (csvContent) {
             const date = new Date(dayElem.dateObj);
             const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
 
-            if (deliveryDates[formattedDate] === 'S') {
-                dayElem.classList.add('workday-1');
-            } else if (deliveryDates[formattedDate] === 'N') {
-                dayElem.classList.add('workday-2');
+            if (deliveryDates.hasOwnProperty(formattedDate)) {
+                if (deliveryDates[formattedDate].tourCode === 'S') {
+                    dayElem.classList.add('workday-1');
+                } else if (deliveryDates[formattedDate].tourCode === 'N') {
+                    dayElem.classList.add('workday-2');
+                }
             }
         },
         disable: [
             function (date) {
                 const day = date.getDay();
                 const formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
-
+                const currentDateTime = new Date();
                 // Disable weekends
                 if (day === 0 || day === 6) {
                     return true;
@@ -120,12 +123,17 @@ loadCSVFile(csvFilePath, function (csvContent) {
                 }
 
                 // Disable 'N' days if tc is 'S'
-                if (tc === 'S' && deliveryDates[formattedDate] === 'N') {
+                if (tc === 'S' && deliveryDates[formattedDate].tourCode === 'N') {
                     return true;
                 }
 
                 // Disable 'S' days if tc is 'N'
-                if (tc === 'N' && deliveryDates[formattedDate] === 'S') {
+                if (tc === 'N' && deliveryDates[formattedDate].tourCode === 'S') {
+                    return true;
+                }
+
+                //Désactive la livraison J+1 si le cut off est dépassé  
+                if (currentDateTime > new Date(deliveryDates[formattedDate].limitDate)) {
                     return true;
                 }
 

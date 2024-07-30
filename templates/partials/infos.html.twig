@@ -1,6 +1,4 @@
-{# <!DOCTYPE html>
-
-
+<!DOCTYPE html>
 <html lang="fr">
 	<head>
 		<meta charset="UTF-8">
@@ -8,10 +6,13 @@
 	</head>
 	<body>
 		<div>
-			{% if comment %}
-				<h1>{{ comment }}</h1>
-			{% endif %}
-
+			<ul>
+				<ul>
+					{% if app.session.get('comment') %}
+						{{ app.session.get('comment') }}
+					{% endif %}
+				</ul>
+			</ul>
 		</div>
 	</body>
-</html> #}
+</html>

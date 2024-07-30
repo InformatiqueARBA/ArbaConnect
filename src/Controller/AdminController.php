@@ -2,19 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Security\ACComment;
 use App\Entity\Security\User;
-use App\Form\CommentType;
-use App\Form\PasswordType;
+use App\Form\ACCommentType;
 use App\Form\UserType;
-use App\Service\MailerService;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 class AdminController extends AbstractController
 {
@@ -24,11 +22,14 @@ class AdminController extends AbstractController
         $em = $managerRegistry->getManager('security');
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
-
-        $formComment = $this->createForm(CommentType::class);
-        $formComment->handleRequest($request);
-
         $form->handleRequest($request);
+
+
+        $ACComment = new ACComment();
+        $formACComment = $this->createForm(ACCommentType::class);
+        $formACComment->handleRequest($request);
+
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Les données du formulaire sont déjà mappées dans l'objet $user
@@ -44,18 +45,39 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_dashboard');
         }
 
-        if ($formComment->isSubmitted() && $formComment->isValid()) {
-            $commentContent = $formComment->get('content')->getData();
-            // dd($commentContent);
+
+
+
+        if ($formACComment->isSubmitted() && $formACComment->isValid()) {
+            // Clear the ACComment table and reset IDs
+            $this->truncateACCommentTable($em);
+
+            $ACComment->setComment($formACComment->get('comment')->getData());
+            $em->persist($ACComment);
+            $em->flush();
+
             $this->addFlash('success', 'Le commentaire a été soumis avec succès.');
-            return $this->render('partials/infos.html.twig', [
-                'comment' => $commentContent,
-            ]);
+            return $this->redirectToRoute('app_home');
         }
+
+
+
+
 
         return $this->render('admin/admin.html.twig', [
             'form' => $form,
-            'formComment' => $formComment
+            'formACComment' =>  $formACComment
         ]);
+    }
+
+
+    private function truncateACCommentTable($em)
+    {
+        $connection = $em->getConnection();
+        $platform = $connection->getDatabasePlatform();
+        // Truncate la table et reset le compteur id
+        $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 0');
+        $connection->executeStatement($platform->getTruncateTableSQL('ACComment', true /* si en cascade */));
+        $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }
