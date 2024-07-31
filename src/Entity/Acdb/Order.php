@@ -5,6 +5,7 @@ namespace App\Entity\Acdb;
 use App\Repository\OrderRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Validator as Acme;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
@@ -24,6 +25,7 @@ class Order
     private ?\DateTimeInterface $orderDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    // #[Acme\DeliveryDate]
     private ?\DateTimeInterface $deliveryDate = null;
 
     #[ORM\Column(length: 20)]

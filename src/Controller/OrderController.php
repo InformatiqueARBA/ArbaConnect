@@ -93,6 +93,8 @@ class OrderController extends AbstractController
 
 
 
+
+    // TODO: interdire la soumission du form si la dte n'a pas été changée voir doc:https://symfony.com/doc/current/form/events.html
     #[Route('/commandes/detail/{id}/edit', name: 'app_edit')]
     public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService, MessageBusInterface $bus, SendARService $sendARService): Response
     {

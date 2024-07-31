@@ -22,9 +22,10 @@ class DeliveryDateValidator extends ConstraintValidator
         if (!$order instanceof Order) {
             return;
         }
+        dd($order->getDeliveryDate(), $value);
 
         // Comparer les dates de livraison
-        if ($order->getDeliveryDate() == $value) {
+        if ($order->getDeliveryDate() && $order->getDeliveryDate()->format('Y-m-d') === $value->format('Y-m-d')) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
         }
