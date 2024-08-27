@@ -9,7 +9,13 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class CsvToRubisService
 {
-    public function sendCsvToRubis($filePath, $fileName, ParameterBagInterface $params)
+    private $params;
+    public function __construct(ParameterBagInterface $params)
+    {
+        $this->params = $params;
+    }
+
+    public function sendCsvToRubis($filePath, $fileName)
     {
 
         // Se connecter au serveur FTP
@@ -32,7 +38,7 @@ class CsvToRubisService
             ftp_pasv($ftp_conn, true);
 
             // TODO: Changer de répertoire sur le serveur FTP
-            $remote_directory =  $params->get('ENV_ERP_DIRECTORY');
+            $remote_directory =  $this->params->get('ENV_ERP_DIRECTORY');
             $remote_file = $remote_directory . $fileName;
 
             if (ftp_put($ftp_conn, $remote_file, $filePath . $fileName, FTP_ASCII)) {
