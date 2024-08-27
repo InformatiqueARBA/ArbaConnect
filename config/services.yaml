@@ -8,6 +8,8 @@ parameters:
     variables_app_directory: '%kernel.project_dir%/public/variables_app/'
     csv_save_directory: '/home/dave/Documents/ArbaConnect/save/csv/'
     jwt_secret: '%env(JWT_SECRET)%'
+    mail_pwd_dev: '%env(MAIL_PWD_DEV)%'
+    mail_ar_dev: '%env(MAIL_AR_DEV)%'
   
     
 services:
@@ -31,12 +33,17 @@ services:
     # please note that last definitions always *replace* previous ones
 
     # ODBC Service
+    App\Service\CsvToRubisService:
+        arguments:
+            $ERPDirDev: '%env(ERP_DIRECTORY_DEV)%'
+
+    # ODBC Service
     App\Service\OdbcService:
         arguments:
             $dsn: '%env(ODBC_DSN)%'
             $username: '%env(ODBC_USERNAME)%'
             $password: '%env(ODBC_PASSWORD)%'
-
+       
     App\Service\DatabaseSwitcherService:
         arguments:
             $defaultEntityManager: "@doctrine.orm.default_entity_manager"

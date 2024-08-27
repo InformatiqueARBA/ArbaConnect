@@ -4,6 +4,7 @@ namespace App\Service;
 
 use Psr\Log\LoggerInterface;
 
+
 class SendARService
 {
 
@@ -56,10 +57,9 @@ class SendARService
             }
 
 
-
             $from = 'informatique@arba.coop';
-            // TODO: changer le destinataire il suffit de supprimer la ligne suivante
-            $to = 'boitedetestsam@gmail.com';
+
+
             $subject = 'ARBA | votre AR de commande modifié';
             $html = '<p>Bonjour,<br><br>
                         Veuillez trouver ci-joint votre AR de commande modifié <br><br><p>';
@@ -70,9 +70,9 @@ class SendARService
             // création d'un message flash pour avertir de la modification
 
             // Suppression du fichier PDF après l'envoi de l'email
-            if (file_exists($pdfPath)) {
-                unlink($pdfPath);
-            }
+            // if (file_exists($pdfPath)) {
+            //     unlink($pdfPath);
+            // }
         } catch (\Exception $e) {
             $this->logger->error("Error in sendAR process: " . $e->getMessage());
         }

@@ -38,7 +38,14 @@ class PasswordController extends AbstractController
             $user = $em->getRepository(User::class)->findUserByLogin($login);
 
             if ($user) {
-                $email = $params->get('ENV_MAIL'); //TODO: utiliser le mail de l'utilisateur 1x en prod $user->getMail();
+                // Récupération de l'adresse e-mail AR en fonction de l'environnement
+                if ($this->getParameter('kernel.environment') === 'dev') {
+                    //$email = $params->get('mail_pwd_dev');
+                    $email = $params->get('mail_pwd_dev');
+                } else {
+                    $email = $user->getMail();
+                }
+
                 $session->set('emailSent', true);
                 $session->set('email', $email);
 
@@ -49,7 +56,6 @@ class PasswordController extends AbstractController
                 $resetUrl = $this->generateUrl('app_change_password', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
 
                 //Génération du mail & injection du lien sécurisé
-                $email = 'boitedetestsam@gmail.com';
                 $subject = 'ARBA | Changement de mot de passe';
                 $content =  "Bonjour, <br><br> Voici le lien pour réinitialiser votre mot de passe : <br> <a href=$resetUrl> ARBA.COOP</a>";
 

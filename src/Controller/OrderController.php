@@ -18,6 +18,7 @@ use App\Service\SendARService;
 use App\Service\TourCodeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,10 +30,12 @@ class OrderController extends AbstractController
 {
 
     private $em;
+    private $params;
 
-    public function __construct(DatabaseSwitcherService $databaseSwitcherService)
+    public function __construct(DatabaseSwitcherService $databaseSwitcherService, ParameterBagInterface $params)
     {
         $this->em = $databaseSwitcherService->getEntityManager();
+        $this->params = $params;
     }
 
 
@@ -126,17 +129,24 @@ class OrderController extends AbstractController
 
 
             $user = $this->getUser();
+            // dd($user); $mail_AR = $user->getMailAR();
 
 
             if (!$user instanceof User) {
                 throw new \LogicException('The user is not valid.');
             }
 
-            $mail_AR = $user->getMailAR();
+            // Récupération de l'adresse e-mail AR en fonction de l'environnement
+            if ($this->getParameter('kernel.environment') === 'dev') {
+                $mail_AR = $this->params->get('mail_ar_dev');
+            } else {
+                $mail_AR = $user->getMailAR();
+            }
 
 
-            // $sendARService->sendAR($nobon, $formattedDate, $mail_AR);
-            $bus->dispatch(new SendARMessage($nobon, $formattedDate, $mail_AR));
+
+            $sendARService->sendAR($nobon, $formattedDate, $mail_AR);
+            // $bus->dispatch(new SendARMessage($nobon, $formattedDate, $mail_AR));
 
 
             //------------------------------------------
