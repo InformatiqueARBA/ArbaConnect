@@ -28,7 +28,7 @@
 /assets/vendor/
 ###< symfony/asset-mapper ###
 
-# Ignore tout le contenu du dossier public sauf le dossier image et ses sous-dossiers
+# Ignore les dossiers suivants de /Public
 #/public/csv
 #/public/pdf
 #/public/variables_app
