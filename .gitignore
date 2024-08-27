@@ -5,6 +5,8 @@
 /.env.*.local
 /.env.prod
 /.env.test
+/.env.dev
+/.env
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
@@ -27,6 +29,6 @@
 ###< symfony/asset-mapper ###
 
 # Ignore tout le contenu du dossier public sauf le dossier image et ses sous-dossiers
-/public/csv
-/public/pdf
-/public/variables_app
+#/public/csv
+#/public/pdf
+#/public/variables_app
