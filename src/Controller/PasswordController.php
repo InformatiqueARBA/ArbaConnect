@@ -9,6 +9,7 @@ use App\Service\JWTService;
 use App\Service\MailerService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -24,7 +25,7 @@ class PasswordController extends AbstractController
 {
     // Gère les demande de changement de mot de passe : Avec le login renseigné, envoi un mail d'accès avec token à la page de changement password
     #[Route(path: '/forgotten-password', name: 'app_forgotten_password')]
-    public function forgottenPassword(Request $request, ManagerRegistry $managerRegistry, SessionInterface $session, MailerService $mailer, JWTService $jwtService): Response
+    public function forgottenPassword(Request $request, ManagerRegistry $managerRegistry, SessionInterface $session, MailerService $mailer, JWTService $jwtService, ParameterBagInterface $params): Response
     {
         $em = $managerRegistry->getManager('security');
         $form = $this->createForm(ForgottenPasswordType::class);
@@ -37,7 +38,7 @@ class PasswordController extends AbstractController
             $user = $em->getRepository(User::class)->findUserByLogin($login);
 
             if ($user) {
-                $email = 'boitedetestsam@gmail.com'; //TODO: utiliser le mail de l'utilisateur 1x en prod $user->getMail();
+                $email = $params->get('ENV_MAIL'); //TODO: utiliser le mail de l'utilisateur 1x en prod $user->getMail();
                 $session->set('emailSent', true);
                 $session->set('email', $email);
 

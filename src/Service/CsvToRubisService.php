@@ -3,12 +3,13 @@
 namespace App\Service;
 
 use Exception;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /*service qui envoie les csv sur le QDLS Rubis*/
 
 class CsvToRubisService
 {
-    public function sendCsvToRubis($filePath, $fileName)
+    public function sendCsvToRubis($filePath, $fileName, ParameterBagInterface $params)
     {
 
         // Se connecter au serveur FTP
@@ -31,7 +32,7 @@ class CsvToRubisService
             ftp_pasv($ftp_conn, true);
 
             // TODO: Changer de répertoire sur le serveur FTP
-            $remote_directory = "/QDLS/AQA/TEST/";
+            $remote_directory =  $params->get('ENV_ERP_DIRECTORY');
             $remote_file = $remote_directory . $fileName;
 
             if (ftp_put($ftp_conn, $remote_file, $filePath . $fileName, FTP_ASCII)) {

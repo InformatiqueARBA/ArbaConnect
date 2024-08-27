@@ -151,7 +151,21 @@ class OrderController extends AbstractController
             $this->addFlash('success', 'la date de livraison à bien été modifiée');
 
             // Appel au service CsvGeneratorService pour généré le fichier csv RUBIS
+            //⚠️ ----------------------------------TODO: à supprimer uniquement pour test avec ADH -------------
+
+            // if ($user->getLogin() === '016253' || $user->getLogin() === '016FICTIF') {
+            //     $csvG->deliveryDateCsv($order);
+            // }
+            // ⚠️----------------------------------TODO: à supprimer uniquement pour test avec ADH -------------
+
+            //962310 rubis 1/12/24
+
+
+            //⚠️ *********************à décommenter après  mise en prod
+
+            // Appel au service CsvGeneratorService pour généré le fichier csv RUBIS
             $csvG->deliveryDateCsv($order);
+            //⚠️ *********************à décommenter après   mise en prod
 
             if (in_array('ROLE_ADMIN', $user->getRoles())) {
 

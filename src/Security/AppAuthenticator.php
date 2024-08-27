@@ -22,9 +22,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
-    {
-    }
+    public function __construct(private UrlGeneratorInterface $urlGenerator) {}
 
     public function authenticate(Request $request): Passport
     {
@@ -48,8 +46,8 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
             // TODO: Code d'origine mais compréhension partielle : return new RedirectResponse('$targetPath');
             return new RedirectResponse('/');
         }
-
-        throw new \Exception('TODO: provide a valid redirect inside ' . __FILE__);
+        // Redirection par défaut en cas de succès de l'authentification
+        return new RedirectResponse($this->urlGenerator->generate('app_home'));
     }
 
     protected function getLoginUrl(Request $request): string
