@@ -32,10 +32,11 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    # ODBC Service
+    # CsvToRubisService
     App\Service\CsvToRubisService:
         arguments:
             $ERPDirDev: '%env(ERP_DIRECTORY_DEV)%'
+            $ERPDirProd: '%env(ERP_DIRECTORY_PROD)%'
 
     # ODBC Service
     App\Service\OdbcService:

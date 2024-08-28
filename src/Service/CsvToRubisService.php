@@ -10,9 +10,14 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 class CsvToRubisService
 {
     private  $ERPDirDev;
-    public function __construct($ERPDirDev)
+    private  $ERPDirProd;
+    private  $params;
+
+    public function __construct($ERPDirDev, $ERPDirProd, ParameterBagInterface $params)
     {
         $this->ERPDirDev = $ERPDirDev;
+        $this->ERPDirProd = $ERPDirProd;
+        $this->params = $params;
     }
 
     public function sendCsvToRubis($filePath, $fileName)
@@ -37,8 +42,16 @@ class CsvToRubisService
 
             ftp_pasv($ftp_conn, true);
 
-            // TODO: Changer de répertoire sur le serveur FTP
-            $remote_directory =  $this->ERPDirDev;
+
+
+            // envoi dans le dossier ERP prod ou test en fonction de l'environnement de l'Appp
+            if ($this->params->get('kernel.environment') === 'dev') {
+                $remote_directory =  $this->ERPDirDev;
+            } else {
+                $remote_directory =  $this->ERPDirProd;
+            }
+
+
             $remote_file = $remote_directory . $fileName;
 
             if (ftp_put($ftp_conn, $remote_file, $filePath . $fileName, FTP_ASCII)) {

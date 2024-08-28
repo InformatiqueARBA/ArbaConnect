@@ -27,7 +27,15 @@ class CsvGeneratorService
         $timestamp = date('_H:i:s');
 
         $header = [
-            'SNOCLI', 'SNOBON', 'SNTA02', 'SNTC07', 'SNTPRO', 'SNTLIS', 'SNTLIA', 'SNTLIM', 'SNTLIJ'
+            'SNOCLI',
+            'SNOBON',
+            'SNTA02',
+            'SNTC07',
+            'SNTPRO',
+            'SNTLIS',
+            'SNTLIA',
+            'SNTLIM',
+            'SNTLIJ'
         ];
 
         $orderId = $order->getId();
@@ -70,6 +78,7 @@ class CsvGeneratorService
 
         // Déplace le CSV vers le dossier de sauvegarde
         $destinationDir = '/home/dave/Documents/ArbaConnect/save/csv/'; //$this->csvSaveDirectory;
+
         $destinationPath = $destinationDir . $fileName;
 
         if (rename($filePath, $destinationPath)) {

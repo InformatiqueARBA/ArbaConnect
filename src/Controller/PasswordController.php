@@ -40,7 +40,6 @@ class PasswordController extends AbstractController
             if ($user) {
                 // Récupération de l'adresse e-mail AR en fonction de l'environnement
                 if ($this->getParameter('kernel.environment') === 'dev') {
-                    //$email = $params->get('mail_pwd_dev');
                     $email = $params->get('mail_pwd_dev');
                 } else {
                     $email = $user->getMail();

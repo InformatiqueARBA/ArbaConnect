@@ -29,6 +29,6 @@
 ###< symfony/asset-mapper ###
 
 # Ignore les dossiers suivants de /Public
-#/public/csv
-#/public/pdf
-#/public/variables_app
+/public/csv
+/public/pdf
+/public/variables_app
