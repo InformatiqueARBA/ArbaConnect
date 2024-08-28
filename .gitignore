@@ -1,12 +1,8 @@
 
 ###> symfony/framework-bundle ###
-/.env.local
-/.env.local.php
-/.env.*.local
-/.env.prod
-/.env.test
-/.env.dev
-/.env
+.env
+.env.*
+
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
@@ -29,10 +25,5 @@
 ###< symfony/asset-mapper ###
 
 # Ignore les dossiers suivants de /Public
-/public/csv/
-/public/pdf/
-/public/variables_app/
-
-/.env.*
-!/.env.local
-!/.env.test
+/public/csv/tour_code/tour_code.csv
+/public/variables_app/variableDataSwitcher.txt
