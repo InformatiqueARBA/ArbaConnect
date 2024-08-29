@@ -160,22 +160,17 @@ class OrderController extends AbstractController
             // création d'un message flash pour avertir de la modification
             $this->addFlash('success', 'la date de livraison à bien été modifiée');
 
-            // Appel au service CsvGeneratorService pour généré le fichier csv RUBIS
-            //⚠️ ----------------------------------TODO: à supprimer uniquement pour test avec ADH -------------
+            // Appel au service CsvGeneratorService pour générer le fichier csv RUBIS
+            // Pendant la phase de test autorise uniquement ces Users ou l'env DEV. 
+            //TODO: Vérifier pertinence FICTIF & travailler sur la casse login
 
-            // if ($user->getLogin() === '016253' || $user->getLogin() === '016FICTIF') {
-            //     $csvG->deliveryDateCsv($order);
-            // }
-            // ⚠️----------------------------------TODO: à supprimer uniquement pour test avec ADH -------------
+            $allowedLogins = ['016253', '016FICTIF', '016god'];
+            $login = $user->getLogin();
 
-            //962310 rubis 1/12/24
-
-
-            //⚠️ *********************à décommenter après  mise en prod
-
-            // Appel au service CsvGeneratorService pour généré le fichier csv RUBIS
-            $csvG->deliveryDateCsv($order);
-            //⚠️ *********************à décommenter après   mise en prod
+            //dd($this->getParameter(('kernel.environment')));
+            if (in_array($login, $allowedLogins) || $this->getParameter('kernel.environment') === 'dev') {
+                $csvG->deliveryDateCsv($order);
+            }
 
             if (in_array('ROLE_ADMIN', $user->getRoles())) {
 

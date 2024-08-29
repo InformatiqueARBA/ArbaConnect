@@ -35,7 +35,8 @@ class CsvGeneratorService
             'SNTLIS',
             'SNTLIA',
             'SNTLIM',
-            'SNTLIJ'
+            'SNTLIJ',
+            'SNTROF'
         ];
 
         $orderId = $order->getId();
@@ -68,7 +69,8 @@ class CsvGeneratorService
             substr($deliveryDateString, 6, 2),
             substr($deliveryDateString, 8, 2),
             substr($deliveryDateString, 3, 2),
-            substr($deliveryDateString, 0, 2)
+            substr($deliveryDateString, 0, 2),
+            'R'
         ];
         fputcsv($file, $data, ';');
 
