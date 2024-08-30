@@ -27,7 +27,7 @@ class ChangePasswordType extends AbstractType
                         'message' => 'Merci de saisir un mot de passe',
                     ]),
                     new Assert\Length([
-                        'min' => 4,
+                        'min' => 12,
                         'minMessage' => 'Votre mot de passe doit faire au moins {{ limit }} caractères',
                         'max' => 50,
                     ]),

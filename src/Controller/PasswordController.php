@@ -66,8 +66,8 @@ class PasswordController extends AbstractController
                 $session->set('email', '');
                 $this->addFlash('warning', 'Utilisateur non trouvé.');
             }
-
-            return $this->redirectToRoute('app_forgotten_password');
+            session_unset();
+            return $this->redirectToRoute('app_home');
         }
 
         //Initialise les variables à faux pour que la vue affiche le formulaire au 1er passage
@@ -125,7 +125,7 @@ class PasswordController extends AbstractController
                 $user->setPassword($hasher->hashPassword($user, $password));
                 $em->flush();
 
-                $this->addFlash('success', "Votre mot de pass a été changé");
+                $this->addFlash('success', "Votre mot de passe a été changé");
             } else {
 
                 $this->addFlash('warning', 'Utilisateur non trouvé.');
