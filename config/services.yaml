@@ -9,7 +9,6 @@ parameters:
     csv_save_directory: '/home/dave/Documents/ArbaConnect/save/csv/'
     jwt_secret: '%env(JWT_SECRET)%'
     mail_pwd_dev: '%env(MAIL_PWD_DEV)%'
-    mail_ar_dev: '%env(MAIL_AR_DEV)%'
     env_app: '%env(APP_ENV)'
   
     

@@ -8,10 +8,8 @@ use App\Service\CsvGeneratorService;
 use App\Service\OdbcService;
 use App\Enum\Status;
 use App\Form\OrderType;
-use App\Message\SendARMessage;
 use App\Service\DatabaseSwitcherService;
 use App\Service\DataMapperSecurityService;
-use App\Service\MailerService;
 use App\Service\PopulateAcdbService;
 use App\Service\RequestOdbcService;
 use App\Service\SendARService;
@@ -22,7 +20,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
+
 use Symfony\Component\Routing\Attribute\Route;
 
 
@@ -99,7 +97,7 @@ class OrderController extends AbstractController
 
     // TODO: interdire la soumission du form si la dte n'a pas été changée voir doc:https://symfony.com/doc/current/form/events.html
     #[Route('/commandes/detail/{id}/edit', name: 'app_edit')]
-    public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService, MessageBusInterface $bus, SendARService $sendARService): Response
+    public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService): Response
     {
         $em = $databaseSwitcherService->getEntityManager();
         $order = $em->getRepository(Order::class)->find($id);
@@ -129,27 +127,12 @@ class OrderController extends AbstractController
 
 
             $user = $this->getUser();
-            // dd($user); $mail_AR = $user->getMailAR();
+
 
 
             if (!$user instanceof User) {
                 throw new \LogicException('The user is not valid.');
             }
-
-            // Récupération de l'adresse e-mail AR en fonction de l'environnement
-            if ($this->getParameter('kernel.environment') === 'dev') {
-                $mail_AR = $this->params->get('mail_ar_dev');
-            } else {
-                $mail_AR = $user->getMailAR();
-            }
-
-
-
-            $sendARService->sendAR($nobon, $formattedDate, $mail_AR);
-            // $bus->dispatch(new SendARMessage($nobon, $formattedDate, $mail_AR));
-
-
-            //------------------------------------------
 
 
 
