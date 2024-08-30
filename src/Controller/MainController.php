@@ -25,7 +25,7 @@ class MainController extends AbstractController
             $session->set('comment', $comment);
         }
 
-
+        $session->set('emailSent', false);
         $user = $security->getUser();
 
 

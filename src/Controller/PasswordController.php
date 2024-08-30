@@ -66,7 +66,7 @@ class PasswordController extends AbstractController
                 $session->set('email', '');
                 $this->addFlash('warning', 'Utilisateur non trouvé.');
             }
-            session_unset();
+            //session_unset();
             return $this->redirectToRoute('app_home');
         }
 
