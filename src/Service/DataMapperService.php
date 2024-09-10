@@ -24,7 +24,7 @@ class DataMapperService
     {
         $this->requestOdbcService = $requestOdbcService;
         $this->odbcService = $odbcService;
-        $this->em = $databaseSwitcherService->getEntityManagerPopulate();
+        //$this->em = $databaseSwitcherService->getEntityManagerPopulate();
     }
 
 
@@ -33,25 +33,35 @@ class DataMapperService
 
 
     //fonction pour peupler la table corporation de la BDD ACDB
-    public function corporationMapper(): void
+    public function corporationMapper(DatabaseSwitcherService $databaseSwitcherService): void
     {
         $sql = $this->requestOdbcService->getCoporations();
-
         $results = $this->odbcService->executeQuery($sql);
-        // dd($results);
-
+        $em = $databaseSwitcherService->getEntityManagerPopulate();
+        
         foreach ($results as $result) {
-
-            $corporation = new Corporation();
-            $corporation->setId($result['ID']);
-            $corporation->setName($result['NAME']);
-            $corporation->setStatus($result['STATUS']);
-
-            $this->em->persist($corporation);
+            // Vérifie si la corporation existe déjà dans la base de données
+            $existingCorporation = $em->getRepository(Corporation::class)->find($result['ID']);
+            
+            if ($existingCorporation) {
+                // Si la corporation existe, on peut mettre à jour les champs si nécessaire
+                $existingCorporation->setName($result['NAME']);
+                $existingCorporation->setStatus($result['STATUS']);
+            } else {
+                // Sinon, on crée une nouvelle corporation
+                $corporation = new Corporation();
+                $corporation->setId($result['ID']);
+                $corporation->setName($result['NAME']);
+                $corporation->setStatus($result['STATUS']);
+                
+                $em->persist($corporation);
+            }
         }
-
-        $this->em->flush();
+    
+        $em->flush();
+        //$em->close();
     }
+    
 
 
 
@@ -59,14 +69,15 @@ class DataMapperService
 
 
     //fonction pour peupler la table order de la BDD ACDB
-    public function orderMapper(): void
+    public function orderMapper(DatabaseSwitcherService $databaseSwitcherService): void
     {
         $sql = $this->requestOdbcService->getOrders();
         $results = $this->odbcService->executeQuery($sql);
+        $em = $databaseSwitcherService->getEntityManagerPopulate();
 
         foreach ($results as $result) {
 
-            $corporation = $this->em->getRepository(Corporation::class)->findOneBy(['id' => $result['CORPORATIONID']]);
+            $corporation = $em->getRepository(Corporation::class)->findOneBy(['id' => $result['CORPORATIONID']]);
 
             $order = new Order();
             $order->setId($result['ID']);
@@ -83,24 +94,26 @@ class DataMapperService
             $order->setSeller($result['SELLER']);
             $order->setComment($result['COMMENT']);
 
-            $this->em->persist($order);
+            $em->persist($order);
         }
 
-        $this->em->flush();
+        $em->flush();
+        //$em->close();
     }
 
 
 
     //fonction pour peupler la table order de la BDD ACDB
-    public function MemberMapper(): void
+    public function MemberMapper(DatabaseSwitcherService $databaseSwitcherService): void
     {
         $sql = $this->requestOdbcService->getMembers();
         $results = $this->odbcService->executeQuery($sql);
+        $em = $databaseSwitcherService->getEntityManagerPopulate();
 
         foreach ($results as $result) {
 
 
-            $corporation = $this->em->getRepository(Corporation::class)->findOneBy(['id' => $result['CORPORATIONID']]);
+            $corporation = $em->getRepository(Corporation::class)->findOneBy(['id' => $result['CORPORATIONID']]);
 
             $Member = new Member();
             $Member->setId($result['ID']);
@@ -113,9 +126,10 @@ class DataMapperService
 
 
 
-            $this->em->persist($Member);
+            $em->persist($Member);
         }
 
-        $this->em->flush();
+        $em->flush();
+        $em->close();
     }
 }

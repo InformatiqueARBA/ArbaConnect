@@ -38,14 +38,14 @@ class PopulateAcdbService
         $connection = $this->databaseSwitcherService->getEntityManagerPopulate()->getConnection();
         // dd($connection);
 
-        try {
+        // try {
             // Start the transaction
             $connection->beginTransaction();
 
-            // Truncate the member table
+            // // Truncate the member table
             $connection->executeStatement('DELETE FROM Member');
 
-            // Truncate the order table
+            // // Truncate the order table
             $connection->executeStatement('DELETE FROM `order`');
 
             // Truncate the corporation table
@@ -53,15 +53,17 @@ class PopulateAcdbService
 
             // Commit the transaction if all statements are successful
             $connection->commit();
-        } catch (\Exception $e) {
-            // Rollback the transaction in case of error
-            $connection->rollBack();
-            throw $e;
-        }
+        // } catch (\Exception $e) {
+        //     // Rollback the transaction in case of error
+        //     $connection->rollBack();
+        //     throw $e;
+        // }
+        $connection->close();
+        
 
-        $this->dataMapperService->corporationMapper();
-        $this->dataMapperService->orderMapper();
-        $this->dataMapperService->MemberMapper();
+        $this->dataMapperService->corporationMapper(($this->databaseSwitcherService));
+        $this->dataMapperService->orderMapper(($this->databaseSwitcherService));
+        $this->dataMapperService->MemberMapper(($this->databaseSwitcherService));
 
         // r+ :Ouvre en lecture et écriture et place le pointeur de fichier au début du fichier.
         $file = fopen($filePath, "r+");
