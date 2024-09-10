@@ -116,8 +116,8 @@ class RequestOdbcService
 			)
 
             ORDER by
-            ID
-        ";
+            CORPORATIONID
+         ";
         return $sql;
     }
 

@@ -36,7 +36,7 @@ class PopulateAcdbService
 
         // Get the connection from the entity manager
         $connection = $this->databaseSwitcherService->getEntityManagerPopulate()->getConnection();
-        // dd($connection);
+
 
         try {
             // Start the transaction
@@ -59,9 +59,10 @@ class PopulateAcdbService
             throw $e;
         }
 
-        $this->dataMapperService->corporationMapper();
-        $this->dataMapperService->orderMapper();
-        $this->dataMapperService->MemberMapper();
+
+        $this->dataMapperService->corporationMapper(($this->databaseSwitcherService));
+        $this->dataMapperService->orderMapper(($this->databaseSwitcherService));
+        $this->dataMapperService->MemberMapper(($this->databaseSwitcherService));
 
         // r+ :Ouvre en lecture et écriture et place le pointeur de fichier au début du fichier.
         $file = fopen($filePath, "r+");

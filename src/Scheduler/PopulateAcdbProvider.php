@@ -15,8 +15,8 @@ class PopulateAcdbProvider implements ScheduleProviderInterface
     { {
             return (new Schedule())->add(
                 // RecurringMessage::every('5 seconds', new WriteInFileMessage(2))
-                // config : 5 minutes
-                RecurringMessage::cron('*/5 * * * *', new PopulateAcdbMessage())
+                // config : 2 minutes
+                RecurringMessage::cron('*/2 * * * *', new PopulateAcdbMessage())
             );
         }
     }

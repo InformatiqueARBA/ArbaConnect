@@ -41,6 +41,12 @@ class Order
     #[ORM\JoinColumn(nullable: false)]
     private ?Corporation $corporation = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $SupplierConfirmation = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $SupplierDeliveryDate = null;
+
     public function getId(): ?string
     {
         return $this->id;
@@ -145,6 +151,30 @@ class Order
     public function setCorporation(?Corporation $corporation): static
     {
         $this->corporation = $corporation;
+
+        return $this;
+    }
+
+    public function isSupplierConfirmation(): ?bool
+    {
+        return $this->SupplierConfirmation;
+    }
+
+    public function setSupplierConfirmation(?bool $SupplierConfirmation): static
+    {
+        $this->SupplierConfirmation = $SupplierConfirmation;
+
+        return $this;
+    }
+
+    public function getSupplierDeliveryDate(): ?\DateTimeInterface
+    {
+        return $this->SupplierDeliveryDate;
+    }
+
+    public function setSupplierDeliveryDate(?\DateTimeInterface $SupplierDeliveryDate): static
+    {
+        $this->SupplierDeliveryDate = $SupplierDeliveryDate;
 
         return $this;
     }
