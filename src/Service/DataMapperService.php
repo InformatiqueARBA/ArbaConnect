@@ -14,18 +14,18 @@ class DataMapperService
 {
 
 
-    private $requestOdbcService;
-    private $odbcService;
-    private $em;
+    // private $requestOdbcService;
+    // // private $odbcService;
+    // private $em;
 
 
 
-    public function __construct(RequestOdbcService $requestOdbcService, OdbcService $odbcService, DatabaseSwitcherService $databaseSwitcherService)
-    {
-        $this->requestOdbcService = $requestOdbcService;
-        $this->odbcService = $odbcService;
-        //$this->em = $databaseSwitcherService->getEntityManagerPopulate();
-    }
+    // public function __construct(RequestOdbcService $requestOdbcService, OdbcService $odbcService)
+    // {
+    //     $this->requestOdbcService = $requestOdbcService;
+    //     // $this->odbcService = $odbcService;
+    //     //$this->em = $databaseSwitcherService->getEntityManagerPopulate();
+    // }
 
 
 
@@ -33,32 +33,27 @@ class DataMapperService
 
 
     //fonction pour peupler la table corporation de la BDD ACDB
-    public function corporationMapper(DatabaseSwitcherService $databaseSwitcherService): void
+    public function corporationMapper(DatabaseSwitcherService $databaseSwitcherService, OdbcService $odbcService, RequestOdbcService $requestOdbcService): void
     {
-        $sql = $this->requestOdbcService->getCoporations();
-        $results = $this->odbcService->executeQuery($sql);
+        $sql = $requestOdbcService->getCoporations();
+        $results = $odbcService->executeQuery($sql);
         $em = $databaseSwitcherService->getEntityManagerPopulate();
 
         foreach ($results as $result) {
             // Vérifie si la corporation existe déjà dans la base de données
-            $existingCorporation = $em->getRepository(Corporation::class)->find($result['ID']);
 
-            if ($existingCorporation) {
-                // Si la corporation existe, on peut mettre à jour les champs si nécessaire
-                $existingCorporation->setName($result['NAME']);
-                $existingCorporation->setStatus($result['STATUS']);
-            } else {
-                // Sinon, on crée une nouvelle corporation
-                $corporation = new Corporation();
-                $corporation->setId($result['ID']);
-                $corporation->setName($result['NAME']);
-                $corporation->setStatus($result['STATUS']);
 
-                $em->persist($corporation);
-            }
+            // Sinon, on crée une nouvelle corporation
+            $corporation = new Corporation();
+            $corporation->setId($result['ID']);
+            $corporation->setName($result['NAME']);
+            $corporation->setStatus($result['STATUS']);
+
+            $em->persist($corporation);
         }
 
         $em->flush();
+        //$em->close();
     }
 
 
@@ -68,10 +63,10 @@ class DataMapperService
 
 
     //fonction pour peupler la table order de la BDD ACDB
-    public function orderMapper(DatabaseSwitcherService $databaseSwitcherService): void
+    public function orderMapper(DatabaseSwitcherService $databaseSwitcherService, OdbcService $odbcService, RequestOdbcService $requestOdbcService): void
     {
-        $sql = $this->requestOdbcService->getOrders();
-        $results = $this->odbcService->executeQuery($sql);
+        $sql = $requestOdbcService->getOrders();
+        $results = $odbcService->executeQuery($sql);
         $em = $databaseSwitcherService->getEntityManagerPopulate();
 
         foreach ($results as $result) {
@@ -97,15 +92,16 @@ class DataMapperService
         }
 
         $em->flush();
+        //$em->close();
     }
 
 
 
     //fonction pour peupler la table order de la BDD ACDB
-    public function MemberMapper(DatabaseSwitcherService $databaseSwitcherService): void
+    public function MemberMapper(DatabaseSwitcherService $databaseSwitcherService, OdbcService $odbcService, RequestOdbcService $requestOdbcService): void
     {
-        $sql = $this->requestOdbcService->getMembers();
-        $results = $this->odbcService->executeQuery($sql);
+        $sql = $requestOdbcService->getMembers();
+        $results = $odbcService->executeQuery($sql);
         $em = $databaseSwitcherService->getEntityManagerPopulate();
 
         foreach ($results as $result) {

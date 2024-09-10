@@ -117,7 +117,7 @@ class RequestOdbcService
 
             ORDER by
             CORPORATIONID
-         ";
+        ";
         return $sql;
     }
 
