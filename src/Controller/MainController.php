@@ -9,7 +9,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 class MainController extends AbstractController
 {
@@ -25,9 +25,10 @@ class MainController extends AbstractController
             $session->set('comment', $comment);
         }
 
+        // affecte la valeur false à la variable de session emailsent
         $session->set('emailSent', false);
-        $user = $security->getUser();
 
+        $user = $security->getUser();
 
         if ($user && in_array('ROLE_ARBA', $user->getRoles())) {
             return $this->redirectToRoute('app_dates_livraisons');

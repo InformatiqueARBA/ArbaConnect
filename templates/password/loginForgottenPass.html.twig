@@ -5,28 +5,24 @@
 
 {% block body %}
 	<div class='w-25 mx-auto mt-form'>
-		{% if emailSent %}
-			{# TODO: Inverser la valeur du test pour n'avoir que le if --> {% if not emailSent %}#}
-			{# si formulaire sousmis on reste sur la page et on affiche uniquement le flash #}
-		{% else %}
-			<div class="light-blue-bg">
-				<h1 class="blue-arba h3 mb-3 sfp-regular-text">Veuillez insérer votre identifiant:</h1>
-				<div>
-					{{ form_start(form, {'action': path('app_forgotten_password')}) }}
 
-					{# Conteneur parent pour l'input et le bouton #}
-					<div class="form-group">
-						{{ form_row(form.login, {'attr': {'class': 'form-control custom-login-class'}}) }}
-					</div>
+		<div class="light-blue-bg">
+			<h1 class="blue-arba h3 mb-3 sfp-regular-text">Veuillez insérer votre identifiant:</h1>
+			<div>
+				{{ form_start(form, {'action': path('app_forgotten_password')}) }}
 
-					{# Utilisation d'un conteneur flex pour aligner les éléments #}
-					<div class="form-group d-flex flex-column">
-						{{ form_row(form.submit, {'attr': {'class': 'custom-btn w-100 custom-submit-class'}}) }}
-					</div>
-
-					{{ form_end(form) }}
+				{# Conteneur parent pour l'input et le bouton #}
+				<div class="form-group">
+					{{ form_row(form.login, {'attr': {'class': 'form-control custom-login-class'}}) }}
 				</div>
+
+				{# Utilisation d'un conteneur flex pour aligner les éléments #}
+				<div class="form-group d-flex flex-column">
+					{{ form_row(form.submit, {'attr': {'class': 'custom-btn w-100 custom-submit-class'}}) }}
+				</div>
+
+				{{ form_end(form) }}
 			</div>
-		{% endif %}
-	</div>
-{% endblock %}
+		</div>
+	{% endif %}
+</div>{% endblock %}

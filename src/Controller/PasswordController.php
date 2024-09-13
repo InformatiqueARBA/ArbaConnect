@@ -71,12 +71,12 @@ class PasswordController extends AbstractController
         }
 
         //Initialise les variables à faux pour que la vue affiche le formulaire au 1er passage
-        $emailSent = $session->get('emailSent', false);
+        // $emailSent = $session->get('emailSent', false);
         $email = $session->get('email', '');
 
         return $this->render('password/loginForgottenPass.html.twig', [
             'form' => $form->createView(),
-            'emailSent' => $emailSent,
+            // 'emailSent' => $emailSent,
             'email' => $email,
         ]);
     }
@@ -92,7 +92,7 @@ class PasswordController extends AbstractController
 
         // on sette emailSent à false car cette variable sert à modifier l'affichage
         // dans  la vue loginForgottenPass.html.twig (si ce n'est pas fait l'utilisateur ne peut pas appuyer une seconde fois sur  mot de passe oublié)
-        $session->set('emailSent', false);
+        // $session->set('emailSent', false);
 
         //TODO: imposer un mot de passe différent du précédant et definir pattern à respecter
         if ($form->isSubmitted() && $form->isValid()) {
