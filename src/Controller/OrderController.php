@@ -10,6 +10,7 @@ use App\Enum\Status;
 use App\Form\OrderType;
 use App\Service\DatabaseSwitcherService;
 use App\Service\DataMapperSecurityService;
+use App\Service\DataMapperService;
 use App\Service\PopulateAcdbService;
 use App\Service\RequestOdbcService;
 use App\Service\SendARService;
@@ -198,9 +199,15 @@ class OrderController extends AbstractController
 
 
     #[Route('/commandes/testDelete', name: 'delete')]
-    public function delete(PopulateAcdbService $populateAcdbService): Response
-    {
-        $populateAcdbService->populateAcdb();
+    public function delete(
+        PopulateAcdbService $populateAcdbService,
+        DataMapperService $dataMapperService,
+        DatabaseSwitcherService $databaseSwitcherService,
+        ParameterBagInterface $params,
+        OdbcService $odbcService,
+        RequestOdbcService $requestOdbcService
+    ): Response {
+        $populateAcdbService->populateAcdb($dataMapperService, $databaseSwitcherService, $params, $odbcService, $requestOdbcService);
 
         return $this->redirectToRoute('app_dates_livraisons');
     }
