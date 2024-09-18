@@ -4,12 +4,14 @@
 namespace App\Form;
 
 use App\Entity\Acdb\Order;
+use App\EventListener\CheckDateModificationListener;
 use App\Validator\DeliveryDate;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OrderType extends AbstractType
@@ -75,7 +77,9 @@ class OrderType extends AbstractType
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Modifier',
-            ]);
+            ])
+
+            ->addEventListener(FormEvents::PRE_SUBMIT, [new CheckDateModificationListener(), 'onPreSubmit']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

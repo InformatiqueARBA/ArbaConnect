@@ -17,8 +17,8 @@ class TourCodeProvider implements ScheduleProviderInterface
             return (new Schedule())->add(
                 // RecurringMessage::every('5 seconds', new WriteInFileMessage(2))
                 // config : 23h30 tous les jours
-                // RecurringMessage::cron('*/1 * * * *', new TourCodeMessage())
-                RecurringMessage::cron('30 22 * * *', new TourCodeMessage())
+                RecurringMessage::cron('*/10 * * * *', new TourCodeMessage())
+                // RecurringMessage::cron('30 22 * * *', new TourCodeMessage())
 
             );
         }

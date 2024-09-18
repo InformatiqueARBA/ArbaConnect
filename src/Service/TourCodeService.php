@@ -32,10 +32,10 @@ class TourCodeService
     private function writeToCsv(string $filePath, array $data)
     {
         // Vérifier si le fichier existe
-        if (file_exists($filePath)) {
-            // Si le fichier existe, le supprimer pour le recréer
-            unlink($filePath);
-        }
+        // if (file_exists($filePath)) {
+        //     // Si le fichier existe, le supprimer pour le recréer
+        //     unlink($filePath);
+        // }
 
         // Ouvrir le fichier en mode écriture
         $file = fopen($filePath, 'w');

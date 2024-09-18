@@ -32,6 +32,12 @@
 			<div class="form-group mt-3">
 				{{ form_label(form.deliveryDate, 'Date de livraison', {'label_attr': {'class': 'custom-typography'}}) }}
 				{{ form_widget(form.deliveryDate, {'attr': {'class': 'form-control custom-typography flatpickr-input', 'placeholder': 'Sélectionner une date', 'data-date-format': 'd/m/Y'}}) }}
+				{% if form.deliveryDate.vars.errors|length > 0 %}
+					<div class="alert alert-danger">
+						{{ form_errors(form.deliveryDate) }}
+					</div>
+				{% endif %}
+
 			</div>
 
 			<div class="form-group">
