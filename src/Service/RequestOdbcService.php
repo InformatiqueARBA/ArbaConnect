@@ -97,6 +97,7 @@ class RequestOdbcService
 			CLDI1 = 'AD' -- ADH uniquement
             and trim(ENT30) <> 'F'
             and ETCLE != 'S' -- ADH ACTIF
+            and ETSEE != 'ANN' -- BON INACTIF
             and CODAR != '' -- Hors ligne commentaire
             and DTZAB != 'O' -- Hors ligne reprise/avoir
             and TIMESTAMP_FORMAT(CONCAT(CONCAT(CONCAT(DSECS, DSECA), DSECM), DSECJ), 'YYYYMMDD') >= CURRENT_DATE - 3 MONTHS
@@ -113,6 +114,16 @@ class RequestOdbcService
             and DTZAB != 'O' -- Hors ligne reprise/avoir
             and BLVSB ='OUI'
             and TIMESTAMP_FORMAT(CONCAT(CONCAT(CONCAT(DLSSB, DLASB), DLMSB), DLJSB), 'YYYYMMDD') >= CURRENT_DATE -7 DAYS
+			)
+
+    OR  /* Récupère les commandes annulées depuis 1 semaine ou moins */
+
+			(
+			CLDI1 = 'AD' -- ADH uniquement
+            and ETCLE != 'S' -- ADH ACTIF
+            and CODAR != '' -- Hors ligne commentaire
+            and ETSEE = 'ANN' -- BON INACTIF
+            and TIMESTAMP_FORMAT(CONCAT(CONCAT(CONCAT(DSECS, DSECA), DSECM), DSECJ), 'YYYYMMDD') >= CURRENT_DATE -7 DAYS
 			)
 
             ORDER by
