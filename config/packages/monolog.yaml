@@ -2,39 +2,64 @@ monolog:
     channels:
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
 
+# when@dev:
+#     monolog:
+#         handlers:
+#             main:
+#                 # un fichier est créé tout les jours pendant 10 jours puis supprime le plus ancien ( type: rotating_file &  max_files: 10 )
+#                 type: rotating_file
+#                 path: "%kernel.logs_dir%/%kernel.environment%.log"
+#                 action_level: warning
+#                 max_files: 10
+#                 channels: ["!event"]
+#                 handler: nested
+#             # deduplicated:
+#             #     type:    deduplication
+#             #     handler: symfony_mailer
+#             # envoi un mail admin en cas d'erreur majeur 
+#             symfony_mailer:
+#                 type:       symfony_mailer
+#                 from_email: 'developpement@arba.coop'
+#                 to_email:   'developpement@arba.coop' 
+#                 subject:    'Environnement Dev | An Error Occurred! %%message%%'
+#                 level:      error
+#                 formatter:  monolog.formatter.html
+#                 content_type: text/html
+#             console:
+#                 type: console
+#                 process_psr_3_messages: false
+#                 channels: ["!event", "!doctrine", "!console"]
+#             nested:
+#                 type: stream
+#                 path: "%kernel.logs_dir%/%kernel.environment%.log"
+#                 # level: critical
 when@dev:
     monolog:
         handlers:
             main:
                 # un fichier est créé tout les jours pendant 10 jours puis supprime le plus ancien ( type: rotating_file &  max_files: 10 )
-                type: rotating_file
-                path: "%kernel.logs_dir%/%kernel.environment%.log"
-                action_level: warning
-                max_files: 10
-                channels: ["!event"]
+                type: fingers_crossed
+                action_level: critical
                 handler: nested
-            # deduplicated:
-            #     type:    deduplication
-            #     handler: symfony_mailer
-            symfony_mailer:
-                type:       symfony_mailer
-                from_email: 'developpement@arba.coop'
-                to_email:   'developpement@arba.coop'
-                # to_email:   ['dev1@example.com', 'dev2@example.com', ...]
-                subject:    'Environnement Dev | An Error Occurred! %%message%%'
-                level:      error
-                formatter:  monolog.formatter.html
-                content_type: text/html
+                excluded_http_codes: [404, 405]
+            # symfony_mailer:
+            #     type:       symfony_mailer
+            #     from_email: 'developpement@arba.coop'
+            #     to_email:   'developpement@arba.coop' 
+            #     subject:    'Environnement Dev | An Error Occurred! %%message%%'
+            #     level:      error
+            #     formatter:  monolog.formatter.html
+            #     content_type: text/html
             console:
                 type: console
                 process_psr_3_messages: false
                 channels: ["!event", "!doctrine", "!console"]
-            # envoi un mail admin en cas d'erreur majeur 
             nested:
-                    type: stream
-                    path: "%kernel.logs_dir%/%kernel.environment%.log"
-                    level: critical
-           
+                type: rotating_file
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: critical
+                # channels: ["!event"]     
+                max_files: 30
 
 when@test:
     monolog:

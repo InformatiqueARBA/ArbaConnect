@@ -53,7 +53,7 @@ class DataMapperService
         }
 
         $em->flush();
-        //$em->close();
+        $em->close();
     }
 
 
@@ -92,7 +92,7 @@ class DataMapperService
         }
 
         $em->flush();
-        //$em->close();
+        $em->close();
     }
 
 

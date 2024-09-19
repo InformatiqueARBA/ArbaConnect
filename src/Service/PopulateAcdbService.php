@@ -4,12 +4,20 @@ namespace App\Service;
 
 use App\Service\DatabaseSwitcherService;
 use App\Service\DataMapperService;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 
 class PopulateAcdbService
 {
 
+
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
     // private $dataMapperService;
     // private $databaseSwitcherService;
     // private $variableDataSwitcher;
@@ -24,6 +32,7 @@ class PopulateAcdbService
 
     public function populateAcdb(DataMapperService $dataMapperService, DatabaseSwitcherService $databaseSwitcherService, ParameterBagInterface $params, OdbcService $odbcService, RequestOdbcService $requestOdbcService): Void
     {
+
 
         // Construire le chemin complet vers le fichier variableDataSwitcher.txt
         $filePath = $params->get('variables_app_directory') . DIRECTORY_SEPARATOR . 'variableDataSwitcher.txt';
@@ -50,12 +59,14 @@ class PopulateAcdbService
 
             // Truncate the corporation table
             $connection->executeStatement('DELETE FROM Corporation');
+            $this->logger->critical('************************DELETE **************************** ');
 
             // Commit the transaction if all statements are successful
             $connection->commit();
         } catch (\Exception $e) {
             // Rollback the transaction in case of error
             $connection->rollBack();
+            $this->logger->critical('************************ROLLBACK **************************** ');
             throw $e;
         }
         $connection->close();
