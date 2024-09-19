@@ -27,8 +27,7 @@ final class CheckDateModificationListener
         $originalData = $form->getData()->getDeliveryDate(); // Valeur pré setter
         // Comparer les 2 dates pour obliger le changement de date si validation
         if ($data['deliveryDate'] === $originalData->format('d/m/Y')) {
-            $form->addError(new FormError('La date de livraison n\'a pas été modifiée'));
-            // $form->get('deliveryDate')->addError(new FormError('La date de livraison n\'a pas été modifiée.'));
+            $form->addError(new FormError('Erreur_DDL'));
         }
     }
 }
