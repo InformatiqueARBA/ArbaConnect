@@ -26,7 +26,7 @@ class MainController extends AbstractController
         }
 
         // affecte la valeur false à la variable de session emailsent
-        $session->set('emailSent', false);
+        // $session->set('emailSent', false);
 
         $user = $security->getUser();
 

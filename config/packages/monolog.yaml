@@ -42,6 +42,8 @@ when@dev:
                 action_level: critical
                 handler: nested
                 excluded_http_codes: [404, 405]
+                buffer_size: 50
+                channels: ["!event"]
             # symfony_mailer:
             #     type:       symfony_mailer
             #     from_email: 'developpement@arba.coop'
@@ -60,6 +62,7 @@ when@dev:
                 level: critical
                 # channels: ["!event"]     
                 max_files: 30
+    
 
 when@test:
     monolog:

@@ -50,6 +50,8 @@ loadCSVFile(csvFilePath, function (csvContent) {
         dateFormat: "d/m/Y",
         minDate: "today",
         maxDate: new Date().fp_incr(365),
+        // ne pas permettre la saisie manuelle
+        allowInput: false,
         locale: {
             firstDayOfWeek: 1,
             weekdays: {

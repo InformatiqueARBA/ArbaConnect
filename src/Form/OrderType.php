@@ -49,6 +49,8 @@ class OrderType extends AbstractType
                     'class' => 'form-control custom-typography flatpickr-input',
                     'placeholder' => 'Sélectionner une date',
                     'data-date-format' => 'd/m/Y',
+                    // ne pas permettre la saisie manuelle
+                    'readonly' => true,
                 ],
                 'constraints' => [
                     new DeliveryDate(),
