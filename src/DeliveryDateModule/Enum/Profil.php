@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\ArbaConnect\Enum;
+namespace App\DeliveryDateModule\Enum;
 
 class Profil
 {

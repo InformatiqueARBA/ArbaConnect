@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form;
+namespace App\ArbaConnect\Form;
 
 use App\Entity\Security\User;
 use Symfony\Component\Form\AbstractType;

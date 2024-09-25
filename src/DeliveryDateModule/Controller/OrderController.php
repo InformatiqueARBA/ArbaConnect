@@ -2,6 +2,7 @@
 
 namespace App\DeliveryDateModule\Controller;
 
+use App\DeliveryDateModule\Enum\Status;
 use App\ArbaConnect\Service\DataMapperSecurityService;
 use App\ArbaConnect\Service\OdbcService;
 use App\DeliveryDateModule\Service\CsvGeneratorService;
@@ -12,8 +13,7 @@ use App\DeliveryDateModule\Service\RequestOdbcDeliveryDateService;
 use App\DeliveryDateModule\Service\TourCodeService;
 use App\Entity\Acdb\Order;
 use App\Entity\Security\User;
-
-use App\Form\OrderType;
+use App\DeliveryDateModule\Form\OrderType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -53,7 +53,7 @@ class OrderController extends AbstractController
 
         $orders = $em->getRepository(Order::class)->findAll();
 
-        return $this->render('order/liste_commandes.html.twig', [
+        return $this->render('DeliveryDateModule/order/liste_commandes.html.twig', [
             'orders' => $orders,
             'DB' => $databaseName,
         ]);
@@ -82,7 +82,7 @@ class OrderController extends AbstractController
         $orders = $em->getRepository(Order::class)->findByCorporationId($enterprise);
 
 
-        return $this->render('order/liste_commandes.html.twig', [
+        return $this->render('DeliveryDateModule/order/liste_commandes.html.twig', [
             'orders' => $orders,
             'DB' => $databaseName,
         ]);
@@ -168,7 +168,7 @@ class OrderController extends AbstractController
 
 
 
-        return $this->render('order/detail_commande.html.twig', [
+        return $this->render('DeliveryDateModule/order/detail_commande.html.twig', [
             'form' => $form,
             'order' => $order
         ]);

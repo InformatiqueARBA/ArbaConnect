@@ -2,11 +2,11 @@
 
 namespace App\ArbaConnect\Controller;
 
+use App\ArbaConnect\Form\ChangePasswordType;
+use App\ArbaConnect\Form\ForgottenPasswordType;
 use App\ArbaConnect\Service\JWTService;
 use App\ArbaConnect\Service\MailerService;
 use App\Entity\Security\User;
-use App\Form\ChangePasswordType;
-use App\Form\ForgottenPasswordType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -74,7 +74,7 @@ class PasswordController extends AbstractController
         // $emailSent = $session->get('emailSent', false);
         $email = $session->get('email', '');
 
-        return $this->render('password/loginForgottenPass.html.twig', [
+        return $this->render('ArbaConnect/password/loginForgottenPass.html.twig', [
             'form' => $form->createView(),
             // 'emailSent' => $emailSent,
             'email' => $email,
@@ -133,7 +133,7 @@ class PasswordController extends AbstractController
 
             return $this->redirectToRoute('app_home');
         }
-        return $this->render('password/changePassword.html.twig', [
+        return $this->render('ArbaConnect/password/changePassword.html.twig', [
             'form' => $form
         ]);
     }

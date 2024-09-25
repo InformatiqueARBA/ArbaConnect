@@ -2,10 +2,10 @@
 
 namespace App\ArbaConnect\Controller;
 
+use App\ArbaConnect\Form\ACCommentType;
+use App\ArbaConnect\Form\UserType;
 use App\Entity\Security\ACComment;
 use App\Entity\Security\User;
-use App\Form\ACCommentType;
-use App\Form\UserType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,7 +64,7 @@ class AdminController extends AbstractController
 
 
 
-        return $this->render('admin/admin.html.twig', [
+        return $this->render('ArbaConnect/admin/admin.html.twig', [
             'form' => $form,
             'formACComment' =>  $formACComment
         ]);
