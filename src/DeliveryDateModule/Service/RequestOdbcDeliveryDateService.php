@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace App\DeliveryDateModule\Service;
 
-class RequestOdbcService
+class RequestOdbcDeliveryDateService
 {
 
 

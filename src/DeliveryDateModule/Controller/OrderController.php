@@ -2,18 +2,18 @@
 
 namespace App\DeliveryDateModule\Controller;
 
+use App\ArbaConnect\Service\DataMapperSecurityService;
+use App\ArbaConnect\Service\OdbcService;
+use App\DeliveryDateModule\Service\CsvGeneratorService;
+use App\DeliveryDateModule\Service\DatabaseSwitcherService;
+use App\DeliveryDateModule\Service\DataMapperService;
+use App\DeliveryDateModule\Service\PopulateAcdbService;
+use App\DeliveryDateModule\Service\RequestOdbcDeliveryDateService;
+use App\DeliveryDateModule\Service\TourCodeService;
 use App\Entity\Acdb\Order;
 use App\Entity\Security\User;
-use App\Service\CsvGeneratorService;
-use App\Service\OdbcService;
 use App\Enum\Status;
 use App\Form\OrderType;
-use App\Service\DatabaseSwitcherService;
-use App\Service\DataMapperSecurityService;
-use App\Service\DataMapperService;
-use App\Service\PopulateAcdbService;
-use App\Service\RequestOdbcService;
-use App\Service\TourCodeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -183,9 +183,9 @@ class OrderController extends AbstractController
 
 
     #[Route('/commandes/odbc', name: 'odbc_index')]
-    public function odbc(OdbcService $odbcService, RequestOdbcService $requestOdbcService): JsonResponse
+    public function odbc(OdbcService $odbcService, RequestOdbcDeliveryDateService $requestOdbcDeliveryDateService): JsonResponse
     {
-        $sql = $requestOdbcService->getCoporations();
+        $sql = $requestOdbcDeliveryDateService->getCoporations();
         try {
             $results = $odbcService->executeQuery($sql);
             return $this->json($results);
@@ -206,9 +206,9 @@ class OrderController extends AbstractController
         DatabaseSwitcherService $databaseSwitcherService,
         ParameterBagInterface $params,
         OdbcService $odbcService,
-        RequestOdbcService $requestOdbcService
+        RequestOdbcDeliveryDateService $requestOdbcDeliveryDateService
     ): Response {
-        $populateAcdbService->populateAcdb($dataMapperService, $databaseSwitcherService, $params, $odbcService, $requestOdbcService);
+        $populateAcdbService->populateAcdb($dataMapperService, $databaseSwitcherService, $params, $odbcService, $requestOdbcDeliveryDateService);
 
         return $this->redirectToRoute('app_dates_livraisons');
     }

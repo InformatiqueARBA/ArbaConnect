@@ -33,19 +33,19 @@ services:
     # please note that last definitions always *replace* previous ones
 
     # CsvToRubisService
-    App\Service\CsvToRubisService:
+    App\ArbaConnect\Service\CsvToRubisService:
         arguments:
             $ERPDirDev: '%env(ERP_DIRECTORY_DEV)%'
             $ERPDirProd: '%env(ERP_DIRECTORY_PROD)%'
 
     # ODBC Service
-    App\Service\OdbcService:
+    App\ArbaConnect\Service\OdbcService:
         arguments:
             $dsn: '%env(ODBC_DSN)%'
             $username: '%env(ODBC_USERNAME)%'
             $password: '%env(ODBC_PASSWORD)%'
        
-    App\Service\DatabaseSwitcherService:
+    App\DeliveryDateModule\Service\DatabaseSwitcherService:
         arguments:
             $defaultEntityManager: "@doctrine.orm.default_entity_manager"
             $customerEntityManager: "@doctrine.orm.customer_entity_manager"

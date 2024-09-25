@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\ArbaConnect\Service;
 
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha256;

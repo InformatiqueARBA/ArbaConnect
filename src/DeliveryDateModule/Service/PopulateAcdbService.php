@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace App\DeliveryDateModule\Service;
 
-use App\Service\DatabaseSwitcherService;
-use App\Service\DataMapperService;
+use App\ArbaConnect\Service\OdbcService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -30,7 +29,7 @@ class PopulateAcdbService
     //     $this->variableDataSwitcher = $params->get('variables_app_directory');
     // }
 
-    public function populateAcdb(DataMapperService $dataMapperService, DatabaseSwitcherService $databaseSwitcherService, ParameterBagInterface $params, OdbcService $odbcService, RequestOdbcService $requestOdbcService): Void
+    public function populateAcdb(DataMapperService $dataMapperService, DatabaseSwitcherService $databaseSwitcherService, ParameterBagInterface $params, OdbcService $odbcService, RequestOdbcDeliveryDateService $requestOdbcDeliveryDateService): Void
     {
 
 
@@ -72,9 +71,9 @@ class PopulateAcdbService
         $connection->close();
 
 
-        $dataMapperService->corporationMapper($databaseSwitcherService, $odbcService, $requestOdbcService);
-        $dataMapperService->orderMapper($databaseSwitcherService, $odbcService, $requestOdbcService);
-        $dataMapperService->MemberMapper($databaseSwitcherService, $odbcService, $requestOdbcService);
+        $dataMapperService->corporationMapper($databaseSwitcherService, $odbcService, $requestOdbcDeliveryDateService);
+        $dataMapperService->orderMapper($databaseSwitcherService, $odbcService, $requestOdbcDeliveryDateService);
+        $dataMapperService->MemberMapper($databaseSwitcherService, $odbcService, $requestOdbcDeliveryDateService);
         // r+ :Ouvre en lecture et écriture et place le pointeur de fichier au début du fichier.
         $file = fopen($filePath, "r+");
         $dbByDefault = file_get_contents($filePath);

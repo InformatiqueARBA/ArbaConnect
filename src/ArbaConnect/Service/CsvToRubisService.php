@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\ArbaConnect\Service;
 
 use Exception;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;

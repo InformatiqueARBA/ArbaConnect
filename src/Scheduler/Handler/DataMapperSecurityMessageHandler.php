@@ -2,7 +2,7 @@
 
 namespace App\Scheduler\Handler;
 
-use App\Service\DataMapperSecurityService;
+use App\ArbaConnect\Service\DataMapperSecurityService;
 use App\Scheduler\Message\DataMapperSecurityMessage;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;

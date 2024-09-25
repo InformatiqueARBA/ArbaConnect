@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\ArbaConnect\Service;
 
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;

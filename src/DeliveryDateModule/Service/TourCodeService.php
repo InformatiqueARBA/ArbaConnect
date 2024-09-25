@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace App\DeliveryDateModule\Service;
 
-use App\Service\OdbcService;
-use App\Service\RequestOdbcService;
+use App\ArbaConnect\Service\OdbcService;
 use Doctrine\ORM\EntityManagerInterface;
 
 //class permettant de Requêter Rubis pour obtenir les codes tournée
@@ -11,18 +10,18 @@ use Doctrine\ORM\EntityManagerInterface;
 //fait appel au service OdbcService pour exécuter les requêtes
 class TourCodeService
 {
-    private $requestOdbcService;
+    private $requestOdbcDeliveryDateService;
     private $odbcService;
 
-    public function __construct(RequestOdbcService $requestOdbcService, OdbcService $odbcService)
+    public function __construct(RequestOdbcDeliveryDateService $requestOdbcDeliveryDateService, OdbcService $odbcService)
     {
-        $this->requestOdbcService = $requestOdbcService;
+        $this->requestOdbcDeliveryDateService = $requestOdbcDeliveryDateService;
         $this->odbcService = $odbcService;
     }
 
     public function getCodeTour()
     {
-        $sql = $this->requestOdbcService->getTourCodes();
+        $sql = $this->requestOdbcDeliveryDateService->getTourCodes();
         $results = $this->odbcService->executeQuery($sql);
 
         $csvFilePath = '/var/www/ArbaConnect/public/csv/tour_code/tour_code.csv';

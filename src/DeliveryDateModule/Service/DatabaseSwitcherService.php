@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\DeliveryDateModule\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;

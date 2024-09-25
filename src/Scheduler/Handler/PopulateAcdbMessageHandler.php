@@ -2,12 +2,12 @@
 
 namespace App\Scheduler\Handler;
 
+use App\ArbaConnect\Service\OdbcService;
+use App\DeliveryDateModule\Service\RequestOdbcDeliveryDateService;
 use App\Scheduler\Message\PopulateAcdbMessage;
-use App\Service\PopulateAcdbService;
-use App\Service\DataMapperService;
-use App\Service\DatabaseSwitcherService;
-use App\Service\OdbcService;
-use App\Service\RequestOdbcService;
+use App\DeliveryDateModule\Service\PopulateAcdbService;
+use App\DeliveryDateModule\Service\DataMapperService;
+use App\DeliveryDateModule\Service\DatabaseSwitcherService;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -19,7 +19,7 @@ final class PopulateAcdbMessageHandler
     private DatabaseSwitcherService $databaseSwitcherService;
     private ParameterBagInterface $params;
     private OdbcService $odbcService;
-    private RequestOdbcService $requestOdbcService;
+    private RequestOdbcDeliveryDateService $requestOdbcDeliveryDateService;
 
 
     public function __construct(
@@ -28,14 +28,14 @@ final class PopulateAcdbMessageHandler
         DatabaseSwitcherService $databaseSwitcherService,
         ParameterBagInterface $params,
         OdbcService $odbcService,
-        RequestOdbcService $requestOdbcService
+        RequestOdbcDeliveryDateService $requestOdbcDeliveryDateService
     ) {
         $this->populateAcdbService = $populateAcdbService;
         $this->dataMapperService = $dataMapperService;
         $this->databaseSwitcherService = $databaseSwitcherService;
         $this->params = $params;
         $this->odbcService = $odbcService;
-        $this->requestOdbcService = $requestOdbcService;
+        $this->requestOdbcDeliveryDateService = $requestOdbcDeliveryDateService;
     }
 
 
@@ -47,7 +47,7 @@ final class PopulateAcdbMessageHandler
             $this->databaseSwitcherService,
             $this->params,
             $this->odbcService,
-            $this->requestOdbcService
+            $this->requestOdbcDeliveryDateService
         );
     }
 }

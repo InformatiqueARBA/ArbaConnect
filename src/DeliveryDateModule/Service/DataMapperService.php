@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace App\DeliveryDateModule\Service;
 
+use App\ArbaConnect\Service\OdbcService;
 use App\Entity\Acdb\Corporation;
 use App\Entity\Acdb\Member;
 use App\Entity\Acdb\Order;
@@ -33,9 +34,9 @@ class DataMapperService
 
 
     //fonction pour peupler la table corporation de la BDD ACDB
-    public function corporationMapper(DatabaseSwitcherService $databaseSwitcherService, OdbcService $odbcService, RequestOdbcService $requestOdbcService): void
+    public function corporationMapper(DatabaseSwitcherService $databaseSwitcherService, OdbcService $odbcService, RequestOdbcDeliveryDateService $requestOdbcDeliveryDateService): void
     {
-        $sql = $requestOdbcService->getCoporations();
+        $sql = $requestOdbcDeliveryDateService->getCoporations();
         $results = $odbcService->executeQuery($sql);
         $em = $databaseSwitcherService->getEntityManagerPopulate();
 
@@ -63,9 +64,9 @@ class DataMapperService
 
 
     //fonction pour peupler la table order de la BDD ACDB
-    public function orderMapper(DatabaseSwitcherService $databaseSwitcherService, OdbcService $odbcService, RequestOdbcService $requestOdbcService): void
+    public function orderMapper(DatabaseSwitcherService $databaseSwitcherService, OdbcService $odbcService, RequestOdbcDeliveryDateService $requestOdbcDeliveryDateService): void
     {
-        $sql = $requestOdbcService->getOrders();
+        $sql = $requestOdbcDeliveryDateService->getOrders();
         $results = $odbcService->executeQuery($sql);
         $em = $databaseSwitcherService->getEntityManagerPopulate();
 
@@ -98,9 +99,9 @@ class DataMapperService
 
 
     //fonction pour peupler la table order de la BDD ACDB
-    public function MemberMapper(DatabaseSwitcherService $databaseSwitcherService, OdbcService $odbcService, RequestOdbcService $requestOdbcService): void
+    public function MemberMapper(DatabaseSwitcherService $databaseSwitcherService, OdbcService $odbcService, RequestOdbcDeliveryDateService $requestOdbcDeliveryDateService): void
     {
-        $sql = $requestOdbcService->getMembers();
+        $sql = $requestOdbcDeliveryDateService->getMembers();
         $results = $odbcService->executeQuery($sql);
         $em = $databaseSwitcherService->getEntityManagerPopulate();
 

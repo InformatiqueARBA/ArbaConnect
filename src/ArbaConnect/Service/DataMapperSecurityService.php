@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\ArbaConnect\Service;
 
 use App\Entity\Security\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,15 +16,15 @@ utilse UserPasswordHasherInterface pour hasher les mdp
 class DataMapperSecurityService
 {
 
-    private $requestOdbcService;
+    private $requestOdbcArbaConnectService;
     private $odbcService;
     private $em;
     private $managerRegistry;
     private $hasher;
 
-    public function __construct(RequestOdbcService $requestOdbcService, OdbcService $odbcService, ManagerRegistry $managerRegistry, EntityManagerInterface $securityEntityManager, UserPasswordHasherInterface $hasher)
+    public function __construct(RequestOdbcArbaConnectService $requestOdbcArbaConnectService, OdbcService $odbcService, ManagerRegistry $managerRegistry, EntityManagerInterface $securityEntityManager, UserPasswordHasherInterface $hasher)
     {
-        $this->requestOdbcService = $requestOdbcService;
+        $this->requestOdbcArbaConnectService = $requestOdbcArbaConnectService;
         $this->odbcService = $odbcService;
         $this->managerRegistry = $managerRegistry;
         $this->em = $managerRegistry->getManager('security');
@@ -42,7 +42,7 @@ class DataMapperSecurityService
         ini_set('max_execution_time', 300);
 
         // récupère et exécute la requête getUsers --- création de la connexion 
-        $sql = $this->requestOdbcService->getusers();
+        $sql = $this->requestOdbcArbaConnectService->getusers();
         $results = $this->odbcService->executeQuery($sql);
         $connection = $this->managerRegistry->getConnection();
 
