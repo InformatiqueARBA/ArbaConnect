@@ -2,11 +2,11 @@
 
 namespace App\ArbaConnect\Controller;
 
+use App\ArbaConnect\Service\JWTService;
+use App\ArbaConnect\Service\MailerService;
 use App\Entity\Security\User;
 use App\Form\ChangePasswordType;
 use App\Form\ForgottenPasswordType;
-use App\Service\JWTService;
-use App\Service\MailerService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;

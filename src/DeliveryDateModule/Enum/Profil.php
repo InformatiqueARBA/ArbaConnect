@@ -1,7 +1,7 @@
 <?php
-// src/Enum/UserRole.php
 
-namespace App\Enum;
+
+namespace App\ArbaConnect\Enum;
 
 class Profil
 {
