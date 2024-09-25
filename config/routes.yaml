@@ -1,7 +1,19 @@
-controllers:
+controllers_ArbaConnect:
     resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+        path: ../src/ArbaConnect/Controller/
+        namespace: App\ArbaConnect\Controller
+    type: attribute
+
+controllers_DeliveryDate:
+    resource:
+        path: ../src/DeliveryDateModule/Controller/
+        namespace: App\DeliveryDateModule\Controller
+    type: attribute
+    
+controllers_Inventory:
+    resource:
+        path: ../src/InventoryModule/Controller/
+        namespace: App\InventoryModule\Controller
     type: attribute
 
 request_password_reset:

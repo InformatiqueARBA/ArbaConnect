@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\ArbaConnect\Controller;
 
 use App\Entity\Security\ACComment;
 use Doctrine\Persistence\ManagerRegistry;

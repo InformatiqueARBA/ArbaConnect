@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\DeliveryDateModule\Controller;
 
 use App\Entity\Acdb\Order;
 use App\Entity\Security\User;
@@ -13,7 +13,6 @@ use App\Service\DataMapperSecurityService;
 use App\Service\DataMapperService;
 use App\Service\PopulateAcdbService;
 use App\Service\RequestOdbcService;
-use App\Service\SendARService;
 use App\Service\TourCodeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
