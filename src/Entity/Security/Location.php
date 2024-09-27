@@ -19,6 +19,12 @@ class Location
     #[ORM\Column(length: 12)]
     private ?string $location = null;
 
+    #[ORM\Column(length: 12, nullable: true)]
+    private ?string $location2 = null;
+
+    #[ORM\Column(length: 12, nullable: true)]
+    private ?string $location3 = null;
+
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $referent = null;
 
@@ -27,6 +33,10 @@ class Location
 
     #[ORM\Column(length: 6)]
     private ?string $inventoryNumber = null;
+
+
+
+
 
     public function getId(): ?int
     {
@@ -53,6 +63,30 @@ class Location
     public function setLocation(string $location): static
     {
         $this->location = $location;
+
+        return $this;
+    }
+
+    public function getLocation2(): ?string
+    {
+        return $this->location2;
+    }
+
+    public function setLocation2(?string $location2): static
+    {
+        $this->location2 = $location2;
+
+        return $this;
+    }
+
+    public function getLocation3(): ?string
+    {
+        return $this->location3;
+    }
+
+    public function setLocation3(?string $location3): static
+    {
+        $this->location3 = $location3;
 
         return $this;
     }

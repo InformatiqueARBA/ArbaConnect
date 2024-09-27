@@ -1,31 +1,66 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AppControllersInventoryController!
+{% block title %}Liste des Emplacements d'Inventaire
 {% endblock %}
 
 {% block body %}
-	<style>
-		.example-wrapper {
-			margin: 1em auto;
-			max-width: 800px;
-			width: 95%;
-			font: 18px / 1.5 sans-serif;
-		}
-		.example-wrapper code {
-			background: #F5F5F5;
-			padding: 2px 6px;
-		}
-	</style>
+	<div class="container-fluid my-4 inventory-container sfp-regular-text">
+		<h3>Liste des Emplacements d'Inventaire pour le numéro
+		</h3>
+		<table id="inventory-locations-table" class="table table-hover centered-table">
+			<thead class="table-light">
+				<tr>
+					<th class="text-center">N° Inventaire</th>
+					<th class="text-center">Entrepôt</th>
+					<th class="text-center">Emplacement</th>
+					{# <th class="text-center">Emplacement 1</th> #}
+					{# <th class="text-center">Emplacement 2</th>
+																				<th class="text-center">Emplacement 3</th> #}
+					<th class="text-center">Référent</th>
+					<th class="text-center">Statut</th>
+					<th class="text-center">Button</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for location in locations %}
+					<tr>
+						<td class="text-center">{{ location.inventoryNumber }}</td>
+						<td class="text-center">{{ location.warehouse }}</td>
+						<td class="text-center">{{ location.location }}</td>
+						{# <td class="text-center">{{ location.location2 }}</td>
+																								<td class="text-center">{{ location.location3 }}</td> #}
+						<td class="text-center">
+							{% if location.referent == null %}
+								-
+							{% else %}
+								{{ location.referent }}
+							{% endif %}
+						</td>
 
-	<div class="example-wrapper">
-		<h1>Hello
-			{{ controller_name }}! ✅</h1>
+						{% if location.status == 0 %}
+							{# <span class="badge bg-warning">Inactif</span> #}
+							<td class="text-dark text-center" style="background-color: rgba(255, 165, 0, 0.5);">
+								Inactif
+							</td>
+						{% else %}
+							<td class="text-dark text-center" style="background-color: rgba(255, 0, 0, 0.5);">
+								Actif
+							</td>
+						{% endif %}
 
-		This friendly message is coming from:
-		<ul>
-			<li>Your controller at
-				<code>Best dev team ever !</code>
-			</li>
-		</ul>
+
+						<td class="text-dark text-center" style="background-color: rgba(0, 70, 100,0.8); ">
+							<a style='color: rgb(130, 170, 55);' href="{{ path('app_edit2', {location: location.location | url_encode }) }}">
+								Afficher
+							</a>
+						</td>
+						{# <td class="text-dark" style="background-color: rgba(0, 70, 100,0.8); ">
+																																																															<a style='color: rgb(130, 170, 55);' href="{{ path('app_edit', {id: order.id}) }}">Modifier</a>
+																																																				</td> #}
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
 	</div>
 {% endblock %}

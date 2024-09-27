@@ -2,47 +2,51 @@
 
 namespace App\Repository\Security;
 
-use App\Entity\Security\Location;
+use App\Entity\Security\InventoryArticle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Location>
+ * @extends ServiceEntityRepository<InventoryArticle>
  */
-class LocationRepository extends ServiceEntityRepository
+class InventoryArticleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Location::class);
+        parent::__construct($registry, InventoryArticle::class);
     }
-    public function findByLocation(string $value): array
+
+
+    public function findByLocationOrLocation2OrLocation3(string $value): array
     {
         return $this->createQueryBuilder('i')
             ->where('i.location = :val')
+            ->orWhere('i.location2 = :val')
+            ->orWhere('i.location3 = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getResult();
     }
 
     //    /**
-    //     * @return Location[] Returns an array of Location objects
+    //     * @return InventoryArticle[] Returns an array of InventoryArticle objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
+    //        return $this->createQueryBuilder('i')
+    //            ->andWhere('i.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('l.id', 'ASC')
+    //            ->orderBy('i.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Location
+    //    public function findOneBySomeField($value): ?InventoryArticle
     //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
+    //        return $this->createQueryBuilder('i')
+    //            ->andWhere('i.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()
