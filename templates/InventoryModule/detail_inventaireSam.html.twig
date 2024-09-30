@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+	<div class="container">
+		<h1>Inventaire pour la location
+			{{ location }}</h1>
+
+		{{ form_start(form) }}
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					{# <th>Numéro d'inventaire</th> #}
+					<th>Entrepôt</th>
+					<th>Emplacement 1</th>
+					{# <th>Emplacement 2</th> #}
+					{# <th>Emplacement 3</th> #}
+					<th>Code article</th>
+					<th>Désignation 1</th>
+					<th>Désignation 2</th>
+					<th>Code lot</th>
+					{# <th>Type dimension</th> #}
+					{# <th>Emballage</th> #}
+					{# <th>Nom de l'emballage</th> #}
+						<th>
+					Quantité emplacement 1
+					</th>
+					{# <th>Quantité emplacement 2</th> #}
+					{# <th>Quantité emplacement 3</th> #}
+						<th>
+					Unité de préparation
+					</th>
+						<th>
+					Quantité 2 emplacement 1
+				</th>
+					{# <th>Quantité 2 emplacement 2</th> #}
+					{# <th>Quantité 2 emplacement 3</th> #}
+				</tr>
+			</thead>
+			<tbody>
+				{% for articleForm in form.articles %}
+					<tr>
+						{# <td>{{ form_widget(articleForm.inventoryNumber) }}</td> #}
+						<td>{{ form_widget(articleForm.warehouse) }}</td>
+						<td>{{ form_widget(articleForm.location) }}</td>
+						{# <td>{{ form_widget(articleForm.location2) }}</td> #}
+						{# <td>{{ form_widget(articleForm.location3) }}</td> #}
+						<td>{{ form_widget(articleForm.articleCode) }}</td>
+						<td>{{ form_widget(articleForm.designation1) }}</td>
+						<td>{{ form_widget(articleForm.designation2) }}</td>
+						<td>{{ form_widget(articleForm.lotCode) }}</td>
+						{# <td>{{ form_widget(articleForm.dimensionType) }}</td> #}
+						{# <td>{{ form_widget(articleForm.packaging) }}</td> #}
+						{# <td>{{ form_widget(articleForm.packagingName) }}</td> #}
+							<td>
+						{{ form_widget(articleForm.quantityLocation1) }}
+						</td>
+						{# <td>{{ form_widget(articleForm.quantityLocation2) }}</td> #}
+						{# <td>{{ form_widget(articleForm.quantityLocation3) }}</td> #}
+							<td>
+						{{ form_widget(articleForm.preparationUnit) }}
+						</td>
+							<td>
+						{{ form_widget(articleForm.quantity2Location1) }}
+					</td>
+						{# <td>{{ form_widget(articleForm.quantity2Location2) }}</td> #}
+						{# <td>{{ form_widget(articleForm.quantity2Location3) }}</td> #}
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		<div class="text-right">
+			{{ form_widget(form.save, { 'attr': { 'class': 'btn btn-primary' } }) }}
+		</div>
+
+
+		{{ form_end(form) }}
+		TODO: changer le
+		<a href="{{ path('app_inventory') }}" id='back-btn' class="btn btn-primary">Retour</a>
+	</div>
+{% endblock %}

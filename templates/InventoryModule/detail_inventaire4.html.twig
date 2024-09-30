@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail Inventaire
+{% endblock %}
+
+{% block body %}
+	<div class="content-container sfp-regular-text">
+		<h3>Détail Inventaire pour l'emplacement
+			{{ location }}</h3>
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Warehouse</th>
+					<th>Article Code</th>
+					<th>Designation 1</th>
+					<th>Designation 2</th>
+					<th>Quantity Location 1</th>
+					<th>Preparation Unit</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in articlesWithForms %}
+					<tr>
+						<td>
+							{{ form_widget(item.form.warehouse, {'attr': {'type': 'hidden'}}) }}
+							{{ item.form.warehouse.vars.value }}
+						</td>
+						<td>
+							{{ form_widget(item.form.articleCode, {'attr': {'type': 'hidden'}}) }}
+							{{ item.form.articleCode.vars.value }}
+						</td>
+						<td>
+							{{ form_widget(item.form.designation1, {'attr': {'type': 'hidden'}}) }}
+							{{ item.form.designation1.vars.value }}
+						</td>
+						<td>
+							{{ form_widget(item.form.designation2, {'attr': {'type': 'hidden'}}) }}
+							{{ item.form.designation2.vars.value }}
+						</td>
+						<td>{{ form_widget(item.form.quantityLocation1, {'attr': {'class': 'form-control'}}) }}</td>
+						<td>
+							{{ form_widget(item.form.preparationUnit, {'attr': {'type': 'hidden'}}) }}
+							{{ item.form.preparationUnit.vars.value }}
+						</td>
+						<td>
+							<button type="submit" class="btn btn-success">Enregistrer</button>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		<a href="{{ path('app_edit2', {location:location | url_encode }) }}" id='back-btn' class="btn btn-primary">Retour</a>
+	{% endblock %}
