@@ -10,13 +10,13 @@ class CsvGeneratorService
 {
     private $csvDirectoryDeliveryDate;
     private $csvToRubisService;
-    private $csvSaveDirectory;
+    private $csvSaveDirectoryDeliveryDate;
 
 
     public function __construct(ParameterBagInterface $params, CsvToRubisService $csvToRubisService)
     {
         $this->csvDirectoryDeliveryDate = $params->get('csv_directory_delivery_date');
-        $this->csvSaveDirectory = $params->get('csv_save_directory');
+        $this->csvSaveDirectoryDeliveryDate = $params->get('csv_save_directory_delivery_date');
         $this->csvToRubisService = $csvToRubisService;
     }
 
@@ -80,7 +80,7 @@ class CsvGeneratorService
         $this->csvToRubisService->sendCsvToRubis($this->csvDirectoryDeliveryDate, $fileName);
 
         // Déplace le CSV vers le dossier de sauvegarde
-        $destinationDir = '/home/dave/Documents/ArbaConnect/save/csv/'; //$this->csvSaveDirectory;
+        $destinationDir = $this->csvSaveDirectoryDeliveryDate;
 
         $destinationPath = $destinationDir . $fileName;
 

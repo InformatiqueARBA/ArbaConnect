@@ -7,6 +7,7 @@ use App\Entity\Security\InventoryArticle;
 use App\Entity\Security\Location;
 use App\InventoryModule\Form\InventoryArticlesCollectionType;
 use App\InventoryModule\Form\InventoryArticleType;
+use App\InventoryModule\Service\CoutingPageXLSXService;
 use App\InventoryModule\Service\DataMapperInventoryService;
 use App\InventoryModule\Service\RequestOdbcInventoryService;
 use Doctrine\Persistence\ManagerRegistry;
@@ -53,38 +54,6 @@ class InventoryController extends AbstractController
     }
 
 
-
-
-    // #[Route('/arba/inventaire/detail/{location}/edit', name: 'app_edit2')]
-    // public function edit2(String $location, ManagerRegistry $managerRegistry): Response
-    // {
-    //     $location = urldecode($location);
-    //     $em = $managerRegistry->getManager('security');
-
-
-
-    //     // changement du statut de l'objet Location
-    //     $statusLocation = $em->getRepository(Location::class)->findByLocation($location);
-    //     $statusLocation[0]->setStatus(1);
-    //     $em->persist($statusLocation[0]);
-    //     $em->flush();
-
-
-    //     $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationOrLocation2OrLocation3($location);
-
-
-    //     // créer un tableau de formulaires pour chaque article
-    //     $forms = [];
-    //     foreach ($articleParLoc as $article) {
-    //         $forms[] = $this->createForm(InventoryArticleType::class, $article)->createView();
-    //     }
-    //     // dd($forms);
-    //     return $this->render('InventoryModule\detail_inventaireSam.html.twig', [
-    //         'articles' => $articleParLoc,
-    //         'location' => $location,
-    //         'forms' => $forms, // commenter si 2
-    //     ]);
-    // }
 
     #[Route('/arba/inventaire/detail/{location}/edit', name: 'app_edit2')]
     public function edit2(String $location, Request $request, ManagerRegistry $managerRegistry): Response
@@ -136,70 +105,6 @@ class InventoryController extends AbstractController
 
 
 
-    // #[Route('/arba/inventaire/detail/{location}/edit', name: 'app_edit2')]
-    // public function edit2(Request $request, String $location, ManagerRegistry $managerRegistry): Response
-    // {
-    //     // Décodage de l'emplacement
-    //     $location = urldecode($location);
-
-    //     // Récupération du gestionnaire d'entité
-    //     $em = $managerRegistry->getManager('security');
-
-    //     // Récupérer l'objet Location et mettre à jour son statut
-    //     $statusLocation = $em->getRepository(Location::class)->findByLocation($location);
-    //     if ($statusLocation) {
-    //         $statusLocation[0]->setStatus(1);
-    //         $em->persist($statusLocation[0]);
-    //         $em->flush();
-    //     }
-
-    //     // Récupérer les articles pour cet emplacement (location, location2 ou location3)
-    //     $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationOrLocation2OrLocation3($location);
-
-    //     // Tableau pour stocker les articles avec leurs formulaires
-    //     $articlesWithForms = [];
-    //     $isFormSubmitted = false;
-
-    //     // Parcours de chaque article lié à cet emplacement
-    //     foreach ($articleParLoc as $index => $article) {
-    //         // Création d'un formulaire pour chaque article
-    //         $form = $this->createForm(InventoryArticleType::class, $article);
-    //         //dd($form->handleRequest($request));
-    //         $form->handleRequest($request);
-
-    //         // Vérification si le formulaire a été soumis et est valide
-    //         if ($form->isSubmitted() && $form->isValid()) {
-    //             $isFormSubmitted = true; // Marqueur indiquant qu'au moins un formulaire est soumis
-    //             // Persister les modifications de l'article
-    //             $em->persist($article);
-    //         }
-
-    //         // Ajout de l'article et de son formulaire au tableau pour affichage dans la vue
-    //         $articlesWithForms[] = [
-    //             'article' => $article,
-    //             'form' => $form->createView(),
-    //         ];
-    //     }
-
-    //     // Si au moins un formulaire a été soumis et validé
-    //     if ($isFormSubmitted) {
-    //         // Sauvegarde des modifications dans la base de données
-    //         $em->flush();
-
-    //         // Ajouter un message flash de succès
-    //         $this->addFlash('success', 'Inventaire mis à jour avec succès.');
-
-    //         // Redirection pour éviter une soumission multiple du formulaire (PRG pattern)
-    //         return $this->redirectToRoute('app_edit2', ['location' => urlencode($location)]);
-    //     }
-
-    //     // Rendu de la vue Twig avec les articles et leurs formulaires
-    //     return $this->render('InventoryModule/detail_inventaire4.html.twig', [
-    //         'articlesWithForms' => $articlesWithForms,
-    //         'location' => $location,
-    //     ]);
-    // }
-
 
 
 
@@ -223,5 +128,35 @@ class InventoryController extends AbstractController
     {
         $dataMapperInventoryService->inventoryArticleMapper('002612');
         return new Response('articles are up to date');
+    }
+
+
+
+    #[Route('/admin/xlsx', name: 'xlsx')]
+    public function xlsx(CoutingPageXLSXService $coutingPageXLSXService): Response
+    {
+        $data = [
+            ['nom' => 'Dupont', 'prenom' => 'Jean'],
+            ['nom' => 'Martin', 'prenom' => 'Sophie'],
+            ['nom' => 'Durand', 'prenom' => 'Paul'],
+            ['nom' => 'Petit', 'prenom' => 'Emma'],
+            ['nom' => 'Lemoine', 'prenom' => 'Louis'],
+            ['nom' => 'Moreau', 'prenom' => 'Lucie'],
+            ['nom' => 'Fournier', 'prenom' => 'Hugo'],
+            ['nom' => 'Roux', 'prenom' => 'Alice'],
+            ['nom' => 'Blanc', 'prenom' => 'Thomas'],
+            ['nom' => 'Garnier', 'prenom' => 'Chloé'],
+            ['nom' => 'Faure', 'prenom' => 'Matthieu'],
+            ['nom' => 'Chevalier', 'prenom' => 'Julie'],
+            ['nom' => 'Renard', 'prenom' => 'Pierre'],
+            ['nom' => 'Schmitt', 'prenom' => 'Marion'],
+            ['nom' => 'Leroux', 'prenom' => 'Antoine'],
+        ];
+
+        $filePath = '/var/www/ArbaConnect/public/csv/inventory/test.xlsx';
+        $spreadsheet = $coutingPageXLSXService->generateXlsx($data);
+        $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
+
+        return new Response('test XLSX');
     }
 }
