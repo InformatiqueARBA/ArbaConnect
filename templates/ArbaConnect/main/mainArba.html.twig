@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Arba Connect
+{% endblock %}
+
+{% block body %}
+	<div class="d-flex flex-column align-items-center">
+		<div class="mb-3">
+			<a href="{{ path('app_dates_livraisons') }}" class="btn btn-primary">Module date de livraison</a>
+		</div>
+		<div class="mb-3">
+			<a href="{{ path('app_inventory') }}" class="btn btn-secondary">Module inventaire</a>
+		</div>
+
+	</div>
+
+{% endblock %}

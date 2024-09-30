@@ -23,12 +23,13 @@
 						{# <span class="ms-2 green-text">ArbaConnect</span> #}
 						<img class="logo_arba" src="{{ asset('images/arba_connect_vert.png') }}" alt="">
 					</a>
-					{% if app.user and is_granted('ROLE_ADMIN') %}
-						<a class="text-decoration-none ms-4" href="{{ path('admin_dashboard') }}">
-							<span class="ms-2 green-text">AdminDashboard</span>
-						</a>
-					{% endif %}
+
 				</div>
+				{% if app.user and is_granted('ROLE_ADMIN') %}
+					<a class="text-decoration-none ms-4" href="{{ path('admin_dashboard') }}">
+						<span class="green-text mt-4">AdminDashboard</span>
+					</a>
+				{% endif %}
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>

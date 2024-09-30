@@ -31,7 +31,7 @@ class MainController extends AbstractController
         $user = $security->getUser();
 
         if ($user && in_array('ROLE_ARBA', $user->getRoles())) {
-            return $this->redirectToRoute('app_dates_livraisons');
+            return $this->render('ArbaConnect/main/mainArba.html.twig');
         } else {
             return $this->redirectToRoute('app_dates_livraisons_adherent');
         }
