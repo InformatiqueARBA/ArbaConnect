@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create User page
+{% endblock %}
+
+{% block body %}
+	<div>
+		<a href="{{ path('admin_dashboard') }}">Admin Dashboard</a>
+	</div>
+
+	<div class="light-blue-bg w-25 mx-auto mt-form">
+		{{ form_start(form, {'action': path('admin_dashboard')}) }}
+
+		{# Render all form fields except the submit button #}
+		{{ form_row(form.login) }}
+		{{ form_row(form.mail) }}
+		{{ form_row(form.enterprise) }}
+		{{ form_row(form.status) }}
+		{{ form_row(form.roles) }}
+		{{ form_row(form.password) }}
+
+		{# Customize the submit button with the custom-btn class #}
+		{{ form_widget(form.save, {'attr': {'class': 'custom-btn custom-submit-class w-100 mt-3'}}) }}
+
+		{{ form_end(form) }}
+	</div>
+
+
+{% endblock %}

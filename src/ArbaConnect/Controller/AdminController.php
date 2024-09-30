@@ -19,16 +19,18 @@ class AdminController extends AbstractController
     #[Route('/admin', name: 'admin_dashboard')]
     public function index(Request $request, ManagerRegistry $managerRegistry, UserPasswordHasherInterface $hasher): Response
     {
+        return $this->render('ArbaConnect/admin/admin.html.twig', []);
+    }
+
+
+
+    #[Route('/admin/creation/user', name: 'admin_create_user')]
+    public function createUser(Request $request, ManagerRegistry $managerRegistry, UserPasswordHasherInterface $hasher): Response
+    {
         $em = $managerRegistry->getManager('security');
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-
-
-        $ACComment = new ACComment();
-        $formACComment = $this->createForm(ACCommentType::class);
-        $formACComment->handleRequest($request);
-
 
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -45,8 +47,21 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_dashboard');
         }
 
+        return $this->render('ArbaConnect/admin/CreateUser.html.twig', [
+            'form' => $form,
+        ]);
+    }
 
 
+
+
+    #[Route('/admin/commentaire', name: 'admin_commentary')]
+    public function commentary(Request $request, ManagerRegistry $managerRegistry, UserPasswordHasherInterface $hasher): Response
+    {
+        $em = $managerRegistry->getManager('security');
+        $ACComment = new ACComment();
+        $formACComment = $this->createForm(ACCommentType::class);
+        $formACComment->handleRequest($request);
 
         if ($formACComment->isSubmitted() && $formACComment->isValid()) {
             // Clear the ACComment table and reset IDs
@@ -60,17 +75,13 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-
-
-
-
-        return $this->render('ArbaConnect/admin/admin.html.twig', [
-            'form' => $form,
+        return $this->render('ArbaConnect/admin/commentary.html.twig', [
             'formACComment' =>  $formACComment
         ]);
     }
 
 
+    // fonction permettant de vider la table commentaire de la DB Security
     private function truncateACCommentTable($em)
     {
         $connection = $em->getConnection();
@@ -79,5 +90,16 @@ class AdminController extends AbstractController
         $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 0');
         $connection->executeStatement($platform->getTruncateTableSQL('ACComment', true /* si en cascade */));
         $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
+    }
+
+
+
+
+    #[Route('/admin/inventaire', name: 'admin_inventory')]
+    public function inventory(): Response
+    {
+
+
+        return $this->render('ArbaConnect/admin/inventory.html.twig', []);
     }
 }
