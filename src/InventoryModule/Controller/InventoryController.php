@@ -151,6 +151,23 @@ class InventoryController extends AbstractController
 
         return new Response('test XLSX');
     }
+
+    #[Route('/admin/xlsx2', name: 'xlsx2')]
+    public function xlsx2(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry): Response
+    {
+        $em = $managerRegistry->getManager('security');
+        $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationOrLocation2OrLocation3('A1 01');
+
+
+        $filePath = '/var/www/ArbaConnect/public/csv/inventory/test2.xlsx';
+        $spreadsheet = $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca);
+        $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
+
+        return new Response('test XLSX2');
+    }
+
+
+
     //TODO: C'est pas fini mais ça fonctionne (un peu ^^)
     // L'accès se fait via la page : http://ac.test/admin/inventaires
     #[Route('/admin/generationInventaire/{inventoryNumber}', name: 'app_csvInventory')]
@@ -158,16 +175,23 @@ class InventoryController extends AbstractController
     {
         $em = $managerRegistry->getManager('security');
 
-        $inventoryArticle = $em->getRepository(InventoryArticle::class)->findOneBy([
-            'inventoryNumber' => $inventoryNumber,
-        ]);
+        // $inventoryArticle = $em->getRepository(InventoryArticle::class)->findOneBy([
+        //     'inventoryNumber' => $inventoryNumber,
+        // ]);
+        // // dd($inventoryArticle);
 
-        if (!$inventoryArticle) {
-            throw $this->createNotFoundException('Article non trouvé pour l\'ID ' . $inventoryNumber);
-        }
+        // if (!$inventoryArticle) {
+        //     throw $this->createNotFoundException('Article non trouvé pour l\'ID ' . $inventoryNumber);
+        // }
 
-        $csvData = $inventoryCSVSRubisService->inventoryCsv($inventoryArticle);
-        dd($csvData);
+        // $csvData = $inventoryCSVSRubisService->inventoryCsv($inventoryArticle);
+        // dd($csvData);
+
+
+
+        //test sur localisation  findByLocationOrLocation2OrLocation3
+        $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationOrLocation2OrLocation3('A1 01');
+        $inventoryCSVSRubisService->inventoryCsvArray($inventoryArticleByLoca);
 
         return new Response('CSV data generated and displayed.');
     }

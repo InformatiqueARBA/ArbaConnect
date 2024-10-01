@@ -5,10 +5,10 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     csv_directory_delivery_date: '%kernel.project_dir%/public/csv/delivery_date/'
-    csv_directory_inventory: '%kernel.project_dir%//public/csv/inventory'
+    csv_directory_inventory: '%kernel.project_dir%/public/csv/inventory/'
     variables_app_directory: '%kernel.project_dir%/public/variables_app/'
-    csv_save_directory_delivery_date: '/home/dave/Documents/ArbaConnect/save/csv/delivery_date'
-    csv_save_directory_inventory: '/home/dave/Documents/ArbaConnect/save/csv/inventory'
+    csv_save_directory_delivery_date: '/home/dave/Documents/ArbaConnect/save/csv/delivery_date/'
+    csv_save_directory_inventory: '/home/dave/Documents/ArbaConnect/save/csv/inventory/'
     jwt_secret: '%env(JWT_SECRET)%'
     mail_pwd_dev: '%env(MAIL_PWD_DEV)%'
     env_app: '%env(APP_ENV)'
