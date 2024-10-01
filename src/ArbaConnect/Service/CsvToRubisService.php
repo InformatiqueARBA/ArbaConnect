@@ -10,17 +10,17 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 class CsvToRubisService
 {
     private  $ERPDirDev;
-    private  $ERPDirProd;
+    // private  $ERPDirProdAC;
     private  $params;
 
-    public function __construct($ERPDirDev, $ERPDirProd, ParameterBagInterface $params)
+    public function __construct($ERPDirDev, ParameterBagInterface $params)
     {
         $this->ERPDirDev = $ERPDirDev;
-        $this->ERPDirProd = $ERPDirProd;
+        // $this->ERPDirProdAC = $ERPDirProdAC;
         $this->params = $params;
     }
 
-    public function sendCsvToRubis($filePath, $fileName)
+    public function sendCsvToRubis($filePath, $fileName, $ERPDirProd)
     {
 
         // Se connecter au serveur FTP
@@ -48,7 +48,7 @@ class CsvToRubisService
             if ($this->params->get('kernel.environment') === 'dev') {
                 $remote_directory =  $this->ERPDirDev;
             } else {
-                $remote_directory =  $this->ERPDirProd;
+                $remote_directory =  $ERPDirProd;
             }
 
 

@@ -11,6 +11,7 @@ class InventoryCSVRubisService
     private $csvDirectoryInventory;
     private $csvToRubisService;
     private $csvSaveDirectoryInventory;
+    private $ERPDirProdINV;
 
 
     public function __construct(ParameterBagInterface $params, CsvToRubisService $csvToRubisService)
@@ -18,6 +19,7 @@ class InventoryCSVRubisService
         $this->csvDirectoryInventory = $params->get('csv_directory_inventory');
         $this->csvSaveDirectoryInventory = $params->get('csv_save_directory_inventory');
         $this->csvToRubisService = $csvToRubisService;
+        $this->ERPDirProdINV = $params->get('erp_dir_prod_inv');
     }
 
 
@@ -28,72 +30,65 @@ class InventoryCSVRubisService
         $timestamp = date('_H:i:s');
 
         $header = [
-            'SNOCLI',
-            'SNOBON',
-            'SNTA02',
-            'SNTC07',
-            'SNTPRO',
-            'SNTLIS',
-            'SNTLIA',
-            'SNTLIM',
-            'SNTLIJ',
-            'SNTROF'
+            'INVNO',  // Inventaire
+            'INVDP',  // Dépôt
+            'INVW1',  // Bordereau
+            'INVID',  // Identifiant
+            'INLIE',  // Description
+            'INVAR',  // Article
+            'HILOT',  // Lot
+            'INVSN',  // Nombre
+            'INVSC',  // Conditionnement
+            'INVQS',  // QTE en US
+            'INVSU',  // Unité
+            'INVL1'   // 'N' = Génération d'inventaire à non.
         ];
 
-        // $orderId = $order->getId();
+        // Définition du chemin du fichier CSV
+        $filePath = $this->csvDirectoryInventory . 'Inventory_' . $inventoryArticle->getInventoryNumber() . $timestamp . '.csv';
+        $fileName = basename($filePath);
 
-        // ($order->getOrderStatus() == 'EDITED') ?  $orderStatus = 1 : $orderStatus = 0;
+        // Création du fichier CSV
+        $file = fopen($filePath, 'w');
 
+        if ($file === false) {
+            throw new \Exception('Impossible de créer ou d\'ouvrir le fichier : ' . $filePath);
+        }
 
-        // $filePath = $this->csvDirectoryInventory . 'AC' . $orderId . '.csv';
-        // $fileName = basename($filePath);
+        // Écriture de l'en-tête dans le fichier CSV
+        fputcsv($file, $header, ';');
 
+        // Récupération des données de l'entité pour remplir chaque colonne
+        $data = [
+            $inventoryArticle->getInventoryNumber(),   // INVNO
+            $inventoryArticle->getWarehouse(),         // INVDP
+            $inventoryArticle->getLocation(),          // INVW1
+            'INV_GEN',                                 // INVID
+            'Inventaire test',                         // INLIE
+            $inventoryArticle->getArticleCode(),       // INVAR
+            $inventoryArticle->getLotCode(),           // HILOT
+            $inventoryArticle->getQuantityLocation1(), // INVSN ce champ et les 2 prochains c'est à vérifier
+            $inventoryArticle->getPackaging(),         // INVSC
+            $inventoryArticle->getQuantityLocation1(), // INVQS
+            $inventoryArticle->getPreparationUnit(),   // INVSU
+            'N'                                        // INVL1
+        ];
 
-        // $file = fopen($filePath, 'w');
+        // Écriture des données dans le fichier CSV
+        fputcsv($file, $data, ';');
 
-        // if ($file === false) {
-        //     throw new \Exception('Unable to create or open the file: ' . $filePath);
-        // }
+        // Fermeture du fichier
+        fclose($file);
 
-        // // création entête
-        // fputcsv($file, $header, ';');
+        // Copie le CSV vers le QDLS
+        $this->csvToRubisService->sendCsvToRubis($this->csvDirectoryInventory, $fileName, $this->ERPDirProdINV);
 
-        // $corporationId = $order->getCorporation()->getId();
-        // $deliveryDateString = $order->getDeliveryDate()->format('d-m-Y');
+        // Déplace le fichier CSV vers le dossier de sauvegarde
+        //$this->moveCsvToSaveDirectory($fileName);
 
-        // $data = [
-        //     $corporationId,
-        //     $orderId . $timestamp,
-        //     '2',
-        //     $orderId,
-        //     'AC',
-        //     substr($deliveryDateString, 6, 2),
-        //     substr($deliveryDateString, 8, 2),
-        //     substr($deliveryDateString, 3, 2),
-        //     substr($deliveryDateString, 0, 2),
-        //     'R'
-        // ];
-        // fputcsv($file, $data, ';');
-
-        // Copie le CSV sur le QDLS RUBIS
-        //TODO: Déplacer vers le dossier spécifique & mise en place de l'autowire
-        // $this->csvToRubisService->sendCsvToRubis($this->csvDirectoryInventory, $fileName);
-
-        // // Déplace le CSV vers le dossier de sauvegarde
-        // $destinationDir = $this->csvSaveDirectoryInventory;
-
-        // $destinationPath = $destinationDir . $fileName;
-
-        // if (rename($filePath, $destinationPath)) {
-        //     echo "File moved successfully to $destinationPath.\n";
-        // } else {
-        //     throw new \Exception('Failed to move the file to: ' . $destinationPath);
-        // }
-
-        //TODO: Gérer la durée de conservation des fichiers sauvegardés 90 jours ?
-
-        /* TODO: Créer le déplacement du fichier
-                Dans un second temps créer une ordere Symfony et la tâche Cron associée
-            */
+        return [
+            'header' => $header,
+            'data' => $data
+        ];
     }
 }

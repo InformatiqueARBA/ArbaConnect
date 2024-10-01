@@ -9,6 +9,7 @@ use App\InventoryModule\Form\InventoryArticlesCollectionType;
 use App\InventoryModule\Form\InventoryArticleType;
 use App\InventoryModule\Service\CoutingPageXLSXService;
 use App\InventoryModule\Service\DataMapperInventoryService;
+use App\InventoryModule\Service\InventoryCSVRubisService;
 use App\InventoryModule\Service\RequestOdbcInventoryService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -105,21 +106,12 @@ class InventoryController extends AbstractController
 
 
 
-
-
-
-
-
-
     #[Route('/admin/localisation', name: 'localisation')]
     public function location(DataMapperInventoryService $dataMapperInventoryService): Response
     {
         $dataMapperInventoryService->inventoryMapper('002612');
         return new Response('Locations are up to date');
     }
-
-
-
 
 
 
@@ -158,5 +150,25 @@ class InventoryController extends AbstractController
         $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
 
         return new Response('test XLSX');
+    }
+    //TODO: C'est pas fini mais ça fonctionne (un peu ^^)
+    // L'accès se fait via la page : http://ac.test/admin/inventaires
+    #[Route('/admin/generationInventaire/{inventoryNumber}', name: 'app_csvInventory')]
+    public function generateCsvInventory(string $inventoryNumber, ManagerRegistry $managerRegistry, InventoryCSVRubisService $inventoryCSVSRubisService, InventoryArticle $inventoryArticle): Response
+    {
+        $em = $managerRegistry->getManager('security');
+
+        $inventoryArticle = $em->getRepository(InventoryArticle::class)->findOneBy([
+            'inventoryNumber' => $inventoryNumber,
+        ]);
+
+        if (!$inventoryArticle) {
+            throw $this->createNotFoundException('Article non trouvé pour l\'ID ' . $inventoryNumber);
+        }
+
+        $csvData = $inventoryCSVSRubisService->inventoryCsv($inventoryArticle);
+        dd($csvData);
+
+        return new Response('CSV data generated and displayed.');
     }
 }

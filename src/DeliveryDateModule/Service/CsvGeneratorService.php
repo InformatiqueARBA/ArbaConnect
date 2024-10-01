@@ -11,6 +11,7 @@ class CsvGeneratorService
     private $csvDirectoryDeliveryDate;
     private $csvToRubisService;
     private $csvSaveDirectoryDeliveryDate;
+    private $ERPDirProdAC;
 
 
     public function __construct(ParameterBagInterface $params, CsvToRubisService $csvToRubisService)
@@ -18,6 +19,7 @@ class CsvGeneratorService
         $this->csvDirectoryDeliveryDate = $params->get('csv_directory_delivery_date');
         $this->csvSaveDirectoryDeliveryDate = $params->get('csv_save_directory_delivery_date');
         $this->csvToRubisService = $csvToRubisService;
+        $this->ERPDirProdAC = $params->get('erp_dir_prod_ac');
     }
 
 
@@ -77,7 +79,7 @@ class CsvGeneratorService
 
         // Copie le CSV sur le QDLS RUBIS
         //TODO: Déplacer vers le dossier spécifique & mise en place de l'autowire
-        $this->csvToRubisService->sendCsvToRubis($this->csvDirectoryDeliveryDate, $fileName);
+        $this->csvToRubisService->sendCsvToRubis($this->csvDirectoryDeliveryDate, $fileName, $this->ERPDirProdAC);
 
         // Déplace le CSV vers le dossier de sauvegarde
         $destinationDir = $this->csvSaveDirectoryDeliveryDate;
