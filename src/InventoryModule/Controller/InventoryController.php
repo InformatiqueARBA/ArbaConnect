@@ -5,6 +5,7 @@ namespace App\InventoryModule\Controller;
 use App\ArbaConnect\Service\OdbcService;
 use App\Entity\Security\InventoryArticle;
 use App\Entity\Security\Location;
+use App\Entity\Security\User;
 use App\InventoryModule\Form\InventoryArticlesCollectionType;
 use App\InventoryModule\Form\InventoryArticleType;
 use App\InventoryModule\Service\CoutingPageXLSXService;
@@ -26,7 +27,6 @@ class InventoryController extends AbstractController
     #[Route('/arba/inventaire/liste', name: 'app_inventory')]
     public function index(ManagerRegistry $managerRegistry): Response
     {
-
         $em = $managerRegistry->getManager('security');
         $locations = $em->getRepository(Location::class)->findAll();
 
@@ -42,11 +42,7 @@ class InventoryController extends AbstractController
     #[Route('/arba/inventaire/detail/localisation', name: 'app_detailLocalisation')]
     public function detailLocation(ManagerRegistry $managerRegistry): Response
     {
-
         $em = $managerRegistry->getManager('security');
-
-
-
         $articles = $em->getRepository(InventoryArticle::class)->findAll();
 
         return $this->render('InventoryModule\detail_inventaire.html.twig', [
@@ -56,16 +52,24 @@ class InventoryController extends AbstractController
 
 
 
-    #[Route('/arba/inventaire/detail/{location}/edit', name: 'app_edit2')]
+    #[Route('/arba/inventaire/detail/{location}/edit', name: 'app_inventory_detail_edit')]
     public function edit2(String $location, Request $request, ManagerRegistry $managerRegistry): Response
     {
         $location = urldecode($location);
         $em = $managerRegistry->getManager('security');
 
+        // on récupère le user connecté pour affecter le référent de la saisie
+        $user = $this->getUser();
+
+        // Check if user is an instance of User class
+        if (!$user instanceof User) {
+            throw new \LogicException('The user is not valid.');
+        }
+
         // Changement du statut de l'objet Location à actif
-        $statusLocation = $em->getRepository(Location::class)->findByLocation($location);
-        $statusLocation[0]->setStatus(1);
-        $em->persist($statusLocation[0]);
+        $Location = $em->getRepository(Location::class)->findByLocation($location);
+        $Location[0]->setStatus(1);
+        $em->persist($Location[0]);
         $em->flush();
 
         // Récupérer les articles
@@ -90,8 +94,9 @@ class InventoryController extends AbstractController
             // return $this->redirectToRoute('app_edit2', ['location' => $location]);
 
             // Changement du statut de l'objet Location à inactif
-            $statusLocation[0]->setStatus(0);
-            $em->persist($statusLocation[0]);
+            $Location[0]->setStatus(0);
+            $Location[0]->setReferent($user->getLogin());
+            $em->persist($Location[0]);
             $em->flush();
 
 
@@ -124,35 +129,35 @@ class InventoryController extends AbstractController
 
 
 
-    #[Route('/admin/xlsx', name: 'xlsx')]
-    public function xlsx(CoutingPageXLSXService $coutingPageXLSXService): Response
-    {
-        $data = [
-            ['nom' => 'Dupont', 'prenom' => 'Jean'],
-            ['nom' => 'Martin', 'prenom' => 'Sophie'],
-            ['nom' => 'Durand', 'prenom' => 'Paul'],
-            ['nom' => 'Petit', 'prenom' => 'Emma'],
-            ['nom' => 'Lemoine', 'prenom' => 'Louis'],
-            ['nom' => 'Moreau', 'prenom' => 'Lucie'],
-            ['nom' => 'Fournier', 'prenom' => 'Hugo'],
-            ['nom' => 'Roux', 'prenom' => 'Alice'],
-            ['nom' => 'Blanc', 'prenom' => 'Thomas'],
-            ['nom' => 'Garnier', 'prenom' => 'Chloé'],
-            ['nom' => 'Faure', 'prenom' => 'Matthieu'],
-            ['nom' => 'Chevalier', 'prenom' => 'Julie'],
-            ['nom' => 'Renard', 'prenom' => 'Pierre'],
-            ['nom' => 'Schmitt', 'prenom' => 'Marion'],
-            ['nom' => 'Leroux', 'prenom' => 'Antoine'],
-        ];
+    // #[Route('/admin/xlsx', name: 'xlsx')]
+    // public function xlsx(CoutingPageXLSXService $coutingPageXLSXService): Response
+    // {
+    //     $data = [
+    //         ['nom' => 'Dupont', 'prenom' => 'Jean'],
+    //         ['nom' => 'Martin', 'prenom' => 'Sophie'],
+    //         ['nom' => 'Durand', 'prenom' => 'Paul'],
+    //         ['nom' => 'Petit', 'prenom' => 'Emma'],
+    //         ['nom' => 'Lemoine', 'prenom' => 'Louis'],
+    //         ['nom' => 'Moreau', 'prenom' => 'Lucie'],
+    //         ['nom' => 'Fournier', 'prenom' => 'Hugo'],
+    //         ['nom' => 'Roux', 'prenom' => 'Alice'],
+    //         ['nom' => 'Blanc', 'prenom' => 'Thomas'],
+    //         ['nom' => 'Garnier', 'prenom' => 'Chloé'],
+    //         ['nom' => 'Faure', 'prenom' => 'Matthieu'],
+    //         ['nom' => 'Chevalier', 'prenom' => 'Julie'],
+    //         ['nom' => 'Renard', 'prenom' => 'Pierre'],
+    //         ['nom' => 'Schmitt', 'prenom' => 'Marion'],
+    //         ['nom' => 'Leroux', 'prenom' => 'Antoine'],
+    //     ];
 
-        $filePath = '/var/www/ArbaConnect/public/csv/inventory/test.xlsx';
-        $spreadsheet = $coutingPageXLSXService->generateXlsx($data);
-        $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
+    //     $filePath = '/var/www/ArbaConnect/public/csv/inventory/test.xlsx';
+    //     $spreadsheet = $coutingPageXLSXService->generateXlsx($data);
+    //     $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
 
-        return new Response('test XLSX');
-    }
+    //     return new Response('test XLSX');
+    // }
 
-    #[Route('/admin/xlsx2', name: 'xlsx2')]
+    #[Route('/admin/xlsx', name: 'app_inventory_counting_xlsx')]
     public function xlsx2(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry): Response
     {
         $em = $managerRegistry->getManager('security');
@@ -163,7 +168,7 @@ class InventoryController extends AbstractController
         $spreadsheet = $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca);
         $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
 
-        return new Response('test XLSX2');
+        return new Response('test XLSX');
     }
 
 
