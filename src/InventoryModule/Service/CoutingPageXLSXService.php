@@ -72,7 +72,7 @@ class CoutingPageXLSXService
         // Écriture des données, en commençant par la ligne 2
         $rowIndex = 2;
         foreach ($bob as $inventoryArticle) {
-            // Récupération des données de l'entité pour remplir chaque colonne
+
             $data = [
                 $inventoryArticle->getLocation(),          // INVW1
                 $inventoryArticle->getArticleCode(),       // INVAR
@@ -96,7 +96,7 @@ class CoutingPageXLSXService
             $rowIndex++;
         }
 
-        // Retourne l'objet Spreadsheet pour plus de flexibilité
+
         return $spreadsheet;
     }
 }

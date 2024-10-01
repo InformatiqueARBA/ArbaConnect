@@ -4,15 +4,66 @@
 {% endblock %}
 
 {% block body %}
-	<div class="d-flex flex-column align-items-center">
-		<div class="mb-3">
-			<a href="{{ path('admin_create_user') }}" class="btn btn-primary">Admin create user</a>
-		</div>
-		<div class="mb-3">
-			<a href="{{ path('admin_commentary') }}" class="btn btn-secondary">Admin commentary</a>
-		</div>
-		<div class="mb-3">
-			<a href="{{ path('admin_inventory') }}" class="btn btn-success">Admin inventory</a>
+	<style>
+		.button-icon {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			width: 250px; /* Taille personnalisée pour les boutons */
+			text-decoration: none; /* Supprimer le soulignement du lien */
+			border-radius: 5px; /* Bordure arrondie */
+			padding: 10px; /* Padding à l'intérieur du bouton */
+			transition: background-color 0.3s ease, color 0.3s ease;
+		}
+		.button-icon img {
+			width: 50px; /* Taille personnalisée pour l'icône */
+			height: 50px;
+			margin-top: 5px; /* Espace entre le texte et l'icône */
+			filter: invert(43%) sepia(51%) saturate(570%) hue-rotate(47deg) brightness(96%) contrast(84%); /* Couleur verte pour l'icône avant survol */
+			transition: filter 0.3s ease; /* Transition douce pour l'icône */
+		}
+		.custom-btn {
+			border-color: rgb(0, 70, 100);
+			background-color: rgb(0, 70, 100);
+			color: rgb(130, 170, 55); /* Vert pour le texte */
+			transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+		}
+		.custom-btn:hover,
+		.custom-btn:focus {
+			border: 2px solid transparent;
+			background-color: rgb(130, 170, 55);
+			color: #000000; /* Texte noir lors du survol */
+		}
+		.custom-btn:hover img,
+		.custom-btn:focus img {
+			filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%); /* Icône noire lors du hover */
+		}
+		.center-container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin: 0 auto;
+		}
+		.button-space {
+			margin-left: 50px; /* Espace entre les boutons */
+		}
+	</style>
+
+	<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+		<div class="center-container">
+			<a href="{{ path('admin_create_user') }}" class="custom-btn button-icon">
+				Admin create user
+				<img src="{{ asset('images/add_user.ico') }}" alt="Add User Icon">
+			</a>
+			<a href="{{ path('admin_commentary') }}" class="custom-btn button-icon button-space">
+				Admin commentary
+				<img src="{{ asset('images/comment.ico') }}" alt="Comment Icon">
+			</a>
+			<a href="{{ path('admin_inventory') }}" class="custom-btn button-icon button-space">
+				Admin inventory
+				<img src="{{ asset('images/barcode.ico') }}" alt="DBarcode Icon">
+			</a>
 		</div>
 	</div>
 {% endblock %}
