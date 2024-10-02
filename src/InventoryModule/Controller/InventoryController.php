@@ -52,8 +52,65 @@ class InventoryController extends AbstractController
 
 
 
+    // #[Route('/arba/inventaire/detail/{location}/edit', name: 'app_inventory_detail_edit')]
+    // public function inventoryDetailEdit(String $location, Request $request, ManagerRegistry $managerRegistry): Response
+    // {
+    //     $location = urldecode($location);
+    //     $em = $managerRegistry->getManager('security');
+
+    //     // on récupère le user connecté pour affecter le référent de la saisie
+    //     $user = $this->getUser();
+
+    //     // Check if user is an instance of User class
+    //     if (!$user instanceof User) {
+    //         throw new \LogicException('The user is not valid.');
+    //     }
+
+    //     // Changement du statut de l'objet Location à actif
+    //     $Location = $em->getRepository(Location::class)->findByLocation($location);
+    //     $Location[0]->setStatus(1);
+    //     $em->persist($Location[0]);
+    //     $em->flush();
+
+    //     // Récupérer les articles
+    //     $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationOrLocation2OrLocation3($location);
+
+    //     // Créer un tableau d'articles pour le formulaire
+    //     $formData = ['articles' => $articleParLoc];
+
+    //     // Créer le formulaire parent avec la collection d'articles
+    //     $form = $this->createForm(InventoryArticlesCollectionType::class, $formData);
+
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         // Traiter chaque article et enregistrer
+    //         foreach ($formData['articles'] as $article) {
+    //             $em->persist($article);
+    //         }
+    //         $em->flush();
+
+    //         $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
+    //         // return $this->redirectToRoute('app_edit2', ['location' => $location]);
+
+    //         // Changement du statut de l'objet Location à inactif
+    //         $Location[0]->setStatus(0);
+    //         $Location[0]->setReferent($user->getLogin());
+    //         $em->persist($Location[0]);
+    //         $em->flush();
+
+
+    //         return $this->redirectToRoute('app_inventory');
+    //     }
+
+    //     return $this->render('InventoryModule/detail_inventaireSam.html.twig', [
+    //         'form' => $form->createView(),
+    //         'location' => $location,
+    //     ]);
+    // }
+
     #[Route('/arba/inventaire/detail/{location}/edit', name: 'app_inventory_detail_edit')]
-    public function edit2(String $location, Request $request, ManagerRegistry $managerRegistry): Response
+    public function inventoryDetailEdit(String $location, Request $request, ManagerRegistry $managerRegistry): Response
     {
         $location = urldecode($location);
         $em = $managerRegistry->getManager('security');
@@ -84,21 +141,30 @@ class InventoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $shouldSetReferent = false; // Initialize flag
+
             // Traiter chaque article et enregistrer
             foreach ($formData['articles'] as $article) {
+                // Check if either quantity field has a value
+                if ($article->getQuantityLocation1() !== null || $article->getQuantity2Location1() !== null) {
+                    $shouldSetReferent = true;
+                }
                 $em->persist($article);
             }
             $em->flush();
 
             $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
-            // return $this->redirectToRoute('app_edit2', ['location' => $location]);
 
             // Changement du statut de l'objet Location à inactif
             $Location[0]->setStatus(0);
-            $Location[0]->setReferent($user->getLogin());
+
+            // Only set the referent if at least one article has a quantity
+            if ($shouldSetReferent) {
+                $Location[0]->setReferent($user->getLogin());
+            }
+
             $em->persist($Location[0]);
             $em->flush();
-
 
             return $this->redirectToRoute('app_inventory');
         }
@@ -108,6 +174,8 @@ class InventoryController extends AbstractController
             'location' => $location,
         ]);
     }
+
+
 
 
 
@@ -129,33 +197,7 @@ class InventoryController extends AbstractController
 
 
 
-    // #[Route('/admin/xlsx', name: 'xlsx')]
-    // public function xlsx(CoutingPageXLSXService $coutingPageXLSXService): Response
-    // {
-    //     $data = [
-    //         ['nom' => 'Dupont', 'prenom' => 'Jean'],
-    //         ['nom' => 'Martin', 'prenom' => 'Sophie'],
-    //         ['nom' => 'Durand', 'prenom' => 'Paul'],
-    //         ['nom' => 'Petit', 'prenom' => 'Emma'],
-    //         ['nom' => 'Lemoine', 'prenom' => 'Louis'],
-    //         ['nom' => 'Moreau', 'prenom' => 'Lucie'],
-    //         ['nom' => 'Fournier', 'prenom' => 'Hugo'],
-    //         ['nom' => 'Roux', 'prenom' => 'Alice'],
-    //         ['nom' => 'Blanc', 'prenom' => 'Thomas'],
-    //         ['nom' => 'Garnier', 'prenom' => 'Chloé'],
-    //         ['nom' => 'Faure', 'prenom' => 'Matthieu'],
-    //         ['nom' => 'Chevalier', 'prenom' => 'Julie'],
-    //         ['nom' => 'Renard', 'prenom' => 'Pierre'],
-    //         ['nom' => 'Schmitt', 'prenom' => 'Marion'],
-    //         ['nom' => 'Leroux', 'prenom' => 'Antoine'],
-    //     ];
 
-    //     $filePath = '/var/www/ArbaConnect/public/csv/inventory/test.xlsx';
-    //     $spreadsheet = $coutingPageXLSXService->generateXlsx($data);
-    //     $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
-
-    //     return new Response('test XLSX');
-    // }
 
     #[Route('/admin/xlsx', name: 'app_inventory_counting_xlsx')]
     public function xlsx2(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry): Response
@@ -199,5 +241,83 @@ class InventoryController extends AbstractController
         $inventoryCSVSRubisService->inventoryCsvArray($inventoryArticleByLoca);
 
         return new Response('CSV data generated and displayed.');
+    }
+
+
+    // #[Route('/admin/inventaire/parametrage', name: 'app_inventory_setting')]
+    // public function inventorySettings(): Response
+    // {
+    //     return $this->render('InventoryModule/inventory_settings.html.twig', []);
+    // }
+
+    #[Route('/admin/inventaire/parametrage/edition/feuille-comptage/{number?}', name: 'app_inventory_setting_counting_page_edition')]
+    public function inventoryCountingPageEdition(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry, $number = null): Response
+    {
+        $em = $managerRegistry->getManager('security');
+
+        // Vérifier si $number est fourni
+        if ($number !== null) {
+            $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationOrLocation2OrLocation3($number);
+
+            // Chemin du fichier basé sur $number
+            $filePath = "/var/www/ArbaConnect/public/csv/inventory/$number.xlsx";
+            $spreadsheet = $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca);
+            $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
+        }
+
+        // Récupérer la liste des fichiers dans le répertoire
+        $directory = '/var/www/ArbaConnect/public/csv/inventory';
+        $files = array_diff(scandir($directory), array('.', '..'));
+
+        return $this->render('InventoryModule/inventory_setting_counting_page_edition.html.twig', [
+            'files' => $files,
+        ]);
+    }
+
+    // #[Route('/admin/populer-db-inventaire/{inventoryNumberDBLocations?}/{inventoryNumberDBArticles?}', name: 'app_inventory_populate_inventory_db')]
+    // public function populateInventoryDB(DataMapperInventoryService $dataMapperInventoryService, $inventoryNumberDBLocations = null, $inventoryNumberDBArticles = null): Response
+    // {
+    //     if ($inventoryNumberDBLocations !== null) {
+    //         $dataMapperInventoryService->inventoryArticleMapper($inventoryNumberDBLocations);
+    //         $this->addFlash('success', "Les localisations de l'inventaire $inventoryNumberDBLocations ont été mises en base");
+    //         // return $this->redirectToRoute('app_inventory_populate_inventory_db');
+    //     }
+
+    //     if ($inventoryNumberDBArticles !== null) {
+    //         $dataMapperInventoryService->inventoryArticleMapper($inventoryNumberDBArticles);
+    //         $this->addFlash('success', "Les Articles de l'inventaire $inventoryNumberDBArticles ont été mis en base");
+    //         // return $this->redirectToRoute('app_inventory_populate_inventory_db');
+    //     }
+
+
+
+    //     return $this->render('InventoryModule/inventory_populate_inventory_db.html.twig', []);
+    // }
+
+    #[Route('/admin/populer-db-articles-inventaire/{inventoryNumberDBArticles?}', name: 'app_inventory_populate_inventory_articles_db')]
+    public function populateInventoryArticlesDB(DataMapperInventoryService $dataMapperInventoryService, $inventoryNumberDBArticles = null): Response
+    {
+
+        if ($inventoryNumberDBArticles !== null) {
+            $dataMapperInventoryService->inventoryArticleMapper($inventoryNumberDBArticles);
+            $this->addFlash('success', "Les articles de l'inventaire $inventoryNumberDBArticles ont été mis en base");
+            return $this->redirectToRoute('admin_inventory');
+        }
+
+        return $this->render('InventoryModule/inventory_populate_inventory_articles_db.html.twig', []);
+    }
+
+
+    #[Route('/admin/populer-db-localisations-inventaire/{inventoryNumberDBLocations?}', name: 'app_inventory_populate_inventory_locations_db')]
+    public function populateInventoryLocationsDB(DataMapperInventoryService $dataMapperInventoryService, $inventoryNumberDBLocations = null): Response
+    {
+
+        if ($inventoryNumberDBLocations !== null) {
+            $dataMapperInventoryService->inventoryMapper($inventoryNumberDBLocations);
+            $this->addFlash('success', "Les localisations de l'inventaire $inventoryNumberDBLocations ont été mises en base");
+            return $this->redirectToRoute('admin_inventory');
+        }
+
+        return $this->render('InventoryModule/inventory_populate_inventory_locations_db.html.twig', []);
     }
 }

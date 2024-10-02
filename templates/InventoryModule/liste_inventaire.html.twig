@@ -5,7 +5,10 @@
 
 {% block body %}
 	<div class="container-fluid my-4 inventory-container sfp-regular-text">
-		<h3>Liste des Emplacements d'Inventaire pour le numéro
+		<h3>Liste des emplacements pour l'inventaire n°
+			{{locations[0].inventoryNumber }}
+			dépot:
+			{{locations[0].warehouse }}
 		</h3>
 		<table id="inventory-locations-table" class="table table-hover centered-table">
 			<thead class="table-light">
@@ -15,7 +18,7 @@
 					<th class="text-center">Emplacement</th>
 					{# <th class="text-center">Emplacement 1</th> #}
 					{# <th class="text-center">Emplacement 2</th>
-																																			<th class="text-center">Emplacement 3</th> #}
+																																																																																																																																																																										<th class="text-center">Emplacement 3</th> #}
 					<th class="text-center">Référent</th>
 					<th class="text-center">Statut</th>
 					<th class="text-center">Button</th>
@@ -28,7 +31,7 @@
 						<td class="text-center">{{ location.warehouse }}</td>
 						<td class="text-center">{{ location.location }}</td>
 						{# <td class="text-center">{{ location.location2 }}</td>
-																																										<td class="text-center">{{ location.location3 }}</td> #}
+																																																																																																																																																																																																												<td class="text-center">{{ location.location3 }}</td> #}
 						<td class="text-center">
 							{% if location.referent == null %}
 								-
@@ -50,26 +53,43 @@
 
 
 						{# <td class="text-dark text-center" style="background-color: rgba(0, 70, 100,0.8); ">
-													<a style='color: rgb(130, 170, 55);' href="{{ path('app_inventory_detail_edit', {location: location.location | url_encode }) }}">
-														Afficher
-													</a>
-												</td> #}
+																																																																																																																																																																			<a style='color: rgb(130, 170, 55);' href="{{ path('app_inventory_detail_edit', {location: location.location | url_encode }) }}">
+																																																																																																																																																																				Afficher
+																																																																																																																																																																			</a>
+																																																																																																																																																																		</td> #}
 
-						{# empêche l'affichage si le status est à 1 (actif) #}
-						<td class="text-dark text-center" style="background-color: rgba(0, 70, 100,0.8); ">
-							{% if location.status != 1 %}
+
+						<td
+							class="text-dark text-center" style="background-color: rgba(0, 70, 100,0.8); ">
+							{# autorise l'affichage si le status est inactif (0) #}
+							{% if location.status != 1  %}
 								<a style='color: rgb(130, 170, 55);' href="{{ path('app_inventory_detail_edit', {location: location.location | url_encode }) }}">
 									Afficher
 								</a>
+								{# autorise l'affichage si le status est actif (0) et que l'utilistaeur connecté est le referent ou un admin #}
+							{% elseif location.status == 1 and (location.referent == app.user.login or is_granted('ROLE_ADMIN')) %}
+
+								<a style='color: rgb(130, 170, 55);' href="{{ path('app_inventory_detail_edit', {location: location.location | url_encode }) }}">
+									Afficher
+								</a>
+								{# empêche l'affichage si le status est à 1 (actif) #}
 							{% else %}
 								<span style='color: gray;'>Afficher</span>
 							{% endif %}
 						</td>
 						{# <td class="text-dark" style="background-color: rgba(0, 70, 100,0.8); ">
-																																																																																	<a style='color: rgb(130, 170, 55);' href="{{ path('app_edit', {id: order.id}) }}">Modifier</a>
-																																																																						</td> #}
+																																																																																																																																																																																																																																																			<a style='color: rgb(130, 170, 55);' href="{{ path('app_edit', {id: order.id}) }}">Modifier</a>
+																																																																																																																																																																																																																																								</td> #}
 					</tr>
 				{% endfor %}
+				<script>
+					// //
+// Rafraîchit la page toutes les 10 secondes (10000 millisecondes)
+setInterval(function () {
+window.location.reload();
+}, 10000);
+				</script>
+
 			</tbody>
 		</table>
 

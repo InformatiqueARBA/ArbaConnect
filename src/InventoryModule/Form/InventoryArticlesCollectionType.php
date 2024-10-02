@@ -18,6 +18,7 @@ class InventoryArticlesCollectionType extends AbstractType
                 'entry_type' => InventoryArticleType::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => false, // on ne veut pas ajouter des articles dynamiquement
+                'label' => false,
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer tous les articles'

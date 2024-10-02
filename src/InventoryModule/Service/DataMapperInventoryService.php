@@ -29,6 +29,7 @@ class DataMapperInventoryService
     {
         $sql = $this->requestOdbcInventoryService->getInventory($inventoryNumber);
         $results = $this->odbcService->executeQuery($sql);
+
         foreach ($results as $result) {
             // Vérifie si l'INVENTORY_NUMBER existe déjà dans la base de données
             // $existingLocation = $this->em->getRepository(Location::class)
@@ -144,6 +145,7 @@ class DataMapperInventoryService
     {
         $sql = $this->requestOdbcInventoryService->getArticlesWithLocation($inventoryNumber);
         $results = $this->odbcService->executeQuery($sql);
+        // dd($results);
 
         foreach ($results as $result) {
             // Vérifie si l'INVENTORY_NUMBER existe déjà dans la base de données
