@@ -109,6 +109,72 @@ class InventoryController extends AbstractController
     //     ]);
     // }
 
+    // #[Route('/arba/inventaire/detail/{location}/edit', name: 'app_inventory_detail_edit')]
+    // public function inventoryDetailEdit(String $location, Request $request, ManagerRegistry $managerRegistry): Response
+    // {
+    //     $location = urldecode($location);
+    //     $em = $managerRegistry->getManager('security');
+
+    //     // on récupère le user connecté pour affecter le référent de la saisie
+    //     $user = $this->getUser();
+
+    //     // Check if user is an instance of User class
+    //     if (!$user instanceof User) {
+    //         throw new \LogicException('The user is not valid.');
+    //     }
+
+    //     // Changement du statut de l'objet Location à actif
+    //     $Location = $em->getRepository(Location::class)->findByLocation($location);
+    //     $Location[0]->setStatus(1);
+    //     $em->persist($Location[0]);
+    //     $em->flush();
+
+    //     // Récupérer les articles
+    //     $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationOrLocation2OrLocation3($location);
+
+    //     // Créer un tableau d'articles pour le formulaire
+    //     $formData = ['articles' => $articleParLoc];
+
+    //     // Créer le formulaire parent avec la collection d'articles
+    //     $form = $this->createForm(InventoryArticlesCollectionType::class, $formData);
+
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $shouldSetReferent = false; // Initialize flag
+
+    //         // Traiter chaque article et enregistrer
+    //         foreach ($formData['articles'] as $article) {
+    //             // Check if either quantity field has a value
+    //             if ($article->getQuantityLocation1() !== null || $article->getQuantity2Location1() !== null) {
+    //                 $shouldSetReferent = true;
+    //             }
+    //             $em->persist($article);
+    //         }
+    //         $em->flush();
+
+    //         $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
+
+    //         // Changement du statut de l'objet Location à inactif
+    //         $Location[0]->setStatus(0);
+
+    //         // Only set the referent if at least one article has a quantity
+    //         if ($shouldSetReferent) {
+    //             $Location[0]->setReferent($user->getLogin());
+    //         }
+
+    //         $em->persist($Location[0]);
+    //         $em->flush();
+
+    //         return $this->redirectToRoute('app_inventory');
+    //     }
+
+    //     return $this->render('InventoryModule/detail_inventaireSam.html.twig', [
+    //         'form' => $form->createView(),
+    //         'location' => $location,
+    //     ]);
+    // }
+
     #[Route('/arba/inventaire/detail/{location}/edit', name: 'app_inventory_detail_edit')]
     public function inventoryDetailEdit(String $location, Request $request, ManagerRegistry $managerRegistry): Response
     {
@@ -135,6 +201,15 @@ class InventoryController extends AbstractController
         // Créer un tableau d'articles pour le formulaire
         $formData = ['articles' => $articleParLoc];
 
+        // Stocker les valeurs originales des articles
+        $originalArticlesData = [];
+        foreach ($articleParLoc as $article) {
+            $originalArticlesData[$article->getId()] = [
+                'quantityLocation1' => $article->getQuantityLocation1(),
+                'quantity2Location1' => $article->getQuantity2Location1(),
+            ];
+        }
+
         // Créer le formulaire parent avec la collection d'articles
         $form = $this->createForm(InventoryArticlesCollectionType::class, $formData);
 
@@ -143,14 +218,22 @@ class InventoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $shouldSetReferent = false; // Initialize flag
 
-            // Traiter chaque article et enregistrer
+            // Traiter chaque article et vérifier les modifications
             foreach ($formData['articles'] as $article) {
-                // Check if either quantity field has a value
-                if ($article->getQuantityLocation1() !== null || $article->getQuantity2Location1() !== null) {
+                $originalData = $originalArticlesData[$article->getId()];
+
+                // Vérifier si les quantités ont changé
+                if (
+                    $article->getQuantityLocation1() !== $originalData['quantityLocation1'] ||
+                    $article->getQuantity2Location1() !== $originalData['quantity2Location1']
+                ) {
                     $shouldSetReferent = true;
                 }
+
+                // Persister l'article dans tous les cas
                 $em->persist($article);
             }
+
             $em->flush();
 
             $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
@@ -158,7 +241,7 @@ class InventoryController extends AbstractController
             // Changement du statut de l'objet Location à inactif
             $Location[0]->setStatus(0);
 
-            // Only set the referent if at least one article has a quantity
+            // Only set the referent if at least one article has been modified
             if ($shouldSetReferent) {
                 $Location[0]->setReferent($user->getLogin());
             }
@@ -174,7 +257,6 @@ class InventoryController extends AbstractController
             'location' => $location,
         ]);
     }
-
 
 
 

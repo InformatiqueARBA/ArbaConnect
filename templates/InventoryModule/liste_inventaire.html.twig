@@ -4,94 +4,87 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container-fluid my-4 inventory-container sfp-regular-text">
-		<h3>Liste des emplacements pour l'inventaire n°
-			{{locations[0].inventoryNumber }}
-			dépot:
-			{{locations[0].warehouse }}
-		</h3>
-		<table id="inventory-locations-table" class="table table-hover centered-table">
-			<thead class="table-light">
-				<tr>
-					<th class="text-center">N° Inventaire</th>
-					<th class="text-center">Entrepôt</th>
-					<th class="text-center">Emplacement</th>
-					{# <th class="text-center">Emplacement 1</th> #}
-					{# <th class="text-center">Emplacement 2</th>
-																																																																																																																																																																										<th class="text-center">Emplacement 3</th> #}
-					<th class="text-center">Référent</th>
-					<th class="text-center">Statut</th>
-					<th class="text-center">Button</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for location in locations %}
-					<tr>
-						<td class="text-center">{{ location.inventoryNumber }}</td>
-						<td class="text-center">{{ location.warehouse }}</td>
-						<td class="text-center">{{ location.location }}</td>
-						{# <td class="text-center">{{ location.location2 }}</td>
-																																																																																																																																																																																																												<td class="text-center">{{ location.location3 }}</td> #}
-						<td class="text-center">
-							{% if location.referent == null %}
-								-
-							{% else %}
-								{{ location.referent }}
-							{% endif %}
-						</td>
+<div class="container-fluid my-4 inventory-container sfp-regular-text">
+	<h3>Liste des emplacements pour l'inventaire 2024
 
-						{% if location.status == 0 %}
-							{# <span class="badge bg-warning">Inactif</span> #}
-							<td class="text-dark text-center" style="background-color: rgba(255, 165, 0, 0.5);">
-								Inactif
-							</td>
-						{% else %}
-							<td class="text-dark text-center" style="background-color: rgba(255, 0, 0, 0.5);">
-								Actif
-							</td>
-						{% endif %}
+	</h3>
+	<table id="inventory-locations-table" class="table table-hover centered-table">
+		<thead class="table-light">
+			<tr>
+				<th>
+					<div class="mb-2"><input type="text" id="filter-inventory-number" class="form-control"
+							data-column="0" placeholder="N° Inventaire" style="text-align: center;"></div>
+				</th>
+				<th>
+					<div class="mb-2"><input type="text" id="filter-warehouse" class="form-control" data-column="1"
+							placeholder="Entrepôt" style="text-align: center;"></div>
+				</th>
+				<th>
+					<div class="mb-2"><input type="text" id="filter-location" class="form-control" data-column="2"
+							placeholder="Emplacement" style="text-align: center;"></div>
+				</th>
+				<th>
+					<div class="mb-2"><input type="text" id="filter-referent" class="form-control" data-column="3"
+							placeholder="Référent" style="text-align: center;"></div>
+				</th>
+				<th>
+					<div class="mb-2"><input type="text" id="filter-status" class="form-control" data-column="4"
+							placeholder="Statut" style="text-align: center;"></div>
+				</th>
+				<th>
+					<div class="mb-2"><input type="text" id="filter-action" class="form-control" data-column="5"
+							placeholder="Button" style="text-align: center;"></div>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for location in locations %}
+			<tr>
+				<td style="text-align: center;">{{ location.inventoryNumber|e }}</td>
+				<td style="text-align: center;">{{ location.warehouse|e }}</td>
+				<td style="text-align: center;">{{ location.location|e }}</td>
+				<td style="text-align: center;">{{ location.referent is not null ? location.referent|e : '-' }}</td>
+				{% if location.status == 0 %}
+				<td class="text-dark" style="background-color: rgba(255, 165, 0, 0.5) ;text-align: center; ">Inactif
+				</td>
+				{% else %}
+				<td class="text-dark" style="background-color: rgba(255, 0, 0, 0.5);text-align: center;">Actif</td>
 
+				{% endif %}
 
-						{# <td class="text-dark text-center" style="background-color: rgba(0, 70, 100,0.8); ">
-																																																																																																																																																																			<a style='color: rgb(130, 170, 55);' href="{{ path('app_inventory_detail_edit', {location: location.location | url_encode }) }}">
-																																																																																																																																																																				Afficher
-																																																																																																																																																																			</a>
-																																																																																																																																																																		</td> #}
+				{% if location.status != 1 %}
+				<td class="text-dark" style="background-color: rgba(0, 70, 100,0.8);text-align: center;">
 
+					<a style='color: rgb(130, 170, 55);'
+						href="{{ path('app_inventory_detail_edit', {location: location.location | url_encode }) }}">Afficher</a>
+				</td>
 
-						<td
-							class="text-dark text-center" style="background-color: rgba(0, 70, 100,0.8); ">
-							{# autorise l'affichage si le status est inactif (0) #}
-							{% if location.status != 1  %}
-								<a style='color: rgb(130, 170, 55);' href="{{ path('app_inventory_detail_edit', {location: location.location | url_encode }) }}">
-									Afficher
-								</a>
-								{# autorise l'affichage si le status est actif (0) et que l'utilistaeur connecté est le referent ou un admin #}
-							{% elseif location.status == 1 and (location.referent == app.user.login or is_granted('ROLE_ADMIN')) %}
+				{% elseif location.status == 1 and (location.referent == app.user.login or is_granted('ROLE_ADMIN')) %}
+				<td class="text-dark" style="background-color: rgba(0, 70, 100,0.8);text-align: center;">
 
-								<a style='color: rgb(130, 170, 55);' href="{{ path('app_inventory_detail_edit', {location: location.location | url_encode }) }}">
-									Afficher
-								</a>
-								{# empêche l'affichage si le status est à 1 (actif) #}
-							{% else %}
-								<span style='color: gray;'>Afficher</span>
-							{% endif %}
-						</td>
-						{# <td class="text-dark" style="background-color: rgba(0, 70, 100,0.8); ">
-																																																																																																																																																																																																																																																			<a style='color: rgb(130, 170, 55);' href="{{ path('app_edit', {id: order.id}) }}">Modifier</a>
-																																																																																																																																																																																																																																								</td> #}
-					</tr>
-				{% endfor %}
-				<script>
-					// //
-// Rafraîchit la page toutes les 10 secondes (10000 millisecondes)
-setInterval(function () {
-window.location.reload();
-}, 10000);
-				</script>
+					<a style='color: rgb(130, 170, 55);'
+						href="{{ path('app_inventory_detail_edit', {location: location.location | url_encode }) }}">Afficher</a>
+				</td>
 
-			</tbody>
-		</table>
+				{% else %}
+				<td class="text-dark" style="background-color: rgba(0, 70, 100,0.8);text-align: center;">
 
-	</div>
+					<span style='color: gray;'>Afficher</span>
+				</td>
+
+				{% endif %}
+			</tr>
+			</td>
+		</tbody>
+		</tr>
+		{% endfor %}</tbody>
+	</table>
+</div>
+<script src="{{ asset('inventory_index.js') }}"></script>
+<script>// //
+	// // Rafraîchit la page toutes les 10 secondes (10000 millisecondes)
+	// setInterval(function () {
+	// window.location.reload();
+	// }, 10000);</script>
+
 {% endblock %}
