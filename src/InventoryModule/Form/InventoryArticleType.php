@@ -15,19 +15,19 @@ class InventoryArticleType extends AbstractType
         $builder
             ->add('inventoryNumber', null, [
                 'disabled' => true,
-                'attr' => ['style' => 'display:none;'],
+                // 'attr' => ['style' => 'display:none;'],
                 'label' => false
             ])
             ->add('warehouse')
             ->add('location')
             ->add('location2', null, [
                 'disabled' => true,
-                'attr' => ['style' => 'display:none;'],
+                // 'attr' => ['style' => 'display:none;'],
                 'label' => false
             ])
             ->add('location3', null, [
                 'disabled' => true,
-                'attr' => ['style' => 'display:none;'],
+                // 'attr' => ['style' => 'display:none;'],
                 'label' => false
             ])
             ->add('articleCode')
@@ -36,40 +36,40 @@ class InventoryArticleType extends AbstractType
             ->add('lotCode')
             ->add('dimensionType', null, [
                 'disabled' => true,
-                'attr' => ['style' => 'display:none;'],
+                // 'attr' => ['style' => 'display:none;'],
                 'label' => false
             ])
             ->add('packaging', null, [
                 'disabled' => true,
-                'attr' => ['style' => 'display:none;'],
+                // 'attr' => ['style' => 'display:none;'],
                 'label' => false
             ])
             ->add('packagingName', null, [
                 'disabled' => true,
-                'attr' => ['style' => 'display:none;'],
+                // 'attr' => ['style' => 'display:none;'],
                 'label' => false
             ])
             ->add('quantityLocation1')
             ->add('quantityLocation2', null, [
-                'disabled' => true,
-                'attr' => ['style' => 'display:none;'],
+                // 'disabled' => true,
+                // 'attr' => ['style' => 'display:none;'],
                 'label' => false
             ])
             ->add('quantityLocation3', null, [
                 'disabled' => true,
-                'attr' => ['style' => 'display:none;'],
+                // 'attr' => ['style' => 'display:none;'],
                 'label' => false
             ])
             ->add('preparationUnit')
             ->add('quantity2Location1')
             ->add('quantity2Location2', null, [
                 'disabled' => true,
-                'attr' => ['style' => 'display:none;'],
+                // 'attr' => ['style' => 'display:none;'],
                 'label' => false
             ])
             ->add('quantity2Location3', null, [
                 'disabled' => true,
-                'attr' => ['style' => 'display:none;'],
+                // 'attr' => ['style' => 'display:none;'],
                 'label' => false
             ])
         ;

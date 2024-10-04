@@ -17,13 +17,14 @@ class InventoryArticleRepository extends ServiceEntityRepository
     }
 
 
-    public function findByLocationOrLocation2OrLocation3(string $value): array
+    public function findByLocationAndWarehouse(string $warehouse, string $location): array
     {
+
         return $this->createQueryBuilder('i')
-            ->where('i.location = :val')
-            ->orWhere('i.location2 = :val')
-            ->orWhere('i.location3 = :val')
-            ->setParameter('val', $value)
+            ->where('(SUBSTRING(i.location, 1, 5) = :val2 OR SUBSTRING(i.location2, 1, 5) = :val2 OR SUBSTRING(i.location3, 1, 5) = :val2)')
+            ->andWhere('i.warehouse = :val')
+            ->setParameter('val', $warehouse)
+            ->setParameter('val2', $location)
             ->getQuery()
             ->getResult();
     }

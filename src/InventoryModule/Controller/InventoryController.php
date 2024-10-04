@@ -175,9 +175,10 @@ class InventoryController extends AbstractController
     //     ]);
     // }
 
-    #[Route('/arba/inventaire/detail/{location}/edit', name: 'app_inventory_detail_edit')]
-    public function inventoryDetailEdit(String $location, Request $request, ManagerRegistry $managerRegistry): Response
+    #[Route('/arba/inventaire/detail/{warehouse}/{location}/edit', name: 'app_inventory_detail_edit')]
+    public function inventoryDetailEdit(String $warehouse, String $location, Request $request, ManagerRegistry $managerRegistry): Response
     {
+
         $location = urldecode($location);
         $em = $managerRegistry->getManager('security');
 
@@ -196,7 +197,7 @@ class InventoryController extends AbstractController
         $em->flush();
 
         // Récupérer les articles
-        $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationOrLocation2OrLocation3($location);
+        $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouse($warehouse, $location);
 
         // Créer un tableau d'articles pour le formulaire
         $formData = ['articles' => $articleParLoc];
@@ -252,7 +253,8 @@ class InventoryController extends AbstractController
             return $this->redirectToRoute('app_inventory');
         }
 
-        return $this->render('InventoryModule/detail_inventaireSam.html.twig', [
+        return $this->render('InventoryModule/detail_inventaireSam2.html.twig', [
+
             'form' => $form->createView(),
             'location' => $location,
         ]);
@@ -281,19 +283,19 @@ class InventoryController extends AbstractController
 
 
 
-    #[Route('/admin/xlsx', name: 'app_inventory_counting_xlsx')]
-    public function xlsx2(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry): Response
-    {
-        $em = $managerRegistry->getManager('security');
-        $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationOrLocation2OrLocation3('A1 01');
+    // #[Route('/admin/xlsx', name: 'app_inventory_counting_xlsx')]
+    // public function xlsx2(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry): Response
+    // {
+    //     $em = $managerRegistry->getManager('security');
+    //     $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouse('AQA', 'A1 01');
 
 
-        $filePath = '/var/www/ArbaConnect/public/csv/inventory/test2.xlsx';
-        $spreadsheet = $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca);
-        $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
+    //     $filePath = '/var/www/ArbaConnect/public/csv/inventory/test2.xlsx';
+    //     $spreadsheet = $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca);
+    //     $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
 
-        return new Response('test XLSX');
-    }
+    //     return new Response('test XLSX');
+    // }
 
 
 
@@ -319,18 +321,16 @@ class InventoryController extends AbstractController
 
 
         //test sur localisation  findByLocationOrLocation2OrLocation3
-        $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationOrLocation2OrLocation3('A1 01');
+        $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouse('AQA', 'A1 01');
         $inventoryCSVSRubisService->inventoryCsvArray($inventoryArticleByLoca);
 
         return new Response('CSV data generated and displayed.');
     }
 
 
-    // #[Route('/admin/inventaire/parametrage', name: 'app_inventory_setting')]
-    // public function inventorySettings(): Response
-    // {
-    //     return $this->render('InventoryModule/inventory_settings.html.twig', []);
-    // }
+
+
+
 
     #[Route('/admin/inventaire/parametrage/edition/feuille-comptage/{number?}', name: 'app_inventory_setting_counting_page_edition')]
     public function inventoryCountingPageEdition(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry, $number = null): Response
@@ -356,25 +356,10 @@ class InventoryController extends AbstractController
         ]);
     }
 
-    // #[Route('/admin/populer-db-inventaire/{inventoryNumberDBLocations?}/{inventoryNumberDBArticles?}', name: 'app_inventory_populate_inventory_db')]
-    // public function populateInventoryDB(DataMapperInventoryService $dataMapperInventoryService, $inventoryNumberDBLocations = null, $inventoryNumberDBArticles = null): Response
-    // {
-    //     if ($inventoryNumberDBLocations !== null) {
-    //         $dataMapperInventoryService->inventoryArticleMapper($inventoryNumberDBLocations);
-    //         $this->addFlash('success', "Les localisations de l'inventaire $inventoryNumberDBLocations ont été mises en base");
-    //         // return $this->redirectToRoute('app_inventory_populate_inventory_db');
-    //     }
-
-    //     if ($inventoryNumberDBArticles !== null) {
-    //         $dataMapperInventoryService->inventoryArticleMapper($inventoryNumberDBArticles);
-    //         $this->addFlash('success', "Les Articles de l'inventaire $inventoryNumberDBArticles ont été mis en base");
-    //         // return $this->redirectToRoute('app_inventory_populate_inventory_db');
-    //     }
 
 
 
-    //     return $this->render('InventoryModule/inventory_populate_inventory_db.html.twig', []);
-    // }
+
 
     #[Route('/admin/populer-db-articles-inventaire/{inventoryNumberDBArticles?}', name: 'app_inventory_populate_inventory_articles_db')]
     public function populateInventoryArticlesDB(DataMapperInventoryService $dataMapperInventoryService, $inventoryNumberDBArticles = null): Response

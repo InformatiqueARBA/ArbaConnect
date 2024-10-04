@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<a href="{{ path('app_inventory') }}" id='back-btn' class="btn btn-primary">Retour</a>
+
+<div class="container">
+
+	<h1>Inventaire pour la location {{ location }}</h1>
+
+	{{ form_start(form) }}
+
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Entrepôt</th>
+				<th>Emplacement</th>
+				<th>Emplacement 2</th>
+				<th>Emplacement 3</th>
+				<th>Code article</th>
+				<th>Désignation 1</th>
+				<th>Désignation 2</th>
+				<th>Code lot</th>
+				<th>Quantité emplacement</th>
+				<th>Unité de préparation</th>
+				<th>Quantité emplacement 1</th>
+				<th>Quantité emplacement 2</th>
+				<th>Quantité emplacement 3</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for article in form.articles %}
+			<tr>
+				<td>{{ form_widget(article.warehouse) }}</td>
+
+				{% if location == article.location.vars.value[:5] %}
+				<td>{{ form_widget(article.location) }}</td>
+				{% else %}
+				<td></td>
+				{% endif %}
+
+				{# Emplacement 2 avec fond jaune pastel #}
+				{% if location == article.location2.vars.value[:5] %}
+				<td style="background-color: #fff9c4;">{{ form_widget(article.location2) }}</td>
+				{% else %}
+				<td></td>
+				{% endif %}
+
+				{# Emplacement 3 avec fond vert pastel #}
+				{% if location == article.location3.vars.value[:5] %}
+				<td style="background-color: #c8e6c9;">{{ form_widget(article.location3) }}</td>
+				{% else %}
+				<td></td>
+				{% endif %}
+
+				<td>{{ form_widget(article.articleCode) }}</td>
+				<td>{{ form_widget(article.designation1) }}</td>
+				<td>{{ form_widget(article.designation2) }}</td>
+				<td>{{ form_widget(article.lotCode) }}</td>
+				<td>{{ form_widget(article.packaging) }}</td>
+				<td>{{ form_widget(article.preparationUnit) }}</td>
+				<td>{{ form_widget(article.quantityLocation1) }}</td>
+
+				{# Quantité emplacement 2 avec fond jaune pastel #}
+				{% if location == article.location2.vars.value[:5] %}
+				<td style="background-color: #fff9c4;">{{ form_widget(article.quantityLocation2) }}</td>
+				{% else %}
+				<td>{{ form_widget(article.quantityLocation2) }}</td>
+				{% endif %}
+
+				{# Quantité emplacement 3 avec fond vert pastel #}
+				{% if location == article.location3.vars.value[:5] %}
+				<td style="background-color: #c8e6c9;">{{ form_widget(article.quantityLocation3) }}</td>
+				{% else %}
+				<td>{{ form_widget(article.quantityLocation3) }}</td>
+				{% endif %}
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<div class="text-right">
+		{{ form_widget(form.save, { 'attr': { 'class': 'btn btn-primary' } }) }}
+	</div>
+
+	{{ form_end(form) }}
+</div>
+
+{% endblock %}
