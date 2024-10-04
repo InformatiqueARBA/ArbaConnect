@@ -337,14 +337,45 @@ class InventoryController extends AbstractController
     {
         $em = $managerRegistry->getManager('security');
 
+
         // Vérifier si $number est fourni
         if ($number !== null) {
-            $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationOrLocation2OrLocation3($number);
+            $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($number);
+            $Locations = $em->getRepository(Location::class)->findByInventoryNumber($number);
+            // dd($Locations);
+
+            foreach ($Locations as $Location) {
+
+                if (null != $Location->getLocation()) {
+                    // récupère tous les articles liés aux localisations d'un dépôt
+                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouse($warehouse, $Location->getLocation());
+
+                    // génère le fichier excel pour un localisation donnée
+
+
+                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/" . str_replace('/', '_', $Location->getLocation()) . ".xlsx";
+
+                    $spreadsheet = $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca, $Location->getLocation());
+                    $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
+
+
+                    // génère le fichier excel pour un article donnée
+                    // foreach ($inventoryArticleByLoca as $bob) {
+                    //     if ($bob->getArticleCode() == '012643') {
+                    //         // dd($bob);
+                    //         $filePath = "/var/www/ArbaConnect/public/csv/inventory/" . $Location->getLocation() . ".xlsx";
+
+                    //         $spreadsheet = $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca, $Location->getLocation());
+                    //         $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
+                    //     }
+                    // }
+                }
+            }
+
+
 
             // Chemin du fichier basé sur $number
-            $filePath = "/var/www/ArbaConnect/public/csv/inventory/$number.xlsx";
-            $spreadsheet = $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca);
-            $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
+
         }
 
         // Récupérer la liste des fichiers dans le répertoire

@@ -29,6 +29,8 @@ class InventoryArticleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+
+
     //    /**
     //     * @return InventoryArticle[] Returns an array of InventoryArticle objects
     //     */
