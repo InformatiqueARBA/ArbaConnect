@@ -91,7 +91,7 @@ class RequestOdbcInventoryService
             ,0 AS STATUS
             ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
         FROM 
-            AQAGESTCOM.AINVENP1 INV
+            AQZGESTCOM.AINVENP1 INV
         WHERE
             ETARE <> 'S' AND 
             INVST = 'OUI' AND 
@@ -107,7 +107,7 @@ class RequestOdbcInventoryService
             ,0 AS STATUS
             ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
         FROM 
-            AQAGESTCOM.AINVENP1 INV
+            AQZGESTCOM.AINVENP1 INV
         WHERE
             ETARE <> 'S' AND 
             INVST = 'OUI' AND 
@@ -123,7 +123,7 @@ class RequestOdbcInventoryService
             ,0 AS STATUS
             ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
         FROM 
-            AQAGESTCOM.AINVENP1 INV
+            AQZGESTCOM.AINVENP1 INV
         WHERE
             ETARE <> 'S' AND 
             INVST = 'OUI' AND 
@@ -145,15 +145,15 @@ class RequestOdbcInventoryService
             SELECT distinct
                  INV.INVNO AS INVENTORY_NUMBER
                 ,INV.INVDP AS WAREHOUSE 
-                ,INV.LOCAL AS LOCATION
-                ,INV.LOCA2 AS LOCATION2 
-                ,INV.LOCA3 AS LOCATION3
+                ,TRIM(INV.LOCAL) AS LOCATION
+                ,TRIM(INV.LOCA2) AS LOCATION2 
+                ,TRIM(INV.LOCA3) AS LOCATION3
                 ,TRIM(INV.INVAR) AS CODE_ARTICLE
                 ,TRIM(INV.DESI1) AS DESIGNATION1
                 ,TRIM(INV.DESI2) AS DESIGNATION2
-                ,INV.HILOT AS CODE_LOT
-                ,ART.TYDIM AS TYPE_DIMENSION
-                ,ART.CONDI AS CONDITIONNEMENT
+                ,TRIM(INV.HILOT) AS CODE_LOT
+                ,TRIM(ART.TYDIM) AS TYPE_DIMENSION
+                ,TRIM(ART.CONDI) AS CONDITIONNEMENT
                 ,TRIM(ART.ARTD4) AS LIBELLE_CONDI
                 ,CAST(NULL AS DECIMAL(8)) AS QUANTITE_LOC1
                 ,CAST(NULL AS DECIMAL(8)) AS QUANTITE_LOC2
@@ -165,9 +165,9 @@ class RequestOdbcInventoryService
                 --,'' AS DEP AS DEPOT
                 --,'' AS P_DEP
             FROM 
-                AQAGESTCOM.AINVENP1 INV
+                AQZGESTCOM.AINVENP1 INV
             inner join
-                AQAGESTCOM.AARTICP1 ART 
+                AQZGESTCOM.AARTICP1 ART 
             on 
                 INV.INVAR = ART.NOART
             WHERE

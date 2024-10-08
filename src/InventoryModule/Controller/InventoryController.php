@@ -321,8 +321,12 @@ class InventoryController extends AbstractController
 
 
         //test sur localisation  findByLocationOrLocation2OrLocation3
-        $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouse('AQA', 'A1 01');
-        $inventoryCSVSRubisService->inventoryCsvArray($inventoryArticleByLoca);
+
+        $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($inventoryNumber);
+        // dd($warehouse);
+
+        $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByInventoryNumberAndWarehouse($inventoryNumber, $warehouse);
+        $inventoryCSVSRubisService->inventoryCsvArray($inventoryArticleByLoca, $inventoryNumber);
 
         return new Response('CSV data generated and displayed.');
     }

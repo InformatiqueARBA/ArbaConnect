@@ -28,6 +28,17 @@ class InventoryArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    public function findByInventoryNumberAndWarehouse(string $inventoryNumber, string $warehouse): array
+    {
+
+        return $this->createQueryBuilder('i')
+            ->where('i.inventoryNumber = :val')
+            ->andWhere('i.warehouse = :val2')
+            ->setParameter('val', $inventoryNumber)
+            ->setParameter('val2', $warehouse)
+            ->getQuery()
+            ->getResult();
+    }
 
 
 
