@@ -19,6 +19,15 @@
 					<div class="mb-2"><input type="text" id="filter-warehouse" class="form-control" data-column="1"
 							placeholder="Entrepôt" style="text-align: center;"></div>
 				</th>
+				{# <th>
+					<div class="mb-2" style="text-align: center;">
+						<label><input type="checkbox" class="filter-warehouse" value="AQA" checked> AQA</label>
+						<label><input type="checkbox" class="filter-warehouse" value="AQB" checked> AQB</label>
+						<label><input type="checkbox" class="filter-warehouse" value="AQD" checked> AQD</label>
+						<label><input type="checkbox" class="filter-warehouse" value="AQE" checked> AQE</label>
+						<label><input type="checkbox" class="filter-warehouse" value="AQN" checked> AQN</label>
+					</div> #}
+				</th>
 				<th>
 					<div class="mb-2"><input type="text" id="filter-location" class="form-control" data-column="2"
 							placeholder="Emplacement" style="text-align: center;"></div>
@@ -81,6 +90,7 @@
 	</table>
 </div>
 <script src="{{ asset('inventory_index.js') }}"></script>
+
 <script>// //
 	// // Rafraîchit la page toutes les 10 secondes (10000 millisecondes)
 	// setInterval(function () {

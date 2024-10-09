@@ -1,26 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Paramétrage Inventaire
+{% block title %}CSV Rubis
 {% endblock %}
 
 {% block body %}
-<h1>Edition feuilles de comptage</h1>
+<h1>Génération du CSV d'inventaire Rubis</h1>
 
-<form id="inventoryForm" method="post">
+<form id="inventoryCSVForm" method="post">
 	<div class="d-flex align-items-center">
 		<label for="name" class="mr-2">Numéro d'inventaire :</label>
 		<input type="text" id="name" name="name" required class="form-control mr-2" placeholder="Numéro d'inventaire"
 			style="width: 200px;">
-		<button type="submit" class="btn btn-primary ">Editer</button>
+		<button type="submit" class="btn btn-primary ">Générer</button>
 
 	</div>
 </form>
 
-<h1>Liste des feuilles de comptage</h1>
+<h1>Liste des inventaires générés</h1>
 <ul>
 	{% for file in files %}
 	<li>
-		<a href="{{ asset('csv/inventory/counting_sheets/' ~ file) }}">{{ file }}</a>
+		<a href="{{ asset('csv/inventory/inventory_sheets/' ~ file) }}">{{ file }}</a>
 	</li>
 	{% else %}
 	<li>Aucun fichier trouvé.</li>
@@ -30,13 +30,13 @@
 
 {% block javascript %}
 <script>
-	document.getElementById('inventoryForm').addEventListener('submit', function (e) {
+	document.getElementById('inventoryCSVForm').addEventListener('submit', function (e) {
 		e.preventDefault();
 
 		let inventoryNumber = document.getElementById('name').value;
 
 		if (inventoryNumber) {
-			let url = "{{ path('app_inventory_setting_counting_page_edition', {'inventoryNumber': 'PLACEHOLDER'}) }}";
+			let url = "{{ path('app_csvInventory', {'inventoryNumber': 'PLACEHOLDER'}) }}";
 			url = url.replace('PLACEHOLDER', inventoryNumber);
 
 			window.location.href = url;

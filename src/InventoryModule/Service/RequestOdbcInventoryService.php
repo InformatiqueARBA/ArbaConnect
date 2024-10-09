@@ -86,12 +86,14 @@ class RequestOdbcInventoryService
         $sql = "
         SELECT DISTINCT
              INV.INVDP AS WAREHOUSE -- Dépôt 
-            ,LEFT(INV.LOCAL, 5) AS LOCATION -- 1ère Loc sur 5 caractères
+            ,CASE
+                WHEN LEFT(INV.LOCAL, 5) = '' THEN CAST(NULL AS VARCHAR(12))
+                ELSE LEFT(INV.LOCAL, 5) END AS LOCATION -- 1ère Loc sur 5 caractères
             ,CAST(NULL AS VARCHAR(50)) AS REFERENT
             ,0 AS STATUS
             ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
         FROM 
-            AQZGESTCOM.AINVENP1 INV
+            AQAGESTCOM.AINVENP1 INV
         WHERE
             ETARE <> 'S' AND 
             INVST = 'OUI' AND 
@@ -102,12 +104,14 @@ class RequestOdbcInventoryService
     
         SELECT DISTINCT
              INV.INVDP AS WAREHOUSE -- Dépôt 
-            ,LEFT(INV.LOCA2, 5) AS LOCATION -- 2ème Loc sur 5 caractères 
+            ,CASE
+                WHEN LEFT(INV.LOCA2, 5) = '' THEN CAST(NULL AS VARCHAR(12))
+                ELSE LEFT(INV.LOCA2, 5) END AS LOCATION -- 2ème Loc sur 5 caractères 
             ,CAST(NULL AS VARCHAR(50)) AS REFERENT
             ,0 AS STATUS
             ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
         FROM 
-            AQZGESTCOM.AINVENP1 INV
+            AQAGESTCOM.AINVENP1 INV
         WHERE
             ETARE <> 'S' AND 
             INVST = 'OUI' AND 
@@ -118,12 +122,14 @@ class RequestOdbcInventoryService
     
         SELECT DISTINCT
              INV.INVDP AS WAREHOUSE -- Dépôt  
-            ,LEFT(INV.LOCA3, 5) AS LOCATION -- 3ème Loc sur 5 caractères
+            ,CASE
+                WHEN LEFT(INV.LOCA3, 5) = '' THEN CAST(NULL AS VARCHAR(12))
+                ELSE LEFT(INV.LOCA3, 5) END AS LOCATION -- 3ème Loc sur 5 caractères
             ,CAST(NULL AS VARCHAR(50)) AS REFERENT
             ,0 AS STATUS
             ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
         FROM 
-            AQZGESTCOM.AINVENP1 INV
+            AQAGESTCOM.AINVENP1 INV
         WHERE
             ETARE <> 'S' AND 
             INVST = 'OUI' AND 
@@ -145,9 +151,15 @@ class RequestOdbcInventoryService
             SELECT distinct
                  INV.INVNO AS INVENTORY_NUMBER
                 ,INV.INVDP AS WAREHOUSE 
-                ,TRIM(INV.LOCAL) AS LOCATION
-                ,TRIM(INV.LOCA2) AS LOCATION2 
-                ,TRIM(INV.LOCA3) AS LOCATION3
+                ,CASE
+                WHEN TRIM(INV.LOCAL) = '' THEN CAST(NULL AS VARCHAR(12)) 
+                ELSE TRIM(INV.LOCAL) END AS LOCATION
+                ,CASE
+                WHEN TRIM(INV.LOCA2) = '' THEN CAST(NULL AS VARCHAR(12)) 
+                ELSE TRIM(INV.LOCA2) END AS LOCATION2
+                ,CASE
+                WHEN TRIM(INV.LOCA3) = '' THEN CAST(NULL AS VARCHAR(12)) 
+                ELSE TRIM(INV.LOCA3) END AS LOCATION3
                 ,TRIM(INV.INVAR) AS CODE_ARTICLE
                 ,TRIM(INV.DESI1) AS DESIGNATION1
                 ,TRIM(INV.DESI2) AS DESIGNATION2
@@ -165,9 +177,9 @@ class RequestOdbcInventoryService
                 --,'' AS DEP AS DEPOT
                 --,'' AS P_DEP
             FROM 
-                AQZGESTCOM.AINVENP1 INV
+                AQAGESTCOM.AINVENP1 INV
             inner join
-                AQZGESTCOM.AARTICP1 ART 
+                AQAGESTCOM.AARTICP1 ART 
             on 
                 INV.INVAR = ART.NOART
             WHERE

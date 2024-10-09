@@ -24,6 +24,9 @@ class InventoryController extends AbstractController
 
 
 
+
+
+    // Liste des emplacements
     #[Route('/arba/inventaire/liste', name: 'app_inventory')]
     public function index(ManagerRegistry $managerRegistry): Response
     {
@@ -39,142 +42,8 @@ class InventoryController extends AbstractController
 
 
 
-    #[Route('/arba/inventaire/detail/localisation', name: 'app_detailLocalisation')]
-    public function detailLocation(ManagerRegistry $managerRegistry): Response
-    {
-        $em = $managerRegistry->getManager('security');
-        $articles = $em->getRepository(InventoryArticle::class)->findAll();
 
-        return $this->render('InventoryModule\detail_inventaire.html.twig', [
-            'articles' => $articles,
-        ]);
-    }
-
-
-
-    // #[Route('/arba/inventaire/detail/{location}/edit', name: 'app_inventory_detail_edit')]
-    // public function inventoryDetailEdit(String $location, Request $request, ManagerRegistry $managerRegistry): Response
-    // {
-    //     $location = urldecode($location);
-    //     $em = $managerRegistry->getManager('security');
-
-    //     // on récupère le user connecté pour affecter le référent de la saisie
-    //     $user = $this->getUser();
-
-    //     // Check if user is an instance of User class
-    //     if (!$user instanceof User) {
-    //         throw new \LogicException('The user is not valid.');
-    //     }
-
-    //     // Changement du statut de l'objet Location à actif
-    //     $Location = $em->getRepository(Location::class)->findByLocation($location);
-    //     $Location[0]->setStatus(1);
-    //     $em->persist($Location[0]);
-    //     $em->flush();
-
-    //     // Récupérer les articles
-    //     $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationOrLocation2OrLocation3($location);
-
-    //     // Créer un tableau d'articles pour le formulaire
-    //     $formData = ['articles' => $articleParLoc];
-
-    //     // Créer le formulaire parent avec la collection d'articles
-    //     $form = $this->createForm(InventoryArticlesCollectionType::class, $formData);
-
-    //     $form->handleRequest($request);
-
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         // Traiter chaque article et enregistrer
-    //         foreach ($formData['articles'] as $article) {
-    //             $em->persist($article);
-    //         }
-    //         $em->flush();
-
-    //         $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
-    //         // return $this->redirectToRoute('app_edit2', ['location' => $location]);
-
-    //         // Changement du statut de l'objet Location à inactif
-    //         $Location[0]->setStatus(0);
-    //         $Location[0]->setReferent($user->getLogin());
-    //         $em->persist($Location[0]);
-    //         $em->flush();
-
-
-    //         return $this->redirectToRoute('app_inventory');
-    //     }
-
-    //     return $this->render('InventoryModule/detail_inventaireSam.html.twig', [
-    //         'form' => $form->createView(),
-    //         'location' => $location,
-    //     ]);
-    // }
-
-    // #[Route('/arba/inventaire/detail/{location}/edit', name: 'app_inventory_detail_edit')]
-    // public function inventoryDetailEdit(String $location, Request $request, ManagerRegistry $managerRegistry): Response
-    // {
-    //     $location = urldecode($location);
-    //     $em = $managerRegistry->getManager('security');
-
-    //     // on récupère le user connecté pour affecter le référent de la saisie
-    //     $user = $this->getUser();
-
-    //     // Check if user is an instance of User class
-    //     if (!$user instanceof User) {
-    //         throw new \LogicException('The user is not valid.');
-    //     }
-
-    //     // Changement du statut de l'objet Location à actif
-    //     $Location = $em->getRepository(Location::class)->findByLocation($location);
-    //     $Location[0]->setStatus(1);
-    //     $em->persist($Location[0]);
-    //     $em->flush();
-
-    //     // Récupérer les articles
-    //     $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationOrLocation2OrLocation3($location);
-
-    //     // Créer un tableau d'articles pour le formulaire
-    //     $formData = ['articles' => $articleParLoc];
-
-    //     // Créer le formulaire parent avec la collection d'articles
-    //     $form = $this->createForm(InventoryArticlesCollectionType::class, $formData);
-
-    //     $form->handleRequest($request);
-
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $shouldSetReferent = false; // Initialize flag
-
-    //         // Traiter chaque article et enregistrer
-    //         foreach ($formData['articles'] as $article) {
-    //             // Check if either quantity field has a value
-    //             if ($article->getQuantityLocation1() !== null || $article->getQuantity2Location1() !== null) {
-    //                 $shouldSetReferent = true;
-    //             }
-    //             $em->persist($article);
-    //         }
-    //         $em->flush();
-
-    //         $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
-
-    //         // Changement du statut de l'objet Location à inactif
-    //         $Location[0]->setStatus(0);
-
-    //         // Only set the referent if at least one article has a quantity
-    //         if ($shouldSetReferent) {
-    //             $Location[0]->setReferent($user->getLogin());
-    //         }
-
-    //         $em->persist($Location[0]);
-    //         $em->flush();
-
-    //         return $this->redirectToRoute('app_inventory');
-    //     }
-
-    //     return $this->render('InventoryModule/detail_inventaireSam.html.twig', [
-    //         'form' => $form->createView(),
-    //         'location' => $location,
-    //     ]);
-    // }
-
+    //Liste des articles par emplacements
     #[Route('/arba/inventaire/detail/{warehouse}/{location}/edit', name: 'app_inventory_detail_edit')]
     public function inventoryDetailEdit(String $warehouse, String $location, Request $request, ManagerRegistry $managerRegistry): Response
     {
@@ -253,7 +122,7 @@ class InventoryController extends AbstractController
             return $this->redirectToRoute('app_inventory');
         }
 
-        return $this->render('InventoryModule/detail_inventaireSam2.html.twig', [
+        return $this->render('InventoryModule/detail_inventaire.html.twig', [
 
             'form' => $form->createView(),
             'location' => $location,
@@ -263,72 +132,35 @@ class InventoryController extends AbstractController
 
 
 
-    #[Route('/admin/localisation', name: 'localisation')]
-    public function location(DataMapperInventoryService $dataMapperInventoryService): Response
-    {
-        $dataMapperInventoryService->inventoryMapper('002612');
-        return new Response('Locations are up to date');
-    }
-
-
-
-    #[Route('/admin/articleInventaire', name: 'articleInventaire')]
-    public function articleInventaire(DataMapperInventoryService $dataMapperInventoryService): Response
-    {
-        $dataMapperInventoryService->inventoryArticleMapper('002612');
-        return new Response('articles are up to date');
-    }
 
 
 
 
 
-    // #[Route('/admin/xlsx', name: 'app_inventory_counting_xlsx')]
-    // public function xlsx2(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry): Response
-    // {
-    //     $em = $managerRegistry->getManager('security');
-    //     $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouse('AQA', 'A1 01');
-
-
-    //     $filePath = '/var/www/ArbaConnect/public/csv/inventory/test2.xlsx';
-    //     $spreadsheet = $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca);
-    //     $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
-
-    //     return new Response('test XLSX');
-    // }
 
 
 
-    //TODO: C'est pas fini mais ça fonctionne (un peu ^^)
-    // L'accès se fait via la page : http://ac.test/admin/inventaires
-    #[Route('/admin/generationInventaire/{inventoryNumber}', name: 'app_csvInventory')]
-    public function generateCsvInventory(string $inventoryNumber, ManagerRegistry $managerRegistry, InventoryCSVRubisService $inventoryCSVSRubisService, InventoryArticle $inventoryArticle): Response
+    // Création du CSV inventaire Rubis
+    #[Route('/admin/generationInventaire/{inventoryNumber?}', name: 'app_csvInventory')]
+    public function generateCsvInventory(ManagerRegistry $managerRegistry, InventoryCSVRubisService $inventoryCSVSRubisService, $inventoryNumber = null): Response
     {
         $em = $managerRegistry->getManager('security');
 
-        // $inventoryArticle = $em->getRepository(InventoryArticle::class)->findOneBy([
-        //     'inventoryNumber' => $inventoryNumber,
-        // ]);
-        // // dd($inventoryArticle);
+        if ($inventoryNumber !== null) {
 
-        // if (!$inventoryArticle) {
-        //     throw $this->createNotFoundException('Article non trouvé pour l\'ID ' . $inventoryNumber);
-        // }
+            $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($inventoryNumber);
 
-        // $csvData = $inventoryCSVSRubisService->inventoryCsv($inventoryArticle);
-        // dd($csvData);
+            $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByInventoryNumberAndWarehouse($inventoryNumber, $warehouse);
+            $inventoryCSVSRubisService->inventoryCsvArray($inventoryArticleByLoca, $inventoryNumber);
+        }
 
+        // Récupérer la liste des fichiers dans le répertoire
+        $directory = '/var/www/ArbaConnect/public/csv/inventory/inventory_sheets/';
+        $files = array_diff(scandir($directory), array('.', '..'));
 
-
-        //test sur localisation  findByLocationOrLocation2OrLocation3
-
-        $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($inventoryNumber);
-        // dd($warehouse);
-
-        $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByInventoryNumberAndWarehouse($inventoryNumber, $warehouse);
-        $inventoryCSVSRubisService->inventoryCsvArray($inventoryArticleByLoca, $inventoryNumber);
-
-        return new Response('CSV data generated and displayed.');
+        return $this->render('InventoryModule/inventory_setting_CSV_Rubis.twig', [
+            'files' => $files,
+        ]);
     }
 
 
@@ -336,54 +168,39 @@ class InventoryController extends AbstractController
 
 
 
-    #[Route('/admin/inventaire/parametrage/edition/feuille-comptage/{number?}', name: 'app_inventory_setting_counting_page_edition')]
-    public function inventoryCountingPageEdition(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry, $number = null): Response
+
+    // Création des feuilles de comptage
+    #[Route('/admin/inventaire/parametrage/edition/feuille-comptage/{inventoryNumber?}', name: 'app_inventory_setting_counting_page_edition')]
+    public function inventoryCountingPageEdition(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry, $inventoryNumber = null): Response
     {
         $em = $managerRegistry->getManager('security');
 
 
         // Vérifier si $number est fourni
-        if ($number !== null) {
-            $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($number);
-            $Locations = $em->getRepository(Location::class)->findByInventoryNumber($number);
+        if ($inventoryNumber !== null) {
+            $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($inventoryNumber);
+            $Locations = $em->getRepository(Location::class)->findByInventoryNumber($inventoryNumber);
             // dd($Locations);
 
             foreach ($Locations as $Location) {
 
-                if (null != $Location->getLocation()) {
+                if (null != $Location->getLocation() && trim($Location->getLocation()) != '') {
                     // récupère tous les articles liés aux localisations d'un dépôt
                     $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouse($warehouse, $Location->getLocation());
-
+                    //dd($inventoryArticleByLoca);
                     // génère le fichier excel pour un localisation donnée
 
 
-                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/" . str_replace('/', '_', $Location->getLocation()) . ".xlsx";
+                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/" . str_replace('/', '_', $Location->getLocation()) . ".xlsx";
 
                     $spreadsheet = $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca, $Location->getLocation());
                     $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
-
-
-                    // génère le fichier excel pour un article donnée
-                    // foreach ($inventoryArticleByLoca as $bob) {
-                    //     if ($bob->getArticleCode() == '012643') {
-                    //         // dd($bob);
-                    //         $filePath = "/var/www/ArbaConnect/public/csv/inventory/" . $Location->getLocation() . ".xlsx";
-
-                    //         $spreadsheet = $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca, $Location->getLocation());
-                    //         $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
-                    //     }
-                    // }
                 }
             }
-
-
-
-            // Chemin du fichier basé sur $number
-
         }
 
         // Récupérer la liste des fichiers dans le répertoire
-        $directory = '/var/www/ArbaConnect/public/csv/inventory';
+        $directory = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/';
         $files = array_diff(scandir($directory), array('.', '..'));
 
         return $this->render('InventoryModule/inventory_setting_counting_page_edition.html.twig', [
@@ -396,6 +213,9 @@ class InventoryController extends AbstractController
 
 
 
+
+
+    // Mise en BDD des Articles de l'inventaire
     #[Route('/admin/populer-db-articles-inventaire/{inventoryNumberDBArticles?}', name: 'app_inventory_populate_inventory_articles_db')]
     public function populateInventoryArticlesDB(DataMapperInventoryService $dataMapperInventoryService, $inventoryNumberDBArticles = null): Response
     {
@@ -410,6 +230,13 @@ class InventoryController extends AbstractController
     }
 
 
+
+
+
+
+
+
+    // Mise en BDD des Localisations de l'inventaire
     #[Route('/admin/populer-db-localisations-inventaire/{inventoryNumberDBLocations?}', name: 'app_inventory_populate_inventory_locations_db')]
     public function populateInventoryLocationsDB(DataMapperInventoryService $dataMapperInventoryService, $inventoryNumberDBLocations = null): Response
     {
@@ -421,5 +248,42 @@ class InventoryController extends AbstractController
         }
 
         return $this->render('InventoryModule/inventory_populate_inventory_locations_db.html.twig', []);
+    }
+
+
+
+
+
+
+
+
+
+
+    //------------------------------------------------------------------------------------------------------------------------------
+
+
+    // Populer les DB en dur via URL
+
+
+    #[Route(
+        '/admin/localisation',
+        name: 'localisation'
+    )]
+    public function location(DataMapperInventoryService $dataMapperInventoryService): Response
+    {
+        $dataMapperInventoryService->inventoryMapper('002612');
+        return new Response('Locations are up to date');
+    }
+
+
+
+    #[Route(
+        '/admin/articleInventaire',
+        name: 'articleInventaire'
+    )]
+    public function articleInventaire(DataMapperInventoryService $dataMapperInventoryService): Response
+    {
+        $dataMapperInventoryService->inventoryArticleMapper('002612');
+        return new Response('articles are up to date');
     }
 }

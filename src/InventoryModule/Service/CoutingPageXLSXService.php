@@ -8,7 +8,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class CoutingPageXLSXService
 {
-    private $filePath = '/var/www/ArbaConnect/public/csv/inventory';
+    private $filePath = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets';
 
     // public function generateXlsx(array $data): Spreadsheet
     // {

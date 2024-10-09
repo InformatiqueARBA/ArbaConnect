@@ -1,64 +1,123 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste Inventaire
-{% endblock %}
-
 {% block body %}
-	<div class="container-fluid my-4 inventory-container sfp-regular-text">
-		<h3>Liste des Articles d'Inventaire pour le numéro
-		</h3>
+<a href="{{ path('app_inventory') }}" id='back-btn'
+	class="custom-btn custom-btn:hover custom-btn:focus mt-3 mb-3">Retour</a>
 
-		<table id="inventory-table" class="table table-hover centered-table">
-			<thead class="table-light">
-				<tr>
-					<th>N° Inventaire</th>
-					<th>Entrepôt</th>
-					<th>Emplacement 1</th>
-					<th>Emplacement 2</th>
-					<th>Emplacement 3</th>
-					<th>Code Article</th>
-					<th>Désignation 1</th>
-					<th>Désignation 2</th>
-					<th>Code Lot</th>
-					<th>Type de Dimension</th>
-					<th>Conditionnement</th>
-					<th>Libellé Conditionnement</th>
-					<th>Quantité Loc1</th>
-					<th>Quantité Loc2</th>
-					<th>Quantité Loc3</th>
-					<th>Unité Préparation</th>
-					<th>Quantité 2 Loc1</th>
-					<th>Quantité 2 Loc2</th>
-					<th>Quantité 2 Loc3</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for article in articles %}
-					<tr>
-						<td>{{ article.inventoryNumber }}</td>
-						<td>{{ article.warehouse }}</td>
-						<td>{{ article.location }}</td>
-						<td>{{ article.location2 }}</td>
-						<td>{{ article.location3 }}</td>
-						<td>{{ article.articleCode }}</td>
-						<td>{{ article.designation1 }}</td>
-						<td>{{ article.designation2 }}</td>
-						<td>{{ article.lotCode }}</td>
-						<td>{{ article.dimensionType }}</td>
-						<td>{{ article.packaging }}</td>
-						<td>{{ article.packagingName }}</td>
-						<td>{{ article.quantityLocation1 }}</td>
-						<td>{{ article.quantityLocation2 }}</td>
-						<td>{{ article.quantityLocation3 }}</td>
-						<td>{{ article.preparationUnit }}</td>
-						<td>{{ article.quantity2Location1 }}</td>
-						<td>{{ article.quantity2Location2 }}</td>
-						<td>{{ article.quantity2Location3 }}</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+<div class="container-fluid ">
+
+	<h3 class="mb-3  mt-3">Inventaire pour la location {{ location }}</h3>
+
+	{{ form_start(form) }}
+
+	<table class="table table-striped ">
+		<thead>
+			<tr>
+				<th style=" width: 130px; font-size:14px; text-align :center;">Emplacement 1</th>
+				<th style=" width: 130px; font-size:14px; text-align :center;">Emplacement 2</th>
+				<th style=" width: 130px; font-size:14px; text-align :center;">Emplacement 3</th>
+				<th style=" width: 100px; font-size:14px; text-align :center;">Code article</th>
+				<th style=" width: 350px; font-size:14px; text-align :center;">Désignation 1</th>
+				<th style=" width: 350px; font-size:14px; text-align :center;">Désignation 2</th>
+				<th style=" width: 80px;  font-size:14px; text-align :center;">N° de lot</th>
+				<th style=" width: 80px;  font-size:14px; text-align :center;">Condi.</th>
+				<th style=" width: 80px;  font-size:14px; text-align :center;">Unité</th>
+				<th style="font-size:14px ; text-align :center;" ;>Qté empl.1</th>
+				<th style="font-size:14px ; text-align :center;" ;>Qté empl.2</th>
+				<th style="font-size:14px ; text-align :center;" ;>Qté empl.3</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for article in form.articles %}
+			<tr>
+				{# <td>{{ form_widget(article.warehouse) }}</td> #}
+
+				{% if location == article.location.vars.value[:5] %}
+				<td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.location) }}</td>
+				{% else %}
+				<td>{{ form_widget(article.location, { 'attr': {'style': 'display: none;'} }) }}</td>
+				{% endif %}
+
+				{# Emplacement 2 avec fond jaune pastel #}
+				{% if location == article.location2.vars.value[:5] %}
+				<td style="background-color: #fff9c4;">{{ form_widget(article.location2) }}</td>
+				{% else %}
+				<td>{{ form_widget(article.location2, { 'attr': {'style': 'display: none;'} }) }}</td>
+				{% endif %}
+
+				{# Emplacement 3 avec fond vert pastel #}
+				{% if location == article.location3.vars.value[:5] %}
+				<td style="background-color: #c8e6c9;">{{ form_widget(article.location3) }}</td>
+				{% else %}
+				<td>{{ form_widget(article.location3, { 'attr': {'style': 'display: none;'} }) }}</td>
+				{% endif %}
+
+				<td>{{ form_widget(article.articleCode) }}</td>
+				<td>{{ form_widget(article.designation1) }}</td>
+				<td>{{ form_widget(article.designation2) }}</td>
+				<td>{{ form_widget(article.lotCode) }}</td>
+				<td>{{ form_widget(article.packaging) }}</td>
+				<td>{{ form_widget(article.preparationUnit) }}</td>
+				{# <td>{{ form_widget(article.quantityLocation1) }}</td> #}
+
+
+				{% if location == article.location.vars.value[:5] %}
+				<td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.quantityLocation1) }}
+				</td>
+				{% else %}
+				<td>{{ form_widget(article.quantityLocation1, { 'attr': {'style': 'display: none;'} }) }}</td>
+				{% endif %}
+
+				{# Quantité emplacement 2 avec fond jaune pastel #}
+				{% if location == article.location2.vars.value[:5] %}
+				<td style="background-color: #fff9c4;">{{ form_widget(article.quantityLocation2) }}</td>
+				{% else %}
+				<td>{{ form_widget(article.quantityLocation2, { 'attr': {'style': 'display: none;'} }) }}</td>
+				{% endif %}
+
+				{# Quantité emplacement 3 avec fond vert pastel #}
+				{% if location == article.location3.vars.value[:5] %}
+				<td style="background-color: #c8e6c9;">{{ form_widget(article.quantityLocation3) }}</td>
+				{% else %}
+				<td>{{ form_widget(article.quantityLocation3, { 'attr': {'style': 'display: none;'} }) }}</td>
+				{% endif %}
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<style>
+		/* bouton connexion */
+		.custom-btn {
+			border-color: rgb(0, 70, 100);
+			background-color: rgb(0, 70, 100);
+			color: rgb(130, 170, 55);
+			border-radius: 5px;
+			/* Bordure arrondie */
+			padding: 10px;
+			text-decoration: none;
+
+			/* Ajout d'une bordure par défaut transparente */
+			transition: border-color 0.3s ease;
+			/* Transition douce pour la bordure */
+		}
+
+		.custom-btn:hover,
+		.custom-btn:focus {
+			border: 2px solid transparent;
+			background-color: rgb(130, 170, 55);
+			color: #f2f6eb;
+			/* Couleur de la bordure au survol */
+		}
+	</style>
+
+	<div class="text-end">
+		{{ form_widget(form.save, { 'attr': { 'class': 'btn btn-primary custom-btn' } }) }}
 	</div>
 
-	<script src="{{ asset('inventory_index.js') }}"></script>
+
+
+
+	{{ form_end(form) }}
+</div>
+
 {% endblock %}

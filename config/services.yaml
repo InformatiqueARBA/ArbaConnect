@@ -4,78 +4,77 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    csv_directory_delivery_date: '%kernel.project_dir%/public/csv/delivery_date/'
-    csv_directory_inventory: '%kernel.project_dir%/public/csv/inventory/'
-    variables_app_directory: '%kernel.project_dir%/public/variables_app/'
-    csv_save_directory_delivery_date: '/home/dave/Documents/ArbaConnect/save/csv/delivery_date/'
-    csv_save_directory_inventory: '/home/dave/Documents/ArbaConnect/save/csv/inventory/'
-    jwt_secret: '%env(JWT_SECRET)%'
-    mail_pwd_dev: '%env(MAIL_PWD_DEV)%'
-    env_app: '%env(APP_ENV)'
-    erp_dir_prod_ac: '%env(ERP_DIRECTORY_PROD_AC)%'
-    erp_dir_prod_inv: '%env(ERP_DIRECTORY_PROD_INV)%'
-  
-    
+  csv_directory_delivery_date: "%kernel.project_dir%/public/csv/delivery_date/"
+  csv_directory_inventory_counting_sheets: "%kernel.project_dir%/public/csv/inventory/counting_sheets/"
+  csv_directory_inventory_inventory_sheets: "%kernel.project_dir%/public/csv/inventory/inventory_sheets/"
+  variables_app_directory: "%kernel.project_dir%/public/variables_app/"
+  csv_save_directory_delivery_date: "/home/dave/Documents/ArbaConnect/save/csv/delivery_date/"
+  csv_save_directory_inventory: "/home/dave/Documents/ArbaConnect/save/csv/inventory/"
+  jwt_secret: "%env(JWT_SECRET)%"
+  mail_pwd_dev: "%env(MAIL_PWD_DEV)%"
+  env_app: "%env(APP_ENV)"
+  erp_dir_prod_ac: "%env(ERP_DIRECTORY_PROD_AC)%"
+  erp_dir_prod_inv: "%env(ERP_DIRECTORY_PROD_INV)%"
+
 services:
-    # default configuration for services in *this* file
-    _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-        bind:
-            $jwtSecret: '%jwt_secret%'
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    bind:
+      $jwtSecret: "%jwt_secret%"
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
-    App\:
-        resource: '../src/'
-        exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
-            - '../src/Kernel.php'
+  # makes classes in src/ available to be used as services
+  # this creates a service per class whose id is the fully-qualified class name
+  App\:
+    resource: "../src/"
+    exclude:
+      - "../src/DependencyInjection/"
+      - "../src/Entity/"
+      - "../src/Kernel.php"
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+  # add more service definitions when explicit configuration is needed
+  # please note that last definitions always *replace* previous ones
 
-    # CsvToRubisService
-    App\ArbaConnect\Service\CsvToRubisService:
-        arguments:
-            $ERPDirDev: '%env(ERP_DIRECTORY_DEV)%'
-            
+  # CsvToRubisService
+  App\ArbaConnect\Service\CsvToRubisService:
+    arguments:
+      $ERPDirDev: "%env(ERP_DIRECTORY_DEV)%"
 
-    # ODBC Service
-    App\ArbaConnect\Service\OdbcService:
-        arguments:
-            $dsn: '%env(ODBC_DSN)%'
-            $username: '%env(ODBC_USERNAME)%'
-            $password: '%env(ODBC_PASSWORD)%'
-       
-    App\DeliveryDateModule\Service\DatabaseSwitcherService:
-        arguments:
-            $defaultEntityManager: "@doctrine.orm.default_entity_manager"
-            $customerEntityManager: "@doctrine.orm.customer_entity_manager"
+  # ODBC Service
+  App\ArbaConnect\Service\OdbcService:
+    arguments:
+      $dsn: "%env(ODBC_DSN)%"
+      $username: "%env(ODBC_USERNAME)%"
+      $password: "%env(ODBC_PASSWORD)%"
 
-    App\Repository\CorporationRepository:
-        factory: ['@doctrine', getRepository]
-        arguments:
-            - App\Entity\Corporation
+  App\DeliveryDateModule\Service\DatabaseSwitcherService:
+    arguments:
+      $defaultEntityManager: "@doctrine.orm.default_entity_manager"
+      $customerEntityManager: "@doctrine.orm.customer_entity_manager"
 
-    App\Repository\OrderRepository:
-        factory: ['@doctrine', getRepository]
-        arguments:
-            - App\Entity\Order
+  App\Repository\CorporationRepository:
+    factory: ["@doctrine", getRepository]
+    arguments:
+      - App\Entity\Corporation
 
-    App\Repository\OrderDetailRepository:
-        factory: ['@doctrine', getRepository]
-        arguments:
-            - App\Entity\OrderDetail
+  App\Repository\OrderRepository:
+    factory: ["@doctrine", getRepository]
+    arguments:
+      - App\Entity\Order
 
-    App\Repository\MemberRepository:
-        factory: ['@doctrine', getRepository]
-        arguments:
-            - App\Entity\Member
+  App\Repository\OrderDetailRepository:
+    factory: ["@doctrine", getRepository]
+    arguments:
+      - App\Entity\OrderDetail
 
-    App\Scheduler\PopulateAcdbProvider:
-        tags: ["scheduler.provider"]
+  App\Repository\MemberRepository:
+    factory: ["@doctrine", getRepository]
+    arguments:
+      - App\Entity\Member
 
-    App\Scheduler\DataMapperSecurityProvider:
-        tags: ["scheduler.provider"]
+  App\Scheduler\PopulateAcdbProvider:
+    tags: ["scheduler.provider"]
+
+  App\Scheduler\DataMapperSecurityProvider:
+    tags: ["scheduler.provider"]

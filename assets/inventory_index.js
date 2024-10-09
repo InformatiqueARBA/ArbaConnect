@@ -30,3 +30,32 @@ filters.forEach(function (filter) {
     });
   });
 });
+// document.addEventListener("DOMContentLoaded", function () {
+//   function filterTable() {
+//     // Récupérer les valeurs sélectionnées
+//     var checkboxes = document.querySelectorAll(".filter-warehouse");
+//     var selectedWarehouses = Array.from(checkboxes)
+//       .filter((checkbox) => checkbox.checked)
+//       .map((checkbox) => checkbox.value);
+
+//     // Afficher ou masquer les lignes du tableau
+//     var rows = document.querySelectorAll("#inventory-locations-table tbody tr");
+//     rows.forEach(function (row) {
+//       var warehouse = row.cells[1].textContent.trim();
+//       if (selectedWarehouses.includes(warehouse)) {
+//         row.style.display = "";
+//       } else {
+//         row.style.display = "none";
+//       }
+//     });
+//   }
+
+//   // Ajouter un écouteur d'événement sur les cases à cocher
+//   var checkboxes = document.querySelectorAll(".filter-warehouse");
+//   checkboxes.forEach(function (checkbox) {
+//     checkbox.addEventListener("change", filterTable);
+//   });
+
+//   // Filtrer le tableau au chargement de la page
+//   filterTable();
+// });

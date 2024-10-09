@@ -32,7 +32,8 @@ class DataMapperInventoryService
             $existingLocation = $this->em->getRepository(Location::class)
                 ->findOneBy(['inventoryNumber' => $result['INVENTORY_NUMBER']]);
 
-            if (!$existingLocation) {
+            // if (!$existingLocation) {
+            if (!$existingLocation && $result['LOCATION'] != null) {
                 // Si l'INVENTORY_NUMBER n'existe pas, on crée une nouvelle location
                 $location = new Location();
                 $location->setWarehouse($result['WAREHOUSE']);
