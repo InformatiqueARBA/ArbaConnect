@@ -1,47 +1,68 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Paramétrage Inventaire
-{% endblock %}
+{% block title %}Paramétrage Inventaire{% endblock %}
 
 {% block body %}
 <h1>Edition feuilles de comptage</h1>
 
 <form id="inventoryForm" method="post">
 	<div class="d-flex align-items-center">
-		<label for="name" class="mr-2">Numéro d'inventaire :</label>
-		<input type="text" id="name" name="name" required class="form-control mr-2" placeholder="Numéro d'inventaire"
-			style="width: 200px;">
-		<button type="submit" class="btn btn-primary ">Editer</button>
+		<label for="inventoryNumber" class="mr-2">Numéro d'inventaire :</label>
+		<input type="text" id="inventoryNumber" name="inventoryNumber" required class="form-control mr-2"
+			placeholder="Numéro d'inventaire" style="width: 200px;">
 
+		<label for="printerName" class="mr-2">Imprimante</label>
+		<select id="printerName" name="printerName" required class="form-control mr-2" style="width: 200px;">
+			<option value="">Sélectionner une imprimante</option>
+
+			<option value="Developpement">Developpement</option>
+			<option value="SalleExpo">SalleExpo</option>
+
+		</select>
+
+		<button type="submit" class="btn btn-primary">Editer</button>
 	</div>
 </form>
 
-<h1>Liste des feuilles de comptage</h1>
+{# <h1>Liste des feuilles de comptage</h1>
 <ul>
 	{% for file in files %}
 	<li>
-		<a href="{{ asset('csv/inventory/counting_sheets/' ~ file) }}">{{ file }}</a>
+		<a href="{{ asset('csv/inventory/counting_sheets/PDF/' ~ file) }}">{{ file }}</a>
+	</li>
+	{% else %}
+	<li>Aucun fichier trouvé.</li>
+	{% endfor %}
+</ul> #}
+
+<h1>Liste des feuilles de comptage imprimées</h1>
+<ul>
+	{% for file in filesPrinted %}
+	<li>
+		<a href="{{ asset('csv/inventory/counting_sheets/PDF/printed/' ~ file) }}">{{ file }}</a>
 	</li>
 	{% else %}
 	<li>Aucun fichier trouvé.</li>
 	{% endfor %}
 </ul>
 
-
 {% block javascript %}
 <script>
 	document.getElementById('inventoryForm').addEventListener('submit', function (e) {
 		e.preventDefault();
 
-		let inventoryNumber = document.getElementById('name').value;
+		let inventoryNumber = document.getElementById('inventoryNumber').value;
+		let printerName = document.getElementById('printerName').value;
 
-		if (inventoryNumber) {
-			let url = "{{ path('app_inventory_setting_counting_page_edition', {'inventoryNumber': 'PLACEHOLDER'}) }}";
-			url = url.replace('PLACEHOLDER', inventoryNumber);
+		if (inventoryNumber && printerName) {
+			let url = "{{ path('app_inventory_setting_counting_page_edition', {'data': 'PLACEHOLDER'}) }}";
+
+			// Remplacer 'PLACEHOLDER' par un tableau qui contient les deux valeurs
+			url = url.replace('PLACEHOLDER', JSON.stringify([inventoryNumber, printerName]));
 
 			window.location.href = url;
 		} else {
-			alert("Veuillez entrer un numéro d'inventaire.");
+			alert("Veuillez entrer un numéro d'inventaire et choisir une imprimante.");
 		}
 	});
 </script>

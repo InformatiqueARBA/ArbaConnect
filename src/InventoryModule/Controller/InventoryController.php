@@ -8,9 +8,11 @@ use App\Entity\Security\Location;
 use App\Entity\Security\User;
 use App\InventoryModule\Form\InventoryArticlesCollectionType;
 use App\InventoryModule\Form\InventoryArticleType;
+use App\InventoryModule\Service\CountingPageXLSXPrinterService;
 use App\InventoryModule\Service\CoutingPageXLSXService;
 use App\InventoryModule\Service\DataMapperInventoryService;
 use App\InventoryModule\Service\InventoryCSVRubisService;
+use App\InventoryModule\Service\PrinterService;
 use App\InventoryModule\Service\RequestOdbcInventoryService;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -170,9 +172,20 @@ class InventoryController extends AbstractController
 
 
     // Création des feuilles de comptage
-    #[Route('/admin/inventaire/parametrage/edition/feuille-comptage/{inventoryNumber?}', name: 'app_inventory_setting_counting_page_edition')]
-    public function inventoryCountingPageEdition(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry, $inventoryNumber = null): Response
+    #[Route('/admin/inventaire/parametrage/edition/feuille-comptage/{data?}', name: 'app_inventory_setting_counting_page_edition')]
+    public function inventoryCountingPageEdition(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry, PrinterService $printerService, $data = null): Response
     {
+        $inventoryNumber = null;
+        $printerName = null;
+        if ($data != null) {
+            $data = json_decode($data);
+            $inventoryNumber = $data[0];
+            $printerName = $data[1];
+            set_time_limit(300);
+        }
+
+
+
         $em = $managerRegistry->getManager('security');
 
 
@@ -191,20 +204,33 @@ class InventoryController extends AbstractController
                     // génère le fichier excel pour un localisation donnée
 
 
-                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/" . str_replace('/', '_', $Location->getLocation()) . ".xlsx";
+                    // $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/" . str_replace('/', '_', $Location->getLocation()) . ".pdf";
+                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/" . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
 
-                    $spreadsheet = $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca, $Location->getLocation());
-                    $coutingPageXLSXService->saveSpreadsheet($spreadsheet, $filePath);
+
+                    $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca, $Location->getLocation(), $filePath);
+                    //$coutingPageXLSXService->saveSpreadsheet($pdfWriter, $filePath);
                 }
             }
         }
+        if ($printerName != null) {
+            $printerService->PDFPrinter($printerName);
+        }
 
         // Récupérer la liste des fichiers dans le répertoire
-        $directory = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/';
+        $directory = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/';
         $files = array_diff(scandir($directory), array('.', '..'));
 
+        $filesOnly = array_filter($files, function ($file) use ($directory) {
+            return is_file($directory . $file);
+        });
+
+        $directoryPrinted = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/printed/';
+        $filesPrinted = array_diff(scandir($directoryPrinted), array('.', '..'));
+
         return $this->render('InventoryModule/inventory_setting_counting_page_edition.html.twig', [
-            'files' => $files,
+            'files' => $filesOnly,
+            'filesPrinted' => $filesPrinted,
         ]);
     }
 
@@ -285,5 +311,20 @@ class InventoryController extends AbstractController
     {
         $dataMapperInventoryService->inventoryArticleMapper('002612');
         return new Response('articles are up to date');
+    }
+
+
+
+
+
+    // Impression du dossier PDF 
+    #[Route(
+        '/admin/impressionInventaire',
+        name: 'impressionInventaire'
+    )]
+    public function Printer(PrinterService $printerService): Response
+    {
+        // $printerService->PDFPrinter();
+        return $this->redirectToRoute('app_inventory_setting_counting_page_edition');
     }
 }
