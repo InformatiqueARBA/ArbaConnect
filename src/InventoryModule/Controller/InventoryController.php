@@ -2,18 +2,17 @@
 
 namespace App\InventoryModule\Controller;
 
-use App\ArbaConnect\Service\OdbcService;
+
 use App\Entity\Security\InventoryArticle;
 use App\Entity\Security\Location;
 use App\Entity\Security\User;
 use App\InventoryModule\Form\InventoryArticlesCollectionType;
-use App\InventoryModule\Form\InventoryArticleType;
-use App\InventoryModule\Service\CountingPageXLSXPrinterService;
+
 use App\InventoryModule\Service\CoutingPageXLSXService;
 use App\InventoryModule\Service\DataMapperInventoryService;
 use App\InventoryModule\Service\InventoryCSVRubisService;
 use App\InventoryModule\Service\PrinterService;
-use App\InventoryModule\Service\RequestOdbcInventoryService;
+
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -128,6 +127,7 @@ class InventoryController extends AbstractController
 
             'form' => $form->createView(),
             'location' => $location,
+            'warehouse' => $warehouse,
         ]);
     }
 
@@ -279,10 +279,99 @@ class InventoryController extends AbstractController
 
 
 
+    /// Routes vers page delete
+    #[Route(
+        '/admin/deleteInventory',
+        name: 'app_inventory_delete_db'
+    )]
+    public function inventoryTruncateDB(): Response
+    {
+        return $this->render('InventoryModule/inventory_delete_db.html.twig', []);
+    }
+
+
+    // Supprimer une Localisation en base
+    #[Route(
+        '/admin/inventoryDeleteLocationByInventoryNumber/{inventoryNumberDBLocations?}',
+        name: 'app_inventory_delete_location_by_inventory_number'
+    )]
+    public function deleteLocationByInventoryNumber(ManagerRegistry $managerRegistry, $inventoryNumberDBLocations = null): Response
+    {
+        if (null != $inventoryNumberDBLocations) {
+            $em = $managerRegistry->getManager('security');
+            $locations = $em->getRepository(Location::class)->findByInventoryNumber($inventoryNumberDBLocations);
+            foreach ($locations as $location) {
+                $em->persist($location);
+                $em->remove($location);
+            }
+            $em->flush();
+            $this->addFlash('success', "Les localisations de l'inventaire $inventoryNumberDBLocations ont été supprimées");
+        }
+
+        return $this->redirectToRoute('admin_inventory');
+    }
+
+    // Supprimer toutes les localisations
+    #[Route(
+        '/admin/inventoryTruncateDBLocation',
+        name: 'app_inventory_truncate_all_locations_db'
+    )]
+    public function truncateDBLocation(ManagerRegistry $managerRegistry): Response
+    {
+        $conn = $managerRegistry->getConnection('security');
+        $sql = 'TRUNCATE TABLE Location';
+        $stmt = $conn->prepare($sql);
+        $stmt->executeStatement();
+        $this->addFlash('success', "La table 'Location' a été vidée.");
+        return $this->redirectToRoute('admin_inventory');
+    }
 
 
 
 
+
+
+    /// Routes DELETE DB INVENTORY ARTICLES
+
+    // Supprimer les articles liés à une Localisation 
+    #[Route(
+        '/admin/inventoryDeleteArticlesByInventoryNumber/{inventoryNumberDBArticles?}',
+        name: 'app_inventory_delete_articles_by_inventory_number'
+    )]
+    public function deleteArticlesByInventoryNumber(ManagerRegistry $managerRegistry, string $inventoryNumberDBArticles): Response
+    {
+
+        if (null != $inventoryNumberDBArticles) {
+            $em = $managerRegistry->getManager('security');
+            $articles = $em->getRepository(InventoryArticle::class)->findByInventoryNumber($inventoryNumberDBArticles);
+            foreach ($articles as $article) {
+                $em->persist($article);
+                $em->remove($article);
+            }
+            $em->flush();
+            $this->addFlash('success', "Les articles de l'inventaire $inventoryNumberDBArticles ont été supprimées");
+        }
+
+
+        return $this->redirectToRoute('admin_inventory');
+    }
+
+    //Supprimer tous les articles
+    #[Route(
+        '/admin/inventoryTruncateDBInventoryArticles',
+        name: 'app_inventory_truncate_all_articles_db'
+
+    )]
+    public function truncateDBInventoryAticles(ManagerRegistry $managerRegistry): Response
+    {
+
+        $conn = $managerRegistry->getConnection('security');
+        $sql = 'TRUNCATE TABLE InventoryArticle';
+        $stmt = $conn->prepare($sql);
+        $stmt->executeStatement();
+        $this->addFlash('success', "La table 'InventoryArticle' a été vidée.");
+        return $this->redirectToRoute('admin_inventory');
+    }
 
 
     //------------------------------------------------------------------------------------------------------------------------------

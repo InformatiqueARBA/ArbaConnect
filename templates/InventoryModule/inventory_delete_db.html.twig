@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+{% block title %}Inventory page{% endblock %}
+
+{% block body %}
+
+<h1 class="text-center">Supprimer une Localisation en fonction d'un numéro d'inventaire</h1>
+
+<!-- Formulaire pour supprimer une localisation par numéro d'inventaire -->
+<div class="d-flex justify-content-center">
+    <form id="deleteLocationByInventoryNumberForm" method="post" class="text-center">
+        <div class="d-flex align-items-center">
+            <input type="text" id="nameLocationsTruncate" name="nameLocationsTruncate" required
+                class="form-control me-2" placeholder="Numéro d'inventaire" style="width: 200px;">
+            <button type="submit" class="btn btn-danger ms-2">Supprimer Localisation</button>
+        </div>
+    </form>
+</div>
+
+<hr>
+
+<h1 class="text-center mt-5">Vider la table des Localisations</h1>
+
+<!-- Formulaire pour vider toute la base de données des localisations -->
+<div class="d-flex justify-content-center">
+    <form id="truncateAllLocationsForm" method="post" class="text-center">
+        <button type="submit" class="btn btn-danger">Vider la table 'Location'</button>
+    </form>
+</div>
+
+<hr>
+
+<h1 class="text-center">Supprimer les articles liés à un numéro d'inventaire</h1>
+
+<!-- Formulaire pour supprimer des articles par numéro d'inventaire -->
+<div class="d-flex justify-content-center">
+    <form id="deleteInventoryArticlesByInventoryNumberForm" method="post" class="text-center">
+        <div class="d-flex align-items-center">
+            <input type="text" id="nameInventoryArticlesDelete" name="nameInventoryArticlesDelete" required
+                class="form-control me-2" placeholder="Numéro d'inventaire" style="width: 200px;">
+            <button type="submit" class="btn btn-danger ms-2">Supprimer les articles</button>
+        </div>
+    </form>
+</div>
+
+<hr>
+
+<h1 class="text-center mt-5">Vider la table des articles</h1>
+
+<!-- Formulaire pour vider toute la base de données des articles -->
+<div class="d-flex justify-content-center">
+    <form id="truncateAllArticlesForm" method="post" class="text-center">
+        <button type="submit" class="btn btn-danger">Vider la table 'InventoryArticle'</button>
+    </form>
+</div>
+
+<hr>
+
+{% block javascript %}
+
+<script>
+    // Gestion du formulaire pour supprimer une localisation par numéro d'inventaire
+    document.getElementById('deleteLocationByInventoryNumberForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        let inventoryNumberLocations = document.getElementById('nameLocationsTruncate').value;
+
+        if (inventoryNumberLocations) {
+            if (confirm("Êtes-vous sûr de vouloir supprimer cette localisation ?")) {
+                // Génère l'URL avec le paramètre "inventoryNumberDBLocations"
+                let url = "{{ path('app_inventory_delete_location_by_inventory_number', {'inventoryNumberDBLocations': 'PLACEHOLDER'}) }}";
+                url = url.replace('PLACEHOLDER', inventoryNumberLocations);
+                window.location.href = url;
+            }
+        } else {
+            alert("Veuillez entrer un numéro d'inventaire.");
+        }
+    });
+
+    // Gestion du formulaire pour vider toute la base de données des localisations
+    document.getElementById('truncateAllLocationsForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        if (confirm("Êtes-vous sûr de vouloir vider complètement la base de données des localisations ? Cette action est irréversible.")) {
+            // Redirige vers une route qui gère la suppression de toutes les localisations
+            window.location.href = "{{ path('app_inventory_truncate_all_locations_db') }}";
+        }
+    });
+
+    // Gestion du formulaire pour supprimer des articles par numéro d'inventaire
+    document.getElementById('deleteInventoryArticlesByInventoryNumberForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        let inventoryNumberArticles = document.getElementById('nameInventoryArticlesDelete').value;
+
+        if (inventoryNumberArticles) {
+            if (confirm("Êtes-vous sûr de vouloir supprimer les articles liés à ce numéro d'inventaire ?")) {
+                // Génère l'URL avec le paramètre "inventoryNumberDBArticles"
+                let url = "{{ path('app_inventory_delete_articles_by_inventory_number', {'inventoryNumberDBArticles': 'PLACEHOLDER'}) }}";
+                url = url.replace('PLACEHOLDER', inventoryNumberArticles);
+                window.location.href = url;
+            }
+        } else {
+            alert("Veuillez entrer un numéro d'inventaire.");
+        }
+    });
+
+    // Gestion du formulaire pour supprimer tous les articles
+    document.getElementById('truncateAllArticlesForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        if (confirm("Êtes-vous sûr de vouloir supprimer tous les articles ? Cette action est irréversible.")) {
+            // Redirige vers une route qui gère la suppression de tous les articles
+            window.location.href = "{{ path('app_inventory_truncate_all_articles_db') }}";
+        }
+    });
+
+</script>
+
+
+{% endblock %}
+{% endblock %}

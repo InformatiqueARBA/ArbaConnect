@@ -1,50 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Populer DB Localisations
-{% endblock %}
+{% block title %}Populer DB Localisations{% endblock %}
 
 {% block body %}
 
+<h1 class="text-center">Populer DB Localisations</h1>
 
-<h1>Populer DB Localisations</h1>
-
-
-<form id="inventoryDBLocationsForm" method="post">
-	<div class="d-flex align-items-center">
-		<label for="nameLocations" class="mr-2">Numéro d'inventaire :</label>
-		<input type="text" id="nameLocations" name="nameLocations" required class="form-control mr-2"
-			placeholder="Numéro d'inventaire" style="width: 200px;">
-		<button type="submit" class="btn btn-primary ">Mettre en base</button>
-	</div>
-</form>
-
+<!-- Formulaire centré -->
+<div class="d-flex justify-content-center">
+	<form id="inventoryDBLocationsForm" method="post" class="text-center">
+		<div class="d-flex align-items-center">
+			{# <label for="nameLocations" class="me-2">Numéro d'inventaire :</label> #}
+			<input type="text" id="nameLocations" name="nameLocations" required class="form-control me-2"
+				placeholder="Numéro d'inventaire" style="width: 200px;">
+			<button type="submit" class="btn btn-primary ms-2">Mettre en base</button>
+		</div>
+	</form>
+</div>
 
 {% block javascript %}
 
 <script>
-
-
-	// Articles
+	// Gestion du formulaire
 	document.getElementById('inventoryDBLocationsForm').addEventListener('submit', function (e) {
-
 		e.preventDefault();
 
 		let inventoryNumberLocations = document.getElementById('nameLocations').value;
 
-
-		if (inventoryNumberLocations) { // Génère l'URL avec le paramètre "inventoryNumberDBArticles"
-
+		if (inventoryNumberLocations) {
+			// Génère l'URL avec le paramètre "inventoryNumberDBLocations"
 			let url = "{{ path('app_inventory_populate_inventory_locations_db', {'inventoryNumberDBLocations': 'PLACEHOLDER'}) }}";
-
-
 			url = url.replace('PLACEHOLDER', inventoryNumberLocations);
-
-
 			window.location.href = url;
 		} else {
 			alert("Veuillez entrer un numéro d'inventaire.");
 		}
 	});
 </script>
+
 {% endblock %}
 {% endblock %}

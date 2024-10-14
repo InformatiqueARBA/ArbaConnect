@@ -55,6 +55,7 @@ class InventoryArticleType extends AbstractType
                 'label' => false
             ])
             ->add('lotCode', null, [
+                'disabled' => true,
                 'attr' => ['style' => 'font-size:14px;text-align :center;'],
                 'label' => false
             ])
