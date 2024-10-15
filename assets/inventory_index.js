@@ -1,61 +1,228 @@
-var filters = document.querySelectorAll('input[type="text"][id^="filter-"]');
-var rows = document.querySelectorAll("#inventory-locations-table tbody tr");
+// var filters = document.querySelectorAll('input[type="text"][id^="filter-"]');
+// var rows = document.querySelectorAll("#inventory-locations-table tbody tr");
 
-filters.forEach(function (filter) {
-  filter.addEventListener("input", function () {
-    let columnIndex = parseInt(this.getAttribute("data-column"), 10);
-    let filterValue = this.value.trim().toLowerCase();
+// filters.forEach(function (filter) {
+//   filter.addEventListener("input", function () {
+//     let columnIndex = parseInt(this.getAttribute("data-column"), 10);
+//     let filterValue = this.value.trim().toLowerCase();
 
-    rows.forEach(function (row) {
-      let isVisible = true;
-
-      filters.forEach(function (f) {
-        let colIndex = parseInt(f.getAttribute("data-column"), 10);
-        let val = f.value.trim().toLowerCase();
-        let cellValue = row
-          .querySelectorAll("td")
-          [colIndex].textContent.trim()
-          .toLowerCase();
-
-        if (val && !cellValue.includes(val)) {
-          isVisible = false;
-        }
-      });
-
-      if (isVisible) {
-        row.style.display = "";
-      } else {
-        row.style.display = "none";
-      }
-    });
-  });
-});
-// document.addEventListener("DOMContentLoaded", function () {
-//   function filterTable() {
-//     // Récupérer les valeurs sélectionnées
-//     var checkboxes = document.querySelectorAll(".filter-warehouse");
-//     var selectedWarehouses = Array.from(checkboxes)
-//       .filter((checkbox) => checkbox.checked)
-//       .map((checkbox) => checkbox.value);
-
-//     // Afficher ou masquer les lignes du tableau
-//     var rows = document.querySelectorAll("#inventory-locations-table tbody tr");
 //     rows.forEach(function (row) {
-//       var warehouse = row.cells[1].textContent.trim();
-//       if (selectedWarehouses.includes(warehouse)) {
+//       let isVisible = true;
+
+//       filters.forEach(function (f) {
+//         let colIndex = parseInt(f.getAttribute("data-column"), 10);
+//         let val = f.value.trim().toLowerCase();
+//         let cellValue = row
+//           .querySelectorAll("td")
+//           [colIndex].textContent.trim()
+//           .toLowerCase();
+
+//         if (val && !cellValue.includes(val)) {
+//           isVisible = false;
+//         }
+//       });
+
+//       if (isVisible) {
 //         row.style.display = "";
 //       } else {
 //         row.style.display = "none";
 //       }
 //     });
+//   });
+// });
+
+// // var filters = document.querySelectorAll('input[type="text"][id^="filter-"]');
+// // var rows = document.querySelectorAll("#inventory-locations-table tbody tr");
+
+// // // Charger les valeurs de filtres depuis le localStorage si elles existent
+// // filters.forEach(function (filter) {
+// //   let savedValue = localStorage.getItem(filter.id);
+// //   if (savedValue) {
+// //     filter.value = savedValue;
+// //   }
+// // });
+
+// // function applyFilters() {
+// //   rows.forEach(function (row) {
+// //     let isVisible = true;
+
+// //     filters.forEach(function (filter) {
+// //       let columnIndex = parseInt(filter.getAttribute("data-column"), 10);
+// //       let filterValue = filter.value.trim().toLowerCase();
+// //       let cellValue = row
+// //         .querySelectorAll("td")
+// //         [columnIndex].textContent.trim()
+// //         .toLowerCase();
+
+// //       if (filterValue && !cellValue.includes(filterValue)) {
+// //         isVisible = false;
+// //       }
+// //     });
+
+// //     row.style.display = isVisible ? "" : "none";
+// //   });
+// // }
+
+// // // Appliquer les filtres au chargement de la page
+// // applyFilters();
+
+// // filters.forEach(function (filter) {
+// //   filter.addEventListener("input", function () {
+// //     // Sauvegarder la valeur du filtre dans le localStorage
+// //     localStorage.setItem(this.id, this.value);
+
+// //     applyFilters();
+// //   });
+// // });
+
+// // // Rafraîchir la page toutes les 10 secondes tout en conservant les filtres
+// // setInterval(function () {
+// //   window.location.reload();
+// // }, 10000);
+
+// // // Appliquer les filtres à nouveau après le rechargement
+// // window.addEventListener("load", applyFilters);
+
+// document.addEventListener("DOMContentLoaded", function () {
+//   function refreshTable() {
+//     fetch("/arba/inventaire/locations") // Appel à la nouvelle route
+//       .then((response) => response.text())
+//       .then((html) => {
+//         // Remplacer le contenu du tableau
+//         document.querySelector("#inventory-locations-table tbody").innerHTML =
+//           html;
+//       })
+//       .catch((error) =>
+//         console.error(
+//           "Erreur lors du rafraîchissement des emplacements:",
+//           error
+//         )
+//       );
 //   }
 
-//   // Ajouter un écouteur d'événement sur les cases à cocher
-//   var checkboxes = document.querySelectorAll(".filter-warehouse");
-//   checkboxes.forEach(function (checkbox) {
-//     checkbox.addEventListener("change", filterTable);
-//   });
-
-//   // Filtrer le tableau au chargement de la page
-//   filterTable();
+//   // Rafraîchir toutes les 3 secondes
+//   setInterval(refreshTable, 3000);
 // });
+document.addEventListener("DOMContentLoaded", function () {
+  let filters = {
+    inventoryNumber: "",
+    warehouse: "",
+    location: "",
+    referent: "",
+    status: "",
+    action: "",
+  };
+
+  function saveFilters() {
+    filters.inventoryNumber = document.querySelector(
+      "#filter-inventory-number"
+    ).value;
+    filters.warehouse = document.querySelector("#filter-warehouse").value;
+    filters.location = document.querySelector("#filter-location").value;
+    filters.referent = document.querySelector("#filter-referent").value;
+    filters.status = document.querySelector("#filter-status").value;
+    filters.action = document.querySelector("#filter-action").value;
+  }
+
+  function applyFilters() {
+    document.querySelector("#filter-inventory-number").value =
+      filters.inventoryNumber;
+    document.querySelector("#filter-warehouse").value = filters.warehouse;
+    document.querySelector("#filter-location").value = filters.location;
+    document.querySelector("#filter-referent").value = filters.referent;
+    document.querySelector("#filter-status").value = filters.status;
+    document.querySelector("#filter-action").value = filters.action;
+
+    filterTable();
+  }
+
+  function filterTable() {
+    let rows = document.querySelectorAll("#inventory-locations-table tbody tr");
+
+    rows.forEach((row) => {
+      let showRow = true;
+
+      if (
+        filters.inventoryNumber &&
+        !row.cells[0].textContent.includes(filters.inventoryNumber)
+      ) {
+        showRow = false;
+      }
+      if (
+        filters.warehouse &&
+        !row.cells[1].textContent.includes(filters.warehouse)
+      ) {
+        showRow = false;
+      }
+      if (
+        filters.location &&
+        !row.cells[2].textContent.includes(filters.location)
+      ) {
+        showRow = false;
+      }
+      if (
+        filters.referent &&
+        !row.cells[3].textContent.includes(filters.referent)
+      ) {
+        showRow = false;
+      }
+      if (
+        filters.status &&
+        !row.cells[4].textContent.includes(filters.status)
+      ) {
+        showRow = false;
+      }
+      if (
+        filters.action &&
+        !row.cells[5].textContent.includes(filters.action)
+      ) {
+        showRow = false;
+      }
+
+      row.style.display = showRow ? "" : "none";
+    });
+  }
+
+  function refreshTable() {
+    saveFilters(); // Sauvegarde des filtres avant le refresh
+
+    fetch("/arba/inventaire/locations", {
+      credentials: "same-origin", // S'assurer que les cookies de session sont envoyés
+    })
+      .then((response) => {
+        // Vérifie si la réponse est une redirection vers la page de login
+        if (response.redirected) {
+          // Redirige l'utilisateur vers la page de connexion
+          window.location.href = response.url;
+          return;
+        }
+
+        return response.text(); // Sinon, retourne le texte de la réponse
+      })
+      .then((html) => {
+        if (html) {
+          const tbody = document.querySelector(
+            "#inventory-locations-table tbody"
+          );
+
+          // Vider l'ancien contenu avant de le remplacer
+          tbody.innerHTML = "";
+
+          // Injecter le nouveau contenu
+          tbody.innerHTML = html;
+
+          // Réappliquer les filtres après mise à jour
+          applyFilters();
+        }
+      })
+      .catch((error) =>
+        console.error(
+          "Erreur lors du rafraîchissement des emplacements:",
+          error
+        )
+      );
+  }
+
+  // Rafraîchir toutes les 3 secondes
+  setInterval(refreshTable, 3000);
+});

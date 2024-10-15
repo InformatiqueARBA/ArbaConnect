@@ -41,4 +41,34 @@ class PrinterService
             }
         }
     }
+
+
+
+
+    // fonction pour tester l'impression
+    public function printTestPDF(string $printerName)
+    {
+
+        $file = "/var/www/ArbaConnect/public/images/test.pdf";
+
+        // Vérifier si le fichier existe
+        if (!file_exists($file)) {
+            throw new \Exception("Le fichier test.pdf n'existe pas à l'emplacement spécifié.");
+        }
+
+        // Commande pour imprimer le fichier
+        $command = ['lp', '-d', $printerName, $file];
+
+        // Créer un processus pour exécuter la commande d'impression
+        $process = new Process($command);
+        $process->run();
+
+        // Vérifier si le processus a réussi
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        // Retourner un message de succès
+        return "Impression du fichier test.pdf réussie sur l'imprimante " . $printerName;
+    }
 }

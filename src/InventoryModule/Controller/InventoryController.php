@@ -15,6 +15,7 @@ use App\InventoryModule\Service\PrinterService;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -38,6 +39,19 @@ class InventoryController extends AbstractController
             'locations' => $locations,
         ]);
     }
+
+    #[Route('/arba/inventaire/locations', name: 'app_inventory_locations')]
+    public function getLocations(ManagerRegistry $managerRegistry): Response
+    {
+        $em = $managerRegistry->getManager('security');
+        $locations = $em->getRepository(Location::class)->findAll();
+
+        return $this->render('InventoryModule\partials\_locations.html.twig', [
+            'locations' => $locations,
+        ]);
+    }
+
+
 
 
 
@@ -213,9 +227,11 @@ class InventoryController extends AbstractController
                 }
             }
         }
+
         if ($printerName != null) {
             $printerService->PDFPrinter($printerName);
         }
+
 
         // Récupérer la liste des fichiers dans le répertoire
         $directory = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/';
@@ -415,5 +431,22 @@ class InventoryController extends AbstractController
     {
         // $printerService->PDFPrinter();
         return $this->redirectToRoute('app_inventory_setting_counting_page_edition');
+    }
+
+
+
+    // test impression SAM 
+    #[Route(
+        '/admin/printerSAM',
+        name: 'printerSAM'
+    )]
+    public function printerSam(PrinterService $printerService): Response
+    {
+
+        $printerName = 'Accueil';
+        if ($printerName != null) {
+            $printerService->printTestPDF($printerName);
+        }
+        return new Response('imprim Sam');
     }
 }

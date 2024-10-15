@@ -53,40 +53,32 @@
 				<td style="text-align: center;">{{ location.warehouse|e }}</td>
 				<td style="text-align: center;">{{ location.location|e }}</td>
 				<td style="text-align: center;">{{ location.referent is not null ? location.referent|e : '-' }}</td>
-				{% if location.status == 0 %}
-				<td class="text-dark" style="background-color: rgba(255, 165, 0, 0.5) ;text-align: center; ">Inactif
-				</td>
-				{% else %}
-				<td class="text-dark" style="background-color: rgba(255, 0, 0, 0.5);text-align: center;">Actif</td>
 
+				{% if location.status == 0 %}
+				<td class="text-dark" style="background-color: rgba(255, 165, 0, 0.5); text-align: center;">Inactif</td>
+				{% else %}
+				<td class="text-dark" style="background-color: rgba(255, 0, 0, 0.5); text-align: center;">Actif</td>
 				{% endif %}
 
 				{% if location.status != 1 %}
-				<td class="text-dark" style="background-color: rgba(0, 70, 100,0.8);text-align: center;">
-
-					<a style='color: rgb(130, 170, 55);'
+				<td class="text-dark" style="background-color: rgba(0, 70, 100, 0.8); text-align: center;">
+					<a style="color: rgb(130, 170, 55);"
 						href="{{ path('app_inventory_detail_edit', {warehouse: location.warehouse, location: location.location | url_encode}) }}">Afficher</a>
 				</td>
-
 				{% elseif location.status == 1 and (location.referent == app.user.login or is_granted('ROLE_ADMIN')) %}
-				<td class="text-dark" style="background-color: rgba(0, 70, 100,0.8);text-align: center;">
-
-					<a style='color: rgb(130, 170, 55);'
+				<td class="text-dark" style="background-color: rgba(0, 70, 100, 0.8); text-align: center;">
+					<a style="color: rgb(130, 170, 55);"
 						href="{{ path('app_inventory_detail_edit', {warehouse: location.warehouse, location: location.location | url_encode}) }}">Afficher</a>
 				</td>
-
 				{% else %}
-				<td class="text-dark" style="background-color: rgba(0, 70, 100,0.8);text-align: center;">
-
-					<span style='color: gray;'>Afficher</span>
+				<td class="text-dark" style="background-color: rgba(0, 70, 100, 0.8); text-align: center;">
+					<span style="color: gray;">Afficher</span>
 				</td>
-
 				{% endif %}
 			</tr>
-			</td>
+			{% endfor %}
 		</tbody>
-		</tr>
-		{% endfor %}</tbody>
+
 	</table>
 </div>
 <script src="{{ asset('inventory_index.js') }}"></script>
