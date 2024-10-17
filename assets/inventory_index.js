@@ -189,11 +189,19 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch("/arba/inventaire/locations", {
       credentials: "same-origin", // S'assurer que les cookies de session sont envoyés
     })
+      // .then((response) => {
+      //   // Vérifie si la réponse est une redirection vers la page de login
+      //   if (response.redirected) {
+      //     // Redirige l'utilisateur vers la page de connexion
+      //     window.location.href = response.url;
+      //     return;
+      //   }
+
       .then((response) => {
-        // Vérifie si la réponse est une redirection vers la page de login
-        if (response.redirected) {
-          // Redirige l'utilisateur vers la page de connexion
-          window.location.href = response.url;
+        // Vérifier le code de statut de la réponse
+        if (response.status === 401 || response.redirected) {
+          // Le token a peut-être expiré, rediriger l'utilisateur vers la page de connexion
+          window.location.href = response.url || "/"; // Redirection vers une page de login
           return;
         }
 
