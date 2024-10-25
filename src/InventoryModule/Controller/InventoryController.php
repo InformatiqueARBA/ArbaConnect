@@ -58,15 +58,13 @@ class InventoryController extends AbstractController
 
 
 
-    //Liste des articles par emplacements
     #[Route('/arba/inventaire/detail/{warehouse}/{location}/edit', name: 'app_inventory_detail_edit')]
     public function inventoryDetailEdit(String $warehouse, String $location, Request $request, ManagerRegistry $managerRegistry): Response
     {
-
         $location = urldecode($location);
         $em = $managerRegistry->getManager('security');
 
-        // on récupère le user connecté pour affecter le référent de la saisie
+        // Récupérer le user connecté pour affecter le référent de la saisie
         $user = $this->getUser();
 
         // Check if user is an instance of User class
@@ -82,6 +80,14 @@ class InventoryController extends AbstractController
 
         // Récupérer les articles
         $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouse($warehouse, $location);
+
+        // Trier les articles par ordre alphabétique de location
+        usort($articleParLoc, function ($a, $b) {
+            return strcmp(
+                $a->getLocation(),
+                $b->getLocation()
+            );
+        });
 
         // Créer un tableau d'articles pour le formulaire
         $formData = ['articles' => $articleParLoc];
@@ -138,12 +144,12 @@ class InventoryController extends AbstractController
         }
 
         return $this->render('InventoryModule/detail_inventaire.html.twig', [
-
             'form' => $form->createView(),
             'location' => $location,
             'warehouse' => $warehouse,
         ]);
     }
+
 
 
 
@@ -222,7 +228,7 @@ class InventoryController extends AbstractController
                     $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/" . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
 
 
-                    $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca, $Location->getLocation(), $filePath);
+                    $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber);
                     //$coutingPageXLSXService->saveSpreadsheet($pdfWriter, $filePath);
                 }
             }
@@ -231,7 +237,13 @@ class InventoryController extends AbstractController
         if ($printerName != null) {
             $printerService->PDFPrinter($printerName);
         }
-
+        /*       // Si ARBA1 & ARBA2
+        if ($printerName != null && $printerName = 'ARBA1_2') {
+            //$printerService->PDFPrinter('Accueil');
+            $printerService->PDFPrinter('Menuiserie');
+        } else { // Si 1 seule imprimante
+            $printerService->PDFPrinter($printerName);
+        }*/
 
         // Récupérer la liste des fichiers dans le répertoire
         $directory = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/';

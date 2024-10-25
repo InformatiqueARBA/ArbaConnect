@@ -23,10 +23,7 @@ class CoutingPageXLSXService
         $writer->save($filePath);
     }
 
-
-
-
-    public function generateCountingXLSX(array $articlesByLocation, $location, string $filePath): PdfWriter
+    public function generateCountingXLSX(array $articlesByLocation, $location, string $filePath, $inventoryNumber): PdfWriter
     {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -39,24 +36,57 @@ class CoutingPageXLSXService
         $sheet->getPageMargins()->setLeft(0.18);
         $sheet->getPageMargins()->setBottom(0.18);
 
-        $headers = [
-            'Emplacement 1',
-            'Emplacement 2',
-            'Emplacement 3',
-            'Code Article',
-            'Désignation 1',
-            'Désignation 2',
-            'N° de lot',
-            'Condi.',
-            'Unité',
-            'Qté empl. 1',
-            'Qté empl. 2',
-            'Qté empl. 3'
+        // Get current date in European format
+        $currentDate = (new \DateTime())->format('d/m/Y');
+
+        // Define the number of columns in the table to correctly merge cells for the header
+        $totalColumns = 7; // Number of columns in the table (from A to G)
+
+
+
+        // Merge the first row cells for the header
+        $sheet->mergeCells('A1:' . Coordinate::stringFromColumnIndex($totalColumns) . '1');
+
+        // Set the complete text in the merged cell
+        // $sheet->setCellValue('A1', 'Inventaire du ' . $currentDate . ' - Allée : ' . $location . str_repeat("\u{00A0}", 24) . '     Compté par :  ........ / .........' . str_repeat("\u{00A0}", 85) . '    Saisie par :  .....................');
+        $sheet->setCellValue('A1', 'Compté par :  ........ / .........' . str_repeat("\u{00A0}", 36) .  'Inventaire n° ' . $inventoryNumber . ' du ' . $currentDate . ' - Allée : ' . $location  . str_repeat("\u{00A0}", 35) . '    Saisie par :  ..............');
+
+
+
+        // Align the whole cell content to the left first
+
+
+        // Appliquer un style de police personnalisé à la cellule A1
+        $headerFontStyle = [
+            'font' => [
+                'bold' => true,       // Mettre en gras
+                'size' => 14,         // Taille de police 14
+                'name' => 'Arial',    // Police Arial (ou toute autre police que vous préférez)
+                'color' => ['argb' => 'FF000000'], // Couleur de police noire
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_LEFT,
+
+            ]
         ];
 
-        // Header style
+        // Appliquer le style à la cellule A1
+        $sheet->getStyle('A1')->applyFromArray($headerFontStyle);
+
+        // Adjust row height for better display
+        $sheet->getRowDimension(1)->setRowHeight(25);
+
+
+        // Add an empty row for spacing between the header and the table
+        $rowIndex = 2;
+        $sheet->getRowDimension($rowIndex)->setRowHeight(10); // Leave some space after the header
+
+        // Move the data header to row 3
+        $rowIndex = 3; // Start from row 3 for the table header
+
+        // Header style for data columns
         $headerStyle = [
-            'font' => ['bold' => true, 'size' => 11],
+            'font' => ['bold' => true, 'size' => 13],
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
             'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
             'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFCCCCCC']]
@@ -64,42 +94,46 @@ class CoutingPageXLSXService
 
         // Cell style
         $cellStyle = [
-            'font' => ['size' => 10],
+            'font' => ['size' => 12],
             'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
             'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]]
         ];
 
-        // Function to add headers
-        $addHeaders = function ($sheet, $headerStyle, $headers, $rowIndex) {
-            $columnIndex = 1;
-            foreach ($headers as $header) {
-                $cellCoordinate = Coordinate::stringFromColumnIndex($columnIndex) . $rowIndex;
-                $sheet->setCellValue($cellCoordinate, $header);
-                $sheet->getStyle($cellCoordinate)->applyFromArray($headerStyle);
-                $columnIndex++;
-            }
-        };
+        // Headers for the data
+        $headers = [
+            'Emplacement',
+            'Article',
+            'Désignation 1',
+            'Désignation 2',
+            '  Quantité  ',
+            'Condi.',
+            'Dont qté dép.',
+            '% dép.',
+            'Recomptage'
+        ];
 
-        // Set rows to repeat at top
-        $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);
+        // Add headers for the data at row 3
+        $this->addHeaders($sheet, $headerStyle, $headers, $rowIndex);
 
-        // Add headers at the first row
-        $addHeaders($sheet, $headerStyle, $headers, 1);
+        // Set rows to repeat at top (for example rows 1 to 3)
+        $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 3);
 
-        $rowIndex = 2; // Start from row 2 since headers are at row 1
+        $rowIndex = 4; // Start from row 4 for the actual data
+
+        // Define pagination
+        $currentPage = 1;
+        $rowsPerPage = 29;
+        $totalPages = ceil(count($articlesByLocation) / $rowsPerPage); // Calculate total pages based on rows per page
 
         // Loop through articles and fill the Excel file
-        foreach ($articlesByLocation as $inventoryArticle) {
+        foreach ($articlesByLocation as $index => $inventoryArticle) {
             // Fill data
             $data = [
-                (!empty($inventoryArticle->getLocation()) && substr($inventoryArticle->getLocation(), 0, 5) === $location) ? $inventoryArticle->getLocation() : '',
-                (!empty($inventoryArticle->getLocation2()) && substr($inventoryArticle->getLocation2(), 0, 5) === $location) ? $inventoryArticle->getLocation2() : '',
-                (!empty($inventoryArticle->getLocation3()) && substr($inventoryArticle->getLocation3(), 0, 5) === $location) ? $inventoryArticle->getLocation3() : '',
+                $inventoryArticle->getLocation(),
                 $inventoryArticle->getArticleCode(),
                 $inventoryArticle->getDesignation1(),
                 $inventoryArticle->getDesignation2(),
-                $inventoryArticle->getLotCode(),
-                $inventoryArticle->getPackaging(),
+                '',
                 $inventoryArticle->getPreparationUnit(),
                 '',
                 '',
@@ -123,6 +157,23 @@ class CoutingPageXLSXService
                 ->getStartColor()->setARGB($fillType);
 
             $rowIndex++;
+
+            // Add footer for page number after each 30 rows
+            if (($index + 1) % $rowsPerPage == 0) {
+                // Add page footer
+                $sheet->mergeCells('A' . $rowIndex . ':G' . $rowIndex);
+                $sheet->setCellValue('A' . $rowIndex, 'Page ' . $currentPage . '/' . $totalPages);
+                $sheet->getStyle('A' . $rowIndex)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $currentPage++;
+                $rowIndex++; // Move to the next row
+            }
+        }
+
+        // If the last page doesn't have 30 rows, add the footer manually
+        if (($rowIndex - 4) % $rowsPerPage != 0) {
+            $sheet->mergeCells('A' . $rowIndex . ':G' . $rowIndex);
+            $sheet->setCellValue('A' . $rowIndex, 'Page ' . $currentPage . '/' . $totalPages);
+            $sheet->getStyle('A' . $rowIndex)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         }
 
         // Auto-adjust column widths
@@ -135,9 +186,25 @@ class CoutingPageXLSXService
             $sheet->getRowDimension($row->getRowIndex())->setRowHeight(25);
         }
 
+        // Save to PDF
         $pdfWriter = new PdfWriter($spreadsheet);
         $pdfWriter->save($filePath);
 
         return $pdfWriter;
+    }
+
+
+    /**
+     * Helper method to add headers to the sheet
+     */
+    private function addHeaders($sheet, $headerStyle, $headers, $rowIndex)
+    {
+        $columnIndex = 1;
+        foreach ($headers as $header) {
+            $cellCoordinate = Coordinate::stringFromColumnIndex($columnIndex) . $rowIndex;
+            $sheet->setCellValue($cellCoordinate, $header);
+            $sheet->getStyle($cellCoordinate)->applyFromArray($headerStyle);
+            $columnIndex++;
+        }
     }
 }

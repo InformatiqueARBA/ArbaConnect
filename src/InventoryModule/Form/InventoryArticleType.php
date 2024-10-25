@@ -29,16 +29,16 @@ class InventoryArticleType extends AbstractType
                 'attr' => ['style' => 'font-size:14px; text-align :center;'],
                 'label' => false
             ])
-            ->add('location2', null, [
-                'disabled' => true,
-                'attr' => ['style' => 'font-size:14px;text-align :center;'],
-                'label' => false
-            ])
-            ->add('location3', null, [
-                'disabled' => true,
-                'attr' => ['style' => 'font-size:14px;text-align :center;'],
-                'label' => false
-            ])
+            // ->add('location2', null, [
+            //     'disabled' => true,
+            //     'attr' => ['style' => 'font-size:14px;text-align :center;'],
+            //     'label' => false
+            // ])
+            // ->add('location3', null, [
+            //     'disabled' => true,
+            //     'attr' => ['style' => 'font-size:14px;text-align :center;'],
+            //     'label' => false
+            // ])
             ->add('articleCode', null, [
                 'disabled' => true,
                 'attr' => ['style' => 'font-size:14px;text-align :center;'],
@@ -64,11 +64,11 @@ class InventoryArticleType extends AbstractType
             //     'attr' => ['style' => 'font-size:14px;'],
             //     'label' => false
             // ])
-            ->add('packaging', null, [
-                'disabled' => true,
-                'attr' => ['style' => 'font-size:14px;text-align :center;'],
-                'label' => false
-            ])
+            // ->add('packaging', null, [
+            //     'disabled' => true,
+            //     'attr' => ['style' => 'font-size:14px;text-align :center;'],
+            //     'label' => false
+            // ])
             // ->add('packagingName', null, [
             //     'disabled' => true,
             //     'attr' => ['style' => 'font-size:14px;'],

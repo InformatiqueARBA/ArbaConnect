@@ -178,14 +178,12 @@ class DataMapperInventoryService
             $existingArticle = $this->em->getRepository(InventoryArticle::class)
                 ->findOneBy(['inventoryNumber' => $result['INVENTORY_NUMBER']]);
 
-            if (!$existingArticle) {
+            if (!$existingArticle && $result['LOCATION'] != null) {
                 // Si l'INVENTORY_NUMBER n'existe pas, on crée un nouvel article
                 $inventoryArticle = new InventoryArticle();
                 $inventoryArticle->setInventoryNumber($result['INVENTORY_NUMBER']);
                 $inventoryArticle->setWarehouse($result['WAREHOUSE']);
                 $inventoryArticle->setLocation($result['LOCATION']);
-                $inventoryArticle->setLocation2($result['LOCATION2']);
-                $inventoryArticle->setLocation3($result['LOCATION3']);
                 $inventoryArticle->setArticleCode($result['CODE_ARTICLE']);
                 $inventoryArticle->setDesignation1($result['DESIGNATION1']);
                 $inventoryArticle->setDesignation2($result['DESIGNATION2']);
@@ -194,12 +192,48 @@ class DataMapperInventoryService
                 $inventoryArticle->setPackaging($result['CONDITIONNEMENT']);
                 $inventoryArticle->setPackagingName($result['LIBELLE_CONDI']);
                 $inventoryArticle->setQuantityLocation1($result['QUANTITE_LOC1']);
-                $inventoryArticle->setQuantityLocation2($result['QUANTITE_LOC2']);
-                $inventoryArticle->setQuantityLocation3($result['QUANTITE_LOC3']);
                 $inventoryArticle->setPreparationUnit($result['UNITE_PREPARATION']);
                 $inventoryArticle->setQuantity2Location1($result['QUANTITE2_LOC1']);
-                $inventoryArticle->setQuantity2Location2($result['QUANTITE2_LOC2']);
-                $inventoryArticle->setQuantity2Location3($result['QUANTITE2_LOC3']);
+
+                $this->em->persist($inventoryArticle);
+            }
+
+            if (!$existingArticle && $result['LOCATION2'] != null) {
+                // Si l'INVENTORY_NUMBER n'existe pas, on crée un nouvel article
+                $inventoryArticle = new InventoryArticle();
+                $inventoryArticle->setInventoryNumber($result['INVENTORY_NUMBER']);
+                $inventoryArticle->setWarehouse($result['WAREHOUSE']);
+                $inventoryArticle->setLocation($result['LOCATION2']);
+                $inventoryArticle->setArticleCode($result['CODE_ARTICLE']);
+                $inventoryArticle->setDesignation1($result['DESIGNATION1']);
+                $inventoryArticle->setDesignation2($result['DESIGNATION2']);
+                $inventoryArticle->setLotCode($result['CODE_LOT']);
+                $inventoryArticle->setDimensionType($result['TYPE_DIMENSION']);
+                $inventoryArticle->setPackaging($result['CONDITIONNEMENT']);
+                $inventoryArticle->setPackagingName($result['LIBELLE_CONDI']);
+                $inventoryArticle->setQuantityLocation1($result['QUANTITE_LOC1']);
+                $inventoryArticle->setPreparationUnit($result['UNITE_PREPARATION']);
+                $inventoryArticle->setQuantity2Location1($result['QUANTITE2_LOC1']);
+
+                $this->em->persist($inventoryArticle);
+            }
+
+            if (!$existingArticle && $result['LOCATION3'] != null) {
+                // Si l'INVENTORY_NUMBER n'existe pas, on crée un nouvel article
+                $inventoryArticle = new InventoryArticle();
+                $inventoryArticle->setInventoryNumber($result['INVENTORY_NUMBER']);
+                $inventoryArticle->setWarehouse($result['WAREHOUSE']);
+                $inventoryArticle->setLocation($result['LOCATION3']);
+                $inventoryArticle->setArticleCode($result['CODE_ARTICLE']);
+                $inventoryArticle->setDesignation1($result['DESIGNATION1']);
+                $inventoryArticle->setDesignation2($result['DESIGNATION2']);
+                $inventoryArticle->setLotCode($result['CODE_LOT']);
+                $inventoryArticle->setDimensionType($result['TYPE_DIMENSION']);
+                $inventoryArticle->setPackaging($result['CONDITIONNEMENT']);
+                $inventoryArticle->setPackagingName($result['LIBELLE_CONDI']);
+                $inventoryArticle->setQuantityLocation1($result['QUANTITE_LOC1']);
+                $inventoryArticle->setPreparationUnit($result['UNITE_PREPARATION']);
+                $inventoryArticle->setQuantity2Location1($result['QUANTITE2_LOC1']);
 
                 $this->em->persist($inventoryArticle);
             }

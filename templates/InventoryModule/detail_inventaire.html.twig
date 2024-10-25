@@ -15,74 +15,36 @@
 	<table class="table table-striped ">
 		<thead>
 			<tr>
-				<th style=" width: 130px; font-size:14px; text-align :center;">Emplacement 1</th>
-				<th style=" width: 130px; font-size:14px; text-align :center;">Emplacement 2</th>
-				<th style=" width: 130px; font-size:14px; text-align :center;">Emplacement 3</th>
+				<th style=" width: 130px; font-size:14px; text-align :center;">Emplacement</th>
 				<th style=" width: 100px; font-size:14px; text-align :center;">Code article</th>
 				<th style=" width: 350px; font-size:14px; text-align :center;">Désignation 1</th>
 				<th style=" width: 350px; font-size:14px; text-align :center;">Désignation 2</th>
-				<th style=" width: 80px;  font-size:14px; text-align :center;">N° de lot</th>
-				<th style=" width: 80px;  font-size:14px; text-align :center;">Condi.</th>
+				<th style="font-size:14px ; text-align :center;" ;>Quantité</th>
 				<th style=" width: 80px;  font-size:14px; text-align :center;">Unité</th>
-				<th style="font-size:14px ; text-align :center;" ;>Qté empl.1</th>
-				<th style="font-size:14px ; text-align :center;" ;>Qté empl.2</th>
-				<th style="font-size:14px ; text-align :center;" ;>Qté empl.3</th>
+
+
 			</tr>
 		</thead>
 		<tbody>
 			{% for article in form.articles %}
 			<tr>
-				{# <td>{{ form_widget(article.warehouse) }}</td> #}
 
-				{% if location == article.location.vars.value[:5] %}
+
+
 				<td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.location) }}</td>
-				{% else %}
-				<td>{{ form_widget(article.location, { 'attr': {'style': 'display: none;'} }) }}</td>
-				{% endif %}
-
-				{# Emplacement 2 avec fond jaune pastel #}
-				{% if location == article.location2.vars.value[:5] %}
-				<td style="background-color: #fff9c4;">{{ form_widget(article.location2) }}</td>
-				{% else %}
-				<td>{{ form_widget(article.location2, { 'attr': {'style': 'display: none;'} }) }}</td>
-				{% endif %}
-
-				{# Emplacement 3 avec fond vert pastel #}
-				{% if location == article.location3.vars.value[:5] %}
-				<td style="background-color: #c8e6c9;">{{ form_widget(article.location3) }}</td>
-				{% else %}
-				<td>{{ form_widget(article.location3, { 'attr': {'style': 'display: none;'} }) }}</td>
-				{% endif %}
-
 				<td>{{ form_widget(article.articleCode) }}</td>
 				<td>{{ form_widget(article.designation1) }}</td>
 				<td>{{ form_widget(article.designation2) }}</td>
-				<td>{{ form_widget(article.lotCode) }}</td>
-				<td>{{ form_widget(article.packaging) }}</td>
-				<td>{{ form_widget(article.preparationUnit) }}</td>
-				{# <td>{{ form_widget(article.quantityLocation1) }}</td> #}
-
-
-				{% if location == article.location.vars.value[:5] %}
 				<td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.quantityLocation1) }}
-				</td>
-				{% else %}
-				<td>{{ form_widget(article.quantityLocation1, { 'attr': {'style': 'display: none;'} }) }}</td>
-				{% endif %}
+				<td>{{ form_widget(article.preparationUnit) }}</td>
 
-				{# Quantité emplacement 2 avec fond jaune pastel #}
-				{% if location == article.location2.vars.value[:5] %}
-				<td style="background-color: #fff9c4;">{{ form_widget(article.quantityLocation2) }}</td>
-				{% else %}
-				<td>{{ form_widget(article.quantityLocation2, { 'attr': {'style': 'display: none;'} }) }}</td>
-				{% endif %}
 
-				{# Quantité emplacement 3 avec fond vert pastel #}
-				{% if location == article.location3.vars.value[:5] %}
-				<td style="background-color: #c8e6c9;">{{ form_widget(article.quantityLocation3) }}</td>
-				{% else %}
-				<td>{{ form_widget(article.quantityLocation3, { 'attr': {'style': 'display: none;'} }) }}</td>
-				{% endif %}
+				{{ form_widget(article.lotCode , { 'attr': {'style': 'display: none;'} }) }}
+				{{ form_widget(article.quantityLocation2, { 'attr': {'style': 'display: none;'} }) }}
+				{{ form_widget(article.quantityLocation3, { 'attr': {'style': 'display: none;'} }) }}
+
+
+
 			</tr>
 			{% endfor %}
 		</tbody>
