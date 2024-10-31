@@ -4,73 +4,86 @@
 {% endblock %}
 
 {% block body %}
-	<style>
-		.button-icon {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			width: 250px; /* Taille personnalisée pour les boutons */
-			text-decoration: none; /* Supprimer le soulignement du lien */
-			border-radius: 5px; /* Bordure arrondie */
-			padding: 10px; /* Padding à l'intérieur du bouton */
-		}
-		.button-icon img {
-			width: 50px; /* Taille personnalisée pour l'icône */
-			height: 50px;
-			margin-top: 5px; /* Espace entre le texte et l'icône */
-			filter: invert(43%) sepia(51%) saturate(570%) hue-rotate(47deg) brightness(96%) contrast(84%); /* Couleur verte pour l'icône */
-		}
-		.center-container {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			margin: 0 auto;
-		}
-		.button-space {
-			margin-left: 50px; /* Espace entre les boutons */
-		}
-
-		/* bouton connexion */
-		.custom-btn {
-			border-color: rgb(0, 70, 100);
-			background-color: rgb(0, 70, 100);
-			color: rgb(130, 170, 55); /* Vert pour le texte */
-			/* Ajout d'une bordure par défaut transparente */
-			transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-			/* Transition douce pour la bordure et les couleurs */
-		}
-
-		.custom-btn:hover,
-		.custom-btn:focus {
-			border: 2px solid transparent;
-			background-color: rgb(130, 170, 55);
-			color: #000000; /* Texte noir lors du hover */
-		}
-
-		/* Change the icon color on hover to black */
-		.custom-btn:hover img,
-		.custom-btn:focus img {
-			filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%);
-			/* Icône noire lors du hover */
-		}
-
+<style>
+	.button-icon {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 250px;
+		/* Taille personnalisée pour les boutons */
+		text-decoration: none;
 		/* Supprimer le soulignement du lien */
-		a.custom-btn {
-			text-decoration: none;
-		}
-	</style>
+		border-radius: 5px;
+		/* Bordure arrondie */
+		padding: 10px;
+		/* Padding à l'intérieur du bouton */
+	}
 
-	<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
-		<div class="center-container">
-			<a href="{{ path('app_dates_livraisons') }}" class="custom-btn button-icon">
-				Module date de livraison
-				<img src="{{ asset('images/delivery.ico') }}" alt="Delivery Icon">
-			</a>
-			<a href="{{ path('app_inventory') }}" class="custom-btn button-icon button-space">
-				Module inventaire
-				<img src="{{ asset('images/barcode.ico') }}" alt="Barcode Icon">
-			</a>
-		</div>
+	.button-icon img {
+		width: 50px;
+		/* Taille personnalisée pour l'icône */
+		height: 50px;
+		margin-top: 5px;
+		/* Espace entre le texte et l'icône */
+		filter: invert(43%) sepia(51%) saturate(570%) hue-rotate(47deg) brightness(96%) contrast(84%);
+		/* Couleur verte pour l'icône */
+	}
+
+	.center-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 0 auto;
+	}
+
+	.button-space {
+		margin-left: 50px;
+		/* Espace entre les boutons */
+	}
+
+	/* bouton connexion */
+	.custom-btn {
+		border-color: rgb(0, 70, 100);
+		background-color: rgb(0, 70, 100);
+		color: rgb(130, 170, 55);
+		/* Vert pour le texte */
+		/* Ajout d'une bordure par défaut transparente */
+		transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+		/* Transition douce pour la bordure et les couleurs */
+	}
+
+	.custom-btn:hover,
+	.custom-btn:focus {
+		border: 2px solid transparent;
+		background-color: rgb(130, 170, 55);
+		color: #000000;
+		/* Texte noir lors du hover */
+	}
+
+	/* Change the icon color on hover to black */
+	.custom-btn:hover img,
+	.custom-btn:focus img {
+		filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%);
+		/* Icône noire lors du hover */
+	}
+
+	/* Supprimer le soulignement du lien */
+	a.custom-btn {
+		text-decoration: none;
+	}
+</style>
+
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+	<div class="center-container">
+		<a href="{{ path('app_dates_livraisons') }}" class="custom-btn button-icon">
+			Module date de livraison
+			<img src="{{ asset('images/delivery.ico') }}" alt="Delivery Icon">
+		</a>
+		<a href="{{ path('app_selection') }}" class="custom-btn button-icon button-space">
+			Module inventaire
+			<img src="{{ asset('images/barcode.ico') }}" alt="Barcode Icon">
+		</a>
 	</div>
+</div>
 {% endblock %}

@@ -28,6 +28,17 @@ class InventoryController extends AbstractController
 
 
 
+    // Menu selection inventaire
+    #[Route('/arba/inventaire/selection', name: 'app_selection')]
+    public function select(): Response
+    {
+
+
+        return $this->render('InventoryModule\select.html.twig', []);
+    }
+
+
+
     // Liste des emplacements
     #[Route('/arba/inventaire/liste', name: 'app_inventory')]
     public function index(ManagerRegistry $managerRegistry): Response
@@ -40,6 +51,7 @@ class InventoryController extends AbstractController
         ]);
     }
 
+
     #[Route('/arba/inventaire/locations', name: 'app_inventory_locations')]
     public function getLocations(ManagerRegistry $managerRegistry): Response
     {
@@ -50,6 +62,27 @@ class InventoryController extends AbstractController
             'locations' => $locations,
         ]);
     }
+
+
+    // Lot
+    #[Route('/arba/inventaire/lot', name: 'app_lot')]
+    public function lot(Request $request): Response
+    {
+        $form = $this->createForm(InventoryArticlesCollectionType::class);
+
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            dd($request);
+
+            return $this->redirectToRoute('app_inventory');
+        }
+        return $this->render('InventoryModule\lot.html.twig', [
+            'form' => $form
+        ]);
+    }
+
 
 
 
@@ -235,6 +268,7 @@ class InventoryController extends AbstractController
         }
 
         if ($printerName != null) {
+
             $printerService->PDFPrinter($printerName);
         }
         /*       // Si ARBA1 & ARBA2

@@ -24,6 +24,33 @@ class AdminController extends AbstractController
 
 
 
+    // #[Route('/admin/creation/user', name: 'admin_create_user')]
+    // public function createUser(Request $request, ManagerRegistry $managerRegistry, UserPasswordHasherInterface $hasher): Response
+    // {
+    //     $em = $managerRegistry->getManager('security');
+    //     $user = new User();
+    //     $form = $this->createForm(UserType::class, $user);
+    //     $form->handleRequest($request);
+
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         // Les données du formulaire sont déjà mappées dans l'objet $user
+    //         $hashedPassword = $hasher->hashPassword($user, $user->getPassword());
+    //         $user->setPassword($hashedPassword);
+
+    //         $em->persist($user);
+    //         $em->flush();
+
+    //         // Optionnel: ajout d'un message flash ou redirection
+    //         $this->addFlash('success', 'L\'utilisateur a été créé avec succès.');
+
+    //         return $this->redirectToRoute('admin_dashboard');
+    //     }
+
+    //     return $this->render('ArbaConnect/admin/CreateUser.html.twig', [
+    //         'form' => $form,
+    //     ]);
+    // }
     #[Route('/admin/creation/user', name: 'admin_create_user')]
     public function createUser(Request $request, ManagerRegistry $managerRegistry, UserPasswordHasherInterface $hasher): Response
     {
@@ -32,17 +59,53 @@ class AdminController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
-            // Les données du formulaire sont déjà mappées dans l'objet $user
-            $hashedPassword = $hasher->hashPassword($user, $user->getPassword());
-            $user->setPassword($hashedPassword);
+            $user = $form->getData();
 
-            $em->persist($user);
+            // dd($user->getLogin());
+
+            $existingUser = $em->getRepository(User::class)->findOneBy(['login' => $user->getLogin()]);
+
+
+            if ($existingUser) {
+
+                // Mise à jour des informations existantes
+                if ($user->getMail() !== $existingUser->getMail()) {
+                    $existingUser->setMail($user->getMail());
+                }
+
+                if ($user->getEnterprise() !== $existingUser->getEnterprise()) {
+                    $existingUser->setEnterprise($user->getEnterprise());
+                }
+
+                if ($user->getStatus() !== $existingUser->getStatus()) {
+                    $existingUser->setStatus($user->getStatus());
+                }
+
+                if ($user->getRoles() !== $existingUser->getRoles()) {
+                    $existingUser->setRoles($user->getRoles());
+                }
+
+                if (!empty($user->getPassword())) {
+                    $hashedPassword = $hasher->hashPassword($existingUser, $user->getPassword());
+                    $existingUser->setPassword($hashedPassword);
+                }
+
+                $user = $existingUser;
+                $this->addFlash('success', 'L\'utilisateur a été  mis à jour avec succès.');
+            } else {
+                // Nouveau utilisateur, on hash le mot de passe et on persiste
+                $hashedPassword = $hasher->hashPassword($user, $user->getPassword());
+                $user->setPassword($hashedPassword);
+                $em->persist($user);
+                $this->addFlash('success', 'L\'utilisateur a été créé  avec succès.');
+            }
+
+            // Enregistrement des changements
             $em->flush();
 
-            // Optionnel: ajout d'un message flash ou redirection
-            $this->addFlash('success', 'L\'utilisateur a été créé avec succès.');
+            // Message flash pour confirmer la création ou mise à jour
+
 
             return $this->redirectToRoute('admin_dashboard');
         }

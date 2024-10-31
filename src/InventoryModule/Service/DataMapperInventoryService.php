@@ -194,6 +194,7 @@ class DataMapperInventoryService
                 $inventoryArticle->setQuantityLocation1($result['QUANTITE_LOC1']);
                 $inventoryArticle->setPreparationUnit($result['UNITE_PREPARATION']);
                 $inventoryArticle->setQuantity2Location1($result['QUANTITE2_LOC1']);
+                $inventoryArticle->setUnitCode($result['CODE_UNITE']);
 
                 $this->em->persist($inventoryArticle);
             }
@@ -214,6 +215,7 @@ class DataMapperInventoryService
                 $inventoryArticle->setQuantityLocation1($result['QUANTITE_LOC1']);
                 $inventoryArticle->setPreparationUnit($result['UNITE_PREPARATION']);
                 $inventoryArticle->setQuantity2Location1($result['QUANTITE2_LOC1']);
+                $inventoryArticle->setUnitCode($result['CODE_UNITE']);
 
                 $this->em->persist($inventoryArticle);
             }
@@ -234,6 +236,7 @@ class DataMapperInventoryService
                 $inventoryArticle->setQuantityLocation1($result['QUANTITE_LOC1']);
                 $inventoryArticle->setPreparationUnit($result['UNITE_PREPARATION']);
                 $inventoryArticle->setQuantity2Location1($result['QUANTITE2_LOC1']);
+                $inventoryArticle->setUnitCode($result['CODE_UNITE']);
 
                 $this->em->persist($inventoryArticle);
             }

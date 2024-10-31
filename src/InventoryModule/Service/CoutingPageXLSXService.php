@@ -49,7 +49,7 @@ class CoutingPageXLSXService
 
         // Set the complete text in the merged cell
         // $sheet->setCellValue('A1', 'Inventaire du ' . $currentDate . ' - Allée : ' . $location . str_repeat("\u{00A0}", 24) . '     Compté par :  ........ / .........' . str_repeat("\u{00A0}", 85) . '    Saisie par :  .....................');
-        $sheet->setCellValue('A1', 'Compté par :  ........ / .........' . str_repeat("\u{00A0}", 36) .  'Inventaire n° ' . $inventoryNumber . ' du ' . $currentDate . ' - Allée : ' . $location  . str_repeat("\u{00A0}", 35) . '    Saisie par :  ..............');
+        $sheet->setCellValue('A1', 'Compté par :  ........ / .........' . str_repeat("\u{00A0}", 36) .  'Inventaire n° ' . $inventoryNumber . ' du ' . $currentDate . ' - Allée : ' . trim($location)  . str_repeat("\u{00A0}", 35) . '    Saisie par :  ..............');
 
 
 
@@ -99,6 +99,12 @@ class CoutingPageXLSXService
             'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]]
         ];
 
+        // Définir une largeur fixe pour les colonnes Désignation 1 et Désignation 2
+        $sheet->getColumnDimension('B')->setWidth(20); // Largeur fixe pour "Code Article"
+        $sheet->getColumnDimension('C')->setWidth(60); // Largeur fixe pour "Désignation 1"
+        $sheet->getColumnDimension('D')->setWidth(60); // Largeur fixe pour "Désignation 2"
+        $sheet->getColumnDimension('F')->setWidth(20); // Largeur fixe pour "Conditionnement"
+
         // Headers for the data
         $headers = [
             'Emplacement',
@@ -122,7 +128,7 @@ class CoutingPageXLSXService
 
         // Define pagination
         $currentPage = 1;
-        $rowsPerPage = 29;
+        $rowsPerPage = 32;
         $totalPages = ceil(count($articlesByLocation) / $rowsPerPage); // Calculate total pages based on rows per page
 
         // Loop through articles and fill the Excel file
@@ -134,7 +140,7 @@ class CoutingPageXLSXService
                 $inventoryArticle->getDesignation1(),
                 $inventoryArticle->getDesignation2(),
                 '',
-                $inventoryArticle->getPreparationUnit(),
+                $inventoryArticle->getUnitCode(),
                 '',
                 '',
                 ''
@@ -176,10 +182,18 @@ class CoutingPageXLSXService
             $sheet->getStyle('A' . $rowIndex)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         }
 
-        // Auto-adjust column widths
+        // Auto-adjust column widths, except for columns C and D
         foreach (range(1, count($headers)) as $columnIndex) {
-            $sheet->getColumnDimension(Coordinate::stringFromColumnIndex($columnIndex))->setAutoSize(true);
+            $columnLetter = Coordinate::stringFromColumnIndex($columnIndex);
+            if (!in_array($columnLetter, ['B', 'C', 'D', 'F'])) {
+                $sheet->getColumnDimension($columnLetter)->setAutoSize(true);
+            }
         }
+
+        // Auto-adjust column widths
+        // foreach (range(1, count($headers)) as $columnIndex) {
+        //     $sheet->getColumnDimension(Coordinate::stringFromColumnIndex($columnIndex))->setAutoSize(true);
+        // }
 
         // Increase row heights
         foreach ($sheet->getRowIterator() as $row) {

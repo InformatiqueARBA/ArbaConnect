@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<a href="{{ path('app_inventory') }}" id='back-btn' class="custom-btn mt-3 mb-3">Retour</a>
+
+<div class="container-fluid">
+    {{ form_start(form) }}
+
+    <table class="table table-striped ">
+        <thead>
+            <tr>
+                <th style="width: 130px; font-size:14px; text-align :center;">Emplacement</th>
+                <th style="width: 100px; font-size:14px; text-align :center;">Code article</th>
+                <th style="width: 350px; font-size:14px; text-align :center;">Désignation 1</th>
+                <th style="width: 350px; font-size:14px; text-align :center;">Désignation 2</th>
+                <th style="font-size:14px; text-align :center;">Quantité</th>
+                <th style="width: 80px; font-size:14px; text-align :center;">Unité</th>
+                <th style="width: 50px; text-align:center;">Action</th>
+            </tr>
+        </thead>
+        <tbody id="article-container">
+            {% for article in form.articles %}
+            <tr class="article-row">
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.location) }}</td>
+                <td>{{ form_widget(article.articleCode) }}</td>
+                <td>{{ form_widget(article.designation1) }}</td>
+                <td>{{ form_widget(article.designation2) }}</td>
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.quantityLocation1) }}
+                </td>
+                <td>{{ form_widget(article.preparationUnit) }}</td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
+                </td>
+            </tr>
+            {% endfor %}
+            <!-- Ligne de modèle cachée pour duplication -->
+            <tr class="article-row d-none" id="article-template">
+                <td style="background-color: rgba(166, 202, 255, 0.3);"><input type="text" name="location" /></td>
+                <td><input type="text" name="articleCode" /></td>
+                <td><input type="text" name="designation1" /></td>
+                <td><input type="text" name="designation2" /></td>
+                <td style="background-color: rgba(166, 202, 255, 0.3);"><input type="number" name="quantityLocation1" />
+                </td>
+                <td><input type="text" name="preparationUnit" /></td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm remove-row">-</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button type="button" id="add-article" class="btn btn-success btn-sm">+</button>
+
+    <div class="text-end">
+        {{ form_widget(form.save, { 'attr': { 'class': 'btn btn-primary custom-btn' } }) }}
+    </div>
+
+    {{ form_end(form) }}
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const articleContainer = document.getElementById("article-container");
+        const addButton = document.getElementById("add-article");
+        const templateRow = document.getElementById("article-template");
+
+        addButton.addEventListener("click", function () {
+            const newRow = templateRow.cloneNode(true);
+            newRow.classList.remove("d-none");
+
+            // Mettez à jour les attributs de name et id pour Symfony
+            newRow.querySelectorAll("input").forEach(input => {
+                const name = input.getAttribute("name");
+                const newIndex = document.querySelectorAll(".article-row").length - 1;
+                input.setAttribute("name", name.replace(/\d+/, newIndex)); // Met à jour l'index dans l'attribut name
+            });
+
+            // Ajouter la fonctionnalité pour supprimer une ligne
+            newRow.querySelector(".remove-row").addEventListener("click", function () {
+                this.closest(".article-row").remove();
+            });
+
+            articleContainer.appendChild(newRow);
+        });
+
+        // Fonctionnalité de suppression pour les lignes existantes
+        articleContainer.querySelectorAll(".remove-row").forEach(button => {
+            button.addEventListener("click", function () {
+                this.closest(".article-row").remove();
+            });
+        });
+    });
+</script>
+
+{% endblock %}

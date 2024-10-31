@@ -103,6 +103,7 @@
 //   // Rafraîchir toutes les 3 secondes
 //   setInterval(refreshTable, 3000);
 // });
+
 document.addEventListener("DOMContentLoaded", function () {
   let filters = {
     inventoryNumber: "",

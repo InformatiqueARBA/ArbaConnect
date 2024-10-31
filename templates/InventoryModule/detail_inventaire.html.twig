@@ -23,6 +23,7 @@
 				<th style=" width: 80px;  font-size:14px; text-align :center;">Unité</th>
 
 
+
 			</tr>
 		</thead>
 		<tbody>
@@ -36,7 +37,16 @@
 				<td>{{ form_widget(article.designation1) }}</td>
 				<td>{{ form_widget(article.designation2) }}</td>
 				<td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.quantityLocation1) }}
-				<td>{{ form_widget(article.preparationUnit) }}</td>
+
+				<td>
+					{% if article.packagingName.vars.value == '' %}
+					{{ form_widget(article.preparationUnit) }}
+					{{ form_widget(article.packagingName, { 'attr': {'style': 'display: none;'} }) }}
+					{% else %}
+					{{ form_widget(article.packagingName) }}
+					{{ form_widget(article.preparationUnit , { 'attr': {'style': 'display: none;'} }) }}
+					{% endif %}
+				</td>
 
 
 				{{ form_widget(article.lotCode , { 'attr': {'style': 'display: none;'} }) }}

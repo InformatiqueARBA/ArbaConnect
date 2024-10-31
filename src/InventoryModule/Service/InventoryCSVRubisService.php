@@ -37,10 +37,10 @@ class InventoryCSVRubisService
             'INLIE',  // Description
             'INVAR',  // Article
             'HILOT',  // Lot
-            'INVSN',  // Nombre
-            'INVSC',  // Conditionnement
-            'INVQS',  // QTE en US
-            'INVSU',  // Unité
+            //'INVSN',  // Nombre
+            //'INVSC',  // Conditionnement
+            'INVQS',  // QTE saisie
+            'INVSU',  // Unité de saisie
             'INVL1'   // 'N' = Génération d'inventaire à non.
         ];
 
@@ -79,10 +79,10 @@ class InventoryCSVRubisService
                         'Inventaire test',                         // N° de demande INLIE
                         $inventoryArticle->getArticleCode(),       // Code article INVAR
                         $inventoryArticle->getLotCode(),           // N° de lot HILOT
-                        $loc['quantity'] !== null ? $loc['quantity'] : 0, // Nombre INVSN, mettre 0 si null mais utilité ?
-                        $inventoryArticle->getPackaging(),         // Conditionnement INVSC
+                        //$loc['quantity'] !== null ? $loc['quantity'] : 0, // Nombre INVSN, mettre 0 si null mais utilité ?
+                        //$inventoryArticle->getPackaging(),         // Conditionnement INVSC
                         $loc['quantity'] !== null ? $loc['quantity'] : 0, // Quantité en unité de saisie INVQS, mettre 0 si null
-                        $inventoryArticle->getPreparationUnit(),   // Unité de saisie INVSU
+                        $inventoryArticle->getUnitCode(),   // Unité de saisie INVSU
                         'N'                                        // Introuvable dans les ASAINVP1, paramètre de provenance ? INVL1
                     ];
 

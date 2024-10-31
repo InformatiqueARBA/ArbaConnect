@@ -70,6 +70,9 @@ class InventoryArticle
     #[ORM\Column(nullable: true)]
     private ?float $quantity2Location3 = null;
 
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $unitCode = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -299,6 +302,18 @@ class InventoryArticle
     public function setQuantity2Location3(?float $quantity2Location3): static
     {
         $this->quantity2Location3 = $quantity2Location3;
+
+        return $this;
+    }
+
+    public function getUnitCode(): ?string
+    {
+        return $this->unitCode;
+    }
+
+    public function setUnitCode(?string $unitCode): static
+    {
+        $this->unitCode = $unitCode;
 
         return $this;
     }
