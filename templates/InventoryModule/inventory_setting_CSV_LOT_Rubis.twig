@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-<h2 class="text-center blue-arba">Génération du CSV d'inventaire Rubis</h2>
+<h2 class="text-center blue-arba">Génération du CSV d'inventaire LOT Rubis</h2>
 
 <form id="inventoryCSVForm" method="post">
 	<div class="d-flex justify-content-center">
@@ -16,11 +16,11 @@
 	</div>
 </form><br><br>
 
-<h2 class="text-center blue-arba">Liste des inventaires générés</h2>
+<h2 class="text-center blue-arba">Liste des inventaires LOT générés</h2>
 <ul class="d-flex justify-content-center">
 	{% for file in files %}
 	<li>
-		<a href="{{ asset('csv/inventory/inventory_sheets/stock/' ~ file) }}">{{ file }}</a>
+		<a href="{{ asset('csv/inventory/inventory_sheets/lot/' ~ file) }}">{{ file }}</a>
 	</li>
 	{% else %}
 	<li>Aucun fichier trouvé.</li>
@@ -36,7 +36,7 @@
 		let inventoryNumber = document.getElementById('name').value;
 
 		if (inventoryNumber) {
-			let url = "{{ path('app_csvInventory', {'inventoryNumber': 'PLACEHOLDER'}) }}";
+			let url = "{{ path('app_csvInventoryLot', {'inventoryNumber': 'PLACEHOLDER'}) }}";
 			url = url.replace('PLACEHOLDER', inventoryNumber);
 
 			window.location.href = url;

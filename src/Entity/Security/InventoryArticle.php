@@ -73,6 +73,12 @@ class InventoryArticle
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $unitCode = null;
 
+    #[ORM\Column(length: 6)]
+    private ?string $typeArticle = null;
+
+    #[ORM\Column]
+    private ?bool $divisible = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -314,6 +320,30 @@ class InventoryArticle
     public function setUnitCode(?string $unitCode): static
     {
         $this->unitCode = $unitCode;
+
+        return $this;
+    }
+
+    public function getTypeArticle(): ?string
+    {
+        return $this->typeArticle;
+    }
+
+    public function setTypeArticle(string $typeArticle): static
+    {
+        $this->typeArticle = $typeArticle;
+
+        return $this;
+    }
+
+    public function isDivisible(): ?bool
+    {
+        return $this->divisible;
+    }
+
+    public function setDivisible(bool $divisible): static
+    {
+        $this->divisible = $divisible;
 
         return $this;
     }

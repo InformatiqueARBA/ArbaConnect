@@ -14,13 +14,27 @@
 
         {% if location.status != 1 %}
         <td class="text-dark" style="background-color: rgba(0, 70, 100, 0.8); text-align: center;">
-            <a style="color: rgb(130, 170, 55);"
+            <a style="color: rgb(130, 170, 55);" {#
                 href="{{ path('app_inventory_detail_edit', {warehouse: location.warehouse, location: location.location | url_encode}) }}">Afficher</a>
+            #}
+            href="{{ path('app_inventory_detail_edit', {
+            warehouse: location.warehouse,
+            location: location.location| url_encode,
+            inventoryNumber: location.inventoryNumber
+
+            }) }}">Afficher</a>
         </td>
         {% elseif location.status == 1 and (location.referent == app.user.login or is_granted('ROLE_ADMIN')) %}
         <td class="text-dark" style="background-color: rgba(0, 70, 100, 0.8); text-align: center;">
-            <a style="color: rgb(130, 170, 55);"
+            <a style="color: rgb(130, 170, 55);" {#
                 href="{{ path('app_inventory_detail_edit', {warehouse: location.warehouse, location: location.location | url_encode}) }}">Afficher</a>
+            #}
+            href="{{ path('app_inventory_detail_edit', {
+            warehouse: location.warehouse,
+            location: location.location | url_encode,
+            inventoryNumber: location.inventoryNumber
+
+            }) }}">Afficher</a>
         </td>
         {% else %}
         <td class="text-dark" style="background-color: rgba(0, 70, 100, 0.8); text-align: center;">

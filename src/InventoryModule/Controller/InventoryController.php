@@ -12,7 +12,6 @@ use App\InventoryModule\Service\CoutingPageXLSXService;
 use App\InventoryModule\Service\DataMapperInventoryService;
 use App\InventoryModule\Service\InventoryCSVRubisService;
 use App\InventoryModule\Service\PrinterService;
-
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,26 +24,24 @@ class InventoryController extends AbstractController
 
 
 
-
-
-
-    // Menu selection inventaire
+    // Menu selection inventaire (inventaire/lot)
     #[Route('/arba/inventaire/selection', name: 'app_selection')]
     public function select(): Response
     {
-
-
         return $this->render('InventoryModule\select.html.twig', []);
     }
 
 
 
-    // Liste des emplacements
+
+
+
+    // Liste des emplacements stock
     #[Route('/arba/inventaire/liste', name: 'app_inventory')]
     public function index(ManagerRegistry $managerRegistry): Response
     {
         $em = $managerRegistry->getManager('security');
-        $locations = $em->getRepository(Location::class)->findAll();
+        $locations = $em->getRepository(Location::class)->findLocationsWithArtArticles();
 
         return $this->render('InventoryModule\liste_inventaire.html.twig', [
             'locations' => $locations,
@@ -52,11 +49,34 @@ class InventoryController extends AbstractController
     }
 
 
+
+
+
+
+    // Liste des emplacements lots
+    #[Route('/arba/inventaire/liste/lot', name: 'app_inventory_lot')]
+    public function indexLot(ManagerRegistry $managerRegistry): Response
+    {
+        $em = $managerRegistry->getManager('security');
+        $locations = $em->getRepository(Location::class)->findLocationsWithLovArticles();
+
+        return $this->render('InventoryModule\liste_inventaire_lot.html.twig', [
+            'locations' => $locations,
+        ]);
+    }
+
+
+
+
+
+
+
+    //partials pour mise a jour du statut sur page locations
     #[Route('/arba/inventaire/locations', name: 'app_inventory_locations')]
     public function getLocations(ManagerRegistry $managerRegistry): Response
     {
         $em = $managerRegistry->getManager('security');
-        $locations = $em->getRepository(Location::class)->findAll();
+        $locations = $em->getRepository(Location::class)->findLocationsWithArtArticles();
 
         return $this->render('InventoryModule\partials\_locations.html.twig', [
             'locations' => $locations,
@@ -64,15 +84,16 @@ class InventoryController extends AbstractController
     }
 
 
+
+
+
+
     // Lot
     #[Route('/arba/inventaire/lot', name: 'app_lot')]
     public function lot(Request $request): Response
     {
         $form = $this->createForm(InventoryArticlesCollectionType::class);
-
         $form->handleRequest($request);
-
-
         if ($form->isSubmitted() && $form->isValid()) {
             dd($request);
 
@@ -90,11 +111,13 @@ class InventoryController extends AbstractController
 
 
 
-
-    #[Route('/arba/inventaire/detail/{warehouse}/{location}/edit', name: 'app_inventory_detail_edit')]
-    public function inventoryDetailEdit(String $warehouse, String $location, Request $request, ManagerRegistry $managerRegistry): Response
+    #http://ac.test/arba/inventaire/detail/AQA/S%2FGAM/002612/edit
+    #[Route('/arba/inventaire/detail/{warehouse}/{location}/{inventoryNumber}/edit', name: 'app_inventory_detail_edit')]
+    public function inventoryDetailEdit(String $warehouse, String $location, String $inventoryNumber, Request $request, ManagerRegistry $managerRegistry): Response
     {
-        $location = urldecode($location);
+        $location = str_replace('®', '/', $location);
+        //$location = urldecode($location);
+        //dd($location);
         $em = $managerRegistry->getManager('security');
 
         // Récupérer le user connecté pour affecter le référent de la saisie
@@ -112,15 +135,15 @@ class InventoryController extends AbstractController
         $em->flush();
 
         // Récupérer les articles
-        $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouse($warehouse, $location);
+        $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndArtType($warehouse, $location);
 
         // Trier les articles par ordre alphabétique de location
-        usort($articleParLoc, function ($a, $b) {
-            return strcmp(
-                $a->getLocation(),
-                $b->getLocation()
-            );
-        });
+        // usort($articleParLoc, function ($a, $b) {
+        //     return strcmp(
+        //         $a->getLocation(),
+        //         $b->getLocation()
+        //     );
+        // });
 
         // Créer un tableau d'articles pour le formulaire
         $formData = ['articles' => $articleParLoc];
@@ -180,6 +203,7 @@ class InventoryController extends AbstractController
             'form' => $form->createView(),
             'location' => $location,
             'warehouse' => $warehouse,
+            'inventoryNumber' => $inventoryNumber
         ]);
     }
 
@@ -194,8 +218,113 @@ class InventoryController extends AbstractController
 
 
 
+    #[Route('/arba/inventaire/detail/lot/{warehouse}/{location}/{inventoryNumber}/edit', name: 'app_inventory_detail_lot_edit')]
+    public function inventoryDetailLotEdit(String $warehouse, String $location, String $inventoryNumber, Request $request, ManagerRegistry $managerRegistry): Response
+    {
+        $location = urldecode($location);
 
-    // Création du CSV inventaire Rubis
+        $em = $managerRegistry->getManager('security');
+
+        // Récupérer le user connecté pour affecter le référent de la saisie
+        $user = $this->getUser();
+
+        // Check if user is an instance of User class
+        if (!$user instanceof User) {
+            throw new \LogicException('The user is not valid.');
+        }
+
+        // Changement du statut de l'objet Location à actif
+        $locationStatus = $em->getRepository(Location::class)->findByLocation($location);
+        $locationStatus[0]->setStatus(1);
+        $em->persist($locationStatus[0]);
+        $em->flush();
+
+        // Récupérer les articles
+
+        $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndLovType($warehouse, $location);
+        //dd($articleParLoc);
+        // Trier les articles par ordre alphabétique de location
+        usort($articleParLoc, function ($a, $b) {
+            return strcmp(
+                $a->getLocation(),
+                $b->getLocation()
+            );
+        });
+
+        // Créer un tableau d'articles pour le formulaire
+        $formData = ['articles' => $articleParLoc];
+
+        // Stocker les valeurs originales des articles
+        $originalArticlesData = [];
+        foreach ($articleParLoc as $article) {
+            $originalArticlesData[$article->getId()] = [
+                'quantityLocation1' => $article->getQuantityLocation1(),
+                'quantity2Location1' => $article->getQuantity2Location1(),
+            ];
+        }
+
+        // Créer le formulaire parent avec la collection d'articles
+        $form = $this->createForm(InventoryArticlesCollectionType::class, $formData);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $shouldSetReferent = false; // Initialize flag
+
+            // Traiter chaque article et vérifier les modifications
+            foreach ($formData['articles'] as $article) {
+                $originalData = $originalArticlesData[$article->getId()];
+
+                // Vérifier si les quantités ont changé
+                if (
+                    $article->getQuantityLocation1() !== $originalData['quantityLocation1'] ||
+                    $article->getQuantity2Location1() !== $originalData['quantity2Location1']
+                ) {
+                    $shouldSetReferent = true;
+                }
+
+                // Persister l'article dans tous les cas
+                $em->persist($article);
+            }
+
+            $em->flush();
+
+            $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
+
+            // Changement du statut de l'objet Location à inactif
+            $locationStatus[0]->setStatus(0);
+
+            // Only set the referent if at least one article has been modified
+            if ($shouldSetReferent) {
+                $locationStatus[0]->setReferent($user->getLogin());
+            }
+
+            $em->persist($locationStatus[0]);
+            $em->flush();
+
+            return $this->redirectToRoute('app_inventory_lot');
+        }
+
+        return $this->render('InventoryModule/detail_inventaire_lot.html.twig', [
+            'form' => $form->createView(),
+            'location' => $location,
+            'warehouse' => $warehouse,
+            'inventoryNumber' => $inventoryNumber
+        ]);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    // Création du CSV inventaire Stockés Rubis
     #[Route('/admin/generationInventaire/{inventoryNumber?}', name: 'app_csvInventory')]
     public function generateCsvInventory(ManagerRegistry $managerRegistry, InventoryCSVRubisService $inventoryCSVSRubisService, $inventoryNumber = null): Response
     {
@@ -205,12 +334,12 @@ class InventoryController extends AbstractController
 
             $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($inventoryNumber);
 
-            $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByInventoryNumberAndWarehouse($inventoryNumber, $warehouse);
+            $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByInventoryNumberAndWarehouseAndArtType($inventoryNumber, $warehouse);
             $inventoryCSVSRubisService->inventoryCsvArray($inventoryArticleByLoca, $inventoryNumber);
         }
 
-        // Récupérer la liste des fichiers dans le répertoire
-        $directory = '/var/www/ArbaConnect/public/csv/inventory/inventory_sheets/';
+        // Récupérer la liste des fichiers dans le répertoire stock
+        $directory = '/var/www/ArbaConnect/public/csv/inventory/inventory_sheets/stock/';
         $files = array_diff(scandir($directory), array('.', '..'));
 
         return $this->render('InventoryModule/inventory_setting_CSV_Rubis.twig', [
@@ -223,9 +352,37 @@ class InventoryController extends AbstractController
 
 
 
+    // Création du CSV inventaire Lot Rubis
+    #[Route('/admin/generationInventaireLot/{inventoryNumber?}', name: 'app_csvInventoryLot')]
+    public function generateCsvInventoryLot(ManagerRegistry $managerRegistry, InventoryCSVRubisService $inventoryCSVSRubisService, $inventoryNumber = null): Response
+    {
+        $em = $managerRegistry->getManager('security');
 
-    // Création des feuilles de comptage
-    #[Route('/admin/inventaire/parametrage/edition/feuille-comptage/{data?}', name: 'app_inventory_setting_counting_page_edition')]
+        if ($inventoryNumber !== null) {
+
+            $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($inventoryNumber);
+
+            $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByInventoryNumberAndWarehouseAndLovType($inventoryNumber, $warehouse);
+            $inventoryCSVSRubisService->inventoryLotCsvArray($inventoryArticleByLoca, $inventoryNumber);
+        }
+
+        // Récupérer la liste des fichiers dans le répertoire lot
+        $directory = '/var/www/ArbaConnect/public/csv/inventory/inventory_sheets/lot/';
+        $files = array_diff(scandir($directory), array('.', '..'));
+
+        return $this->render('InventoryModule/inventory_setting_CSV_LOT_Rubis.twig', [
+            'files' => $files,
+        ]);
+    }
+
+
+
+
+
+
+
+    // Création des feuilles de comptage articles stockés
+    #[Route('/admin/inventaire/parametrage/edition/feuille-comptage-stock/{data?}', name: 'app_inventory_setting_counting_page_edition_stock')]
     public function inventoryCountingPageEdition(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry, PrinterService $printerService, $data = null): Response
     {
         $inventoryNumber = null;
@@ -245,49 +402,41 @@ class InventoryController extends AbstractController
         // Vérifier si $number est fourni
         if ($inventoryNumber !== null) {
             $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($inventoryNumber);
-            $Locations = $em->getRepository(Location::class)->findByInventoryNumber($inventoryNumber);
-            // dd($Locations);
+            $Locations = $em->getRepository(Location::class)->findLocationsWithArtArticlesByinventoryNumber($inventoryNumber);
+
 
             foreach ($Locations as $Location) {
 
                 if (null != $Location->getLocation() && trim($Location->getLocation()) != '') {
                     // récupère tous les articles liés aux localisations d'un dépôt
-                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouse($warehouse, $Location->getLocation());
-                    //dd($inventoryArticleByLoca);
-                    // génère le fichier excel pour un localisation donnée
 
+                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndArtType($warehouse, $Location->getLocation());
 
-                    // $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/" . str_replace('/', '_', $Location->getLocation()) . ".pdf";
-                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/" . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
-
+                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/" . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
 
                     $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber);
+
                     //$coutingPageXLSXService->saveSpreadsheet($pdfWriter, $filePath);
                 }
             }
         }
 
+        $directory = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/';
+        $destinationDirectory = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/printed/stock/";
         if ($printerName != null) {
 
-            $printerService->PDFPrinter($printerName);
+            $printerService->PDFPrinter($printerName,  $directory, $destinationDirectory);
         }
-        /*       // Si ARBA1 & ARBA2
-        if ($printerName != null && $printerName = 'ARBA1_2') {
-            //$printerService->PDFPrinter('Accueil');
-            $printerService->PDFPrinter('Menuiserie');
-        } else { // Si 1 seule imprimante
-            $printerService->PDFPrinter($printerName);
-        }*/
 
         // Récupérer la liste des fichiers dans le répertoire
-        $directory = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/';
+
         $files = array_diff(scandir($directory), array('.', '..'));
 
         $filesOnly = array_filter($files, function ($file) use ($directory) {
             return is_file($directory . $file);
         });
 
-        $directoryPrinted = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/printed/';
+        $directoryPrinted = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/printed/stock/';
         $filesPrinted = array_diff(scandir($directoryPrinted), array('.', '..'));
 
         return $this->render('InventoryModule/inventory_setting_counting_page_edition.html.twig', [
@@ -300,6 +449,82 @@ class InventoryController extends AbstractController
 
 
 
+
+    // Création des feuilles de comptage lot
+    #[Route('/admin/inventaire/parametrage/edition/feuille-comptage-lot/{data?}', name: 'app_inventory_setting_counting_page_edition_lot')]
+    public function inventoryCountingPageLotEdition(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry, PrinterService $printerService, $data = null): Response
+    {
+        $inventoryNumber = null;
+        $printerName = null;
+        if ($data != null) {
+            $data = json_decode($data);
+            $inventoryNumber = $data[0];
+            $printerName = $data[1];
+            set_time_limit(300);
+        }
+
+
+
+        $em = $managerRegistry->getManager('security');
+
+
+        // Vérifier si $number est fourni
+        if ($inventoryNumber !== null) {
+            $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($inventoryNumber);
+            $Locations = $em->getRepository(Location::class)->findLocationsWithLovArticlesByinventoryNumber($inventoryNumber);
+            // dd($Locations);
+
+            foreach ($Locations as $Location) {
+
+                if (null != $Location->getLocation() && trim($Location->getLocation()) != '') {
+
+                    // récupère tous les articles liés aux localisations d'un dépôt
+                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndLovType($warehouse, $Location->getLocation());
+
+                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/lot/" . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
+
+
+                    $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber);
+                }
+            }
+        }
+
+        $directory = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/lot/';
+        $destinationDirectory = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/printed/lot/";
+        if ($printerName != null) {
+
+            $printerService->PDFPrinter($printerName,  $directory, $destinationDirectory);
+        }
+
+        // Récupérer la liste des fichiers dans le répertoire
+
+        $files = array_diff(scandir($directory), array('.', '..'));
+
+        $filesOnly = array_filter($files, function ($file) use ($directory) {
+            return is_file($directory . $file);
+        });
+
+        $directoryPrinted = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/printed/lot/';
+        $filesPrinted = array_diff(scandir($directoryPrinted), array('.', '..'));
+
+        return $this->render('InventoryModule/inventory_setting_counting_page_edition_LOT.html.twig', [
+            'files' => $filesOnly,
+            'filesPrinted' => $filesPrinted,
+        ]);
+    }
+
+
+
+
+
+
+
+    // Permet aux utilisateurs de consulter l'aide en ligne du module
+    #[Route('/arba/inventaire/help', name: 'app_inventory_help')]
+    public function inventoryHelp(): Response
+    {
+        return $this->render('InventoryModule/inventory_help.html.twig');
+    }
 
 
 
@@ -395,7 +620,7 @@ class InventoryController extends AbstractController
 
     /// Routes DELETE DB INVENTORY ARTICLES
 
-    // Supprimer les articles liés à une Localisation 
+    // Supprimer les articles liés à une Localisation
     #[Route(
         '/admin/inventoryDeleteArticlesByInventoryNumber/{inventoryNumberDBArticles?}',
         name: 'app_inventory_delete_articles_by_inventory_number'
@@ -468,7 +693,7 @@ class InventoryController extends AbstractController
 
 
 
-    // Impression du dossier PDF 
+    // Impression du dossier PDF
     #[Route(
         '/admin/impressionInventaire',
         name: 'impressionInventaire'
@@ -481,7 +706,7 @@ class InventoryController extends AbstractController
 
 
 
-    // test impression SAM 
+    // test impression SAM
     #[Route(
         '/admin/printerSAM',
         name: 'printerSAM'
@@ -489,10 +714,10 @@ class InventoryController extends AbstractController
     public function printerSam(PrinterService $printerService): Response
     {
 
-        $printerName = 'Accueil';
-        if ($printerName != null) {
-            $printerService->printTestPDF($printerName);
-        }
+        // $printerName = 'Accueil';
+        // if ($printerName != null) {
+        //     $printerService->printTestPDF($printerName);
+        // }
         return new Response('imprim Sam');
     }
 }

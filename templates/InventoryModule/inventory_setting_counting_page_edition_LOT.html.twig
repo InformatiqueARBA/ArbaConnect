@@ -5,8 +5,8 @@
 {% block body %}
 
 <div class="d-flex justify-content-center align-items-center">
-	<form id="inventoryForm" method="post" class="p-3 border rounded" style="background-color: #f8f9fa;">
-		<h3 class="text-center blue-arba">Edition feuilles de comptage</h3>
+	<form id="inventoryFormLot" method="post" class="p-3 border rounded" style="background-color: #f8f9fa;">
+		<h3 class="text-center blue-arba">Edition feuilles de comptage lot</h3>
 		<div class="d-flex align-items-center mb-3">
 			<label for="inventoryNumber" class="mr-2">Numéro d'inventaire :</label>
 			<input type="text" id="inventoryNumber" name="inventoryNumber" required class="form-control"
@@ -33,11 +33,11 @@
 	</form>
 </div><br>
 
-<h2 class="text-center blue-arba">Liste des feuilles de comptage imprimées</h2>
+<h2 class="text-center blue-arba">Liste des feuilles de comptage lot imprimées</h2>
 <ul>
 	{% for file in filesPrinted %}
 	<li>
-		<a href="{{ asset('csv/inventory/counting_sheets/PDF/printed/stock/' ~ file) }}">{{ file }}</a>
+		<a href="{{ asset('csv/inventory/counting_sheets/PDF/printed/lot/' ~ file) }}">{{ file }}</a>
 	</li>
 	{% else %}
 	<li>Aucun fichier trouvé.</li>
@@ -46,14 +46,14 @@
 
 {% block javascript %}
 <script>
-	document.getElementById('inventoryForm').addEventListener('submit', function (e) {
+	document.getElementById('inventoryFormLot').addEventListener('submit', function (e) {
 		e.preventDefault();
 
 		let inventoryNumber = document.getElementById('inventoryNumber').value;
 		let printerName = document.getElementById('printerName').value;
 
 		if (inventoryNumber && printerName) {
-			let url = "{{ path('app_inventory_setting_counting_page_edition_stock', {'data': 'PLACEHOLDER'}) }}";
+			let url = "{{ path('app_inventory_setting_counting_page_edition_lot', {'data': 'PLACEHOLDER'}) }}";
 
 			// Remplacer 'PLACEHOLDER' par un tableau qui contient les deux valeurs
 			url = url.replace('PLACEHOLDER', JSON.stringify([inventoryNumber, printerName]));

@@ -32,7 +32,7 @@ class Location
     private ?int $status = null;
 
     #[ORM\Column(length: 6)]
-    private ?string $inventoryNumber = null;
+    public ?string $inventoryNumber = null;
 
 
 

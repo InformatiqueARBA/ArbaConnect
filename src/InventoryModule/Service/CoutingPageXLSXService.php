@@ -13,8 +13,6 @@ use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 
 class CoutingPageXLSXService
 {
-    private $filePath = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets';
-    private $PDFfilePath = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/';
 
     public function saveSpreadsheet(Spreadsheet $spreadsheet, string $filePath): void
     {
@@ -42,19 +40,11 @@ class CoutingPageXLSXService
         // Define the number of columns in the table to correctly merge cells for the header
         $totalColumns = 7; // Number of columns in the table (from A to G)
 
-
-
         // Merge the first row cells for the header
         $sheet->mergeCells('A1:' . Coordinate::stringFromColumnIndex($totalColumns) . '1');
 
         // Set the complete text in the merged cell
-        // $sheet->setCellValue('A1', 'Inventaire du ' . $currentDate . ' - Allée : ' . $location . str_repeat("\u{00A0}", 24) . '     Compté par :  ........ / .........' . str_repeat("\u{00A0}", 85) . '    Saisie par :  .....................');
         $sheet->setCellValue('A1', 'Compté par :  ........ / .........' . str_repeat("\u{00A0}", 36) .  'Inventaire n° ' . $inventoryNumber . ' du ' . $currentDate . ' - Allée : ' . trim($location)  . str_repeat("\u{00A0}", 35) . '    Saisie par :  ..............');
-
-
-
-        // Align the whole cell content to the left first
-
 
         // Appliquer un style de police personnalisé à la cellule A1
         $headerFontStyle = [
@@ -75,7 +65,6 @@ class CoutingPageXLSXService
 
         // Adjust row height for better display
         $sheet->getRowDimension(1)->setRowHeight(25);
-
 
         // Add an empty row for spacing between the header and the table
         $rowIndex = 2;
@@ -140,7 +129,8 @@ class CoutingPageXLSXService
                 $inventoryArticle->getDesignation1(),
                 $inventoryArticle->getDesignation2(),
                 '',
-                $inventoryArticle->getUnitCode(),
+                // $inventoryArticle->getUnitCode(),
+                $inventoryArticle->getPreparationUnit(),
                 '',
                 '',
                 ''
@@ -156,7 +146,8 @@ class CoutingPageXLSXService
             }
 
             // Alternate row styles
-            $fillType = $rowIndex % 2 === 0 ? 'FFFFFFFF' : 'FFF2F2F2';
+            // $fillType = $rowIndex % 2 === 0 ? 'FFFFFFFF' : 'FFF2F2F2';
+            $fillType = $rowIndex % 2 === 0 ? 'FFFFFFFF' : 'FFCCCCCC'; // Blanc et gris plus foncé
             $sheet->getStyle('A' . $rowIndex . ':' . Coordinate::stringFromColumnIndex(count($headers)) . $rowIndex)
                 ->getFill()
                 ->setFillType(Fill::FILL_SOLID)
@@ -189,11 +180,6 @@ class CoutingPageXLSXService
                 $sheet->getColumnDimension($columnLetter)->setAutoSize(true);
             }
         }
-
-        // Auto-adjust column widths
-        // foreach (range(1, count($headers)) as $columnIndex) {
-        //     $sheet->getColumnDimension(Coordinate::stringFromColumnIndex($columnIndex))->setAutoSize(true);
-        // }
 
         // Increase row heights
         foreach ($sheet->getRowIterator() as $row) {

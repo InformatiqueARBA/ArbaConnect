@@ -4,64 +4,8 @@
 
 {% block body %}
 
-<div class="container my-4">
-    <h1 class="text-center green-text mb-4">Gestion de l'Inventaire</h1>
-
-    <!-- Section Actions -->
-    <section class="mb-5">
-        <h2 class="blue-arba mb-3">Actions</h2>
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <a href="{{ path('app_inventory_populate_inventory_locations_db') }}"
-                    class="btn btn-secondary custom-btn blue-arba w-100 d-flex align-items-center justify-content-center">
-                    <i class="fas fa-map-marker-alt me-2"></i> Extraire les allées Rubis
-                </a>
-            </div>
-            <div class="col-md-4 mb-3">
-                <a href="{{ path('app_inventory_populate_inventory_articles_db') }}"
-                    class="btn btn-secondary custom-btn blue-arba w-100 d-flex align-items-center justify-content-center">
-                    <i class="fas fa-boxes me-2"></i> Extraire les articles Rubis
-                </a>
-            </div>
-            <div class="col-md-4 mb-3">
-                <a href="{{ path('app_inventory_setting_counting_page_edition_stock') }}"
-                    class="btn btn-secondary custom-btn blue-arba w-100 d-flex align-items-center justify-content-center">
-                    <i class="fas fa-print me-2"></i> Imprimer les feuilles de comptage articles stockés
-                </a>
-            </div>
-                        <div class="col-md-4 mb-3">
-                <a href="{{ path('app_inventory_setting_counting_page_edition_lot') }}"
-                    class="btn btn-secondary custom-btn blue-arba w-100 d-flex align-items-center justify-content-center">
-                    <i class="fas fa-print me-2"></i> Imprimer les feuilles de comptage articles variables
-                </a>
-            </div>
-            <div class="col-md-4 mb-3">
-                <a href="{{ path('app_csvInventory') }}"
-                    class="btn btn-secondary custom-btn blue-arba w-100 d-flex align-items-center justify-content-center">
-                    <i class="fas fa-file-csv me-2"></i> Générer le CSV Rubis
-                </a>
-            </div>
-            <div class="col-md-4 mb-3">
-                <a href="{{ path('app_csvInventoryLot') }}"
-                    class="btn btn-secondary custom-btn blue-arba w-100 d-flex align-items-center justify-content-center">
-                    <i class="fas fa-file-csv me-2"></i> Générer le CSV Lot Rubis
-                </a>
-            </div>
-            <div class="col-md-4 mb-3">
-                <a href="{{ path('admin_dashboard') }}"
-                    class="btn return-btn blue-arba w-100 d-flex align-items-center justify-content-center">
-                    <i class="fas fa-arrow-left me-2"></i> Menu d'administration
-                </a>
-            </div>
-            <div class="col-md-4 mb-3">
-                <a href="{{ path('app_inventory_delete_db') }}"
-                    class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center">
-                    <i class="fas fa-trash-alt me-2"></i> Supprimer les Bases de Données
-                </a>
-            </div>
-        </div>
-    </section>
-
+<div class="container my-4 content-offset">
+   
     <!-- Section Règles de Gestion -->
     <section>
         <h2 class="blue-arba">Règles de Gestion</h2>
@@ -70,10 +14,10 @@
             <p class="sfp-regular-text">Ce guide fournit des instructions sur l'utilisation du module inventaire,
                 incluant :</p>
             <ul class="list-group list-group-flush sfp-regular-text">
-                <li class="list-group-item">L'import des inventaires Rubis</li>
-                <li class="list-group-item">L'impression des feuilles de comptage</li>
-                <li class="list-group-item">La saisie des quantités</li>
-                <li class="list-group-item">La génération du Fichier CSV Rubis</li>
+    <li class="list-group-item"><a href="#collapseImport" data-bs-toggle="collapse">L'import des inventaires Rubis</a></li>
+    <li class="list-group-item"><a href="#collapsePrint" data-bs-toggle="collapse">L'impression des feuilles de comptage</a></li>
+    <li class="list-group-item"><a href="#collapseEntry" data-bs-toggle="collapse">La saisie des quantités</a></li>
+    <li class="list-group-item"><a href="#collapseCSV" data-bs-toggle="collapse">La génération du Fichier CSV Rubis</a></li>
             </ul>
         </div>
 

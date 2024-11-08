@@ -16,54 +16,67 @@ class InventoryArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, InventoryArticle::class);
     }
 
-
-    public function findByLocationAndWarehouse(string $warehouse, string $location): array
+    // Retourne les articles pour la vue & l'impression PDF par allée stockée
+    public function findByLocationAndWarehouseAndArtType(string $warehouse, string $location): array
     {
 
         return $this->createQueryBuilder('i')
-            ->where('(SUBSTRING(i.location, 1, 5) = :val2 OR SUBSTRING(i.location2, 1, 5) = :val2 OR SUBSTRING(i.location3, 1, 5) = :val2)')
+            ->where('(SUBSTRING(i.location, 1, 5) = :val2)')
             ->andWhere('i.warehouse = :val')
+            ->andWhere('i.typeArticle = :typeArticle')
             ->setParameter('val', $warehouse)
             ->setParameter('val2', $location)
+            ->setParameter('typeArticle', 'ART')
+            ->orderBy('i.location', 'ASC')
             ->getQuery()
             ->getResult();
     }
-    public function findByInventoryNumberAndWarehouse(string $inventoryNumber, string $warehouse): array
+
+    // Retourne les articles pour la vue & l'impression PDF par allée lot
+    public function findByLocationAndWarehouseAndLovType(string $warehouse, string $location): array
+    {
+
+        return $this->createQueryBuilder('i')
+            ->where('(SUBSTRING(i.location, 1, 5) = :val2)')
+            ->andWhere('i.warehouse = :val')
+            ->andWhere('i.typeArticle = :typeArticle')
+            ->setParameter('val', $warehouse)
+            ->setParameter('val2', $location)
+            ->setParameter('typeArticle', 'LOV')
+            ->orderBy('i.location', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    // Retourne les articles par inventaire pour les stockés sur les CSV
+    public function findByInventoryNumberAndWarehouseAndArtType(string $inventoryNumber, string $warehouse): array
     {
 
         return $this->createQueryBuilder('i')
             ->where('i.inventoryNumber = :val')
             ->andWhere('i.warehouse = :val2')
+            ->andWhere('i.typeArticle = :typeArticle')
             ->setParameter('val', $inventoryNumber)
             ->setParameter('val2', $warehouse)
+            ->setParameter('typeArticle', 'ART')
+            ->orderBy('i.location', 'ASC')
             ->getQuery()
             ->getResult();
     }
 
+    // Retourne les articles par inventaire pour les lots sur les CSV
+    public function findByInventoryNumberAndWarehouseAndLovType(string $inventoryNumber, string $warehouse): array
+    {
 
-
-    //    /**
-    //     * @return InventoryArticle[] Returns an array of InventoryArticle objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('i')
-    //            ->andWhere('i.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('i.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?InventoryArticle
-    //    {
-    //        return $this->createQueryBuilder('i')
-    //            ->andWhere('i.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        return $this->createQueryBuilder('i')
+            ->where('i.inventoryNumber = :val')
+            ->andWhere('i.warehouse = :val2')
+            ->andWhere('i.typeArticle = :typeArticle')
+            ->setParameter('val', $inventoryNumber)
+            ->setParameter('val2', $warehouse)
+            ->setParameter('typeArticle', 'LOV')
+            ->orderBy('i.location', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

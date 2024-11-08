@@ -169,7 +169,10 @@ class RequestOdbcInventoryService
     trim(INV.HILOT) as CODE_LOT,
     trim(ART.TYDIM) as TYPE_DIMENSION,
     trim(ART.CONDI) as CONDITIONNEMENT,
-    trim(ART.ARTD4) as LIBELLE_CONDI,
+    case
+        when (UNI.COD15 <> '') and ART.CDCON = 'NON' then trim(ART.ARTD4)
+        else trim(ART.ULPRE)
+    end as LIBELLE_CONDI,
     cast(null as decimal(8)) as QUANTITE_LOC1,
     cast(null as decimal(8)) as QUANTITE_LOC2,
     cast(null as decimal(8)) as QUANTITE_LOC3,
@@ -177,10 +180,17 @@ class RequestOdbcInventoryService
     cast(null as decimal(8)) as QUANTITE2_LOC1,
     cast(null as decimal(8)) as QUANTITE2_LOC2,
     cast(null as decimal(8)) as QUANTITE2_LOC3,
-    case
-        when (UNI.COD15 <> '') then trim(UNI.COD15)
-        else trim(ART.ULPRE)
-    end as CODE_UNITE
+    case 
+        when trim(ART.CDCON) = 'NON' then 0
+        when trim(ART.CDCON) = '' then 0
+        when trim(ART.CDCON) = 'OUI' then 1
+        else 1
+    end as DIVISIBLE
+    --case
+       -- when (UNI.COD15 <> '') and ART.CDCON = 'NON' then trim(UNI.COD15)
+        --else trim(ART.ULPRE)
+    --end as CODE_UNITE
+    , trim(ART.ART32) as TYPE_ARTICLE
     --,'' AS DEP AS DEPOT
     --,'' AS P_DEP
 from

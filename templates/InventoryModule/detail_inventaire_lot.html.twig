@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<a href="{{ path('app_inventory') }}" id='back-btn'
+<a href="{{ path('app_inventory_lot') }}" id='back-btn'
 	class="custom-btn custom-btn:hover custom-btn:focus mt-3 mb-3">Retour</a>
 
 <div class="container-fluid ">
@@ -19,6 +19,7 @@
 				<th style=" width: 100px; font-size:14px; text-align :center;">Code article</th>
 				<th style=" width: 350px; font-size:14px; text-align :center;">Désignation 1</th>
 				<th style=" width: 350px; font-size:14px; text-align :center;">Désignation 2</th>
+				<th style=" width: 150px; font-size:14px ; text-align :center;">N° de lot</th>
 				<th style=" width: 100px; font-size:14px ; text-align :center;">Quantité</th>
 				<th style=" width: 80px;  font-size:14px; text-align :center;">Unité</th>
 
@@ -36,6 +37,7 @@
 				<td>{{ form_widget(article.articleCode) }}</td>
 				<td>{{ form_widget(article.designation1) }}</td>
 				<td>{{ form_widget(article.designation2) }}</td>
+				<td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.lotCode) }}
 				<td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.quantityLocation1) }}
 
 				<td>
@@ -49,7 +51,6 @@
 				</td>
 
 
-				{{ form_widget(article.lotCode , { 'attr': {'style': 'display: none;'} }) }}
 				{{ form_widget(article.quantityLocation2, { 'attr': {'style': 'display: none;'} }) }}
 				{{ form_widget(article.quantityLocation3, { 'attr': {'style': 'display: none;'} }) }}
 

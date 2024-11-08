@@ -7,13 +7,12 @@ use Symfony\Component\Process\Process;
 
 class PrinterService
 {
-    private $filePath = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/';
 
-    public function PDFPrinter(string $printerName)
+    public function PDFPrinter(string $printerName, $directory, $destinationDirectory)
     {
 
-        $fichierDestination = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/printed/";
-        $files = new FilesystemIterator($this->filePath);
+
+        $files = new FilesystemIterator($directory);
 
 
         if ($printerName == 'ARBA1_2') {
@@ -30,7 +29,7 @@ class PrinterService
                     // $process->run();
 
                     if (file_exists($file)) {
-                        rename($file, $fichierDestination . basename($file));
+                        rename($file, $destinationDirectory . basename($file));
                     }
                 }
 
@@ -47,7 +46,7 @@ class PrinterService
                     // $process->run();
 
                     if (file_exists($file)) {
-                        rename($file, $fichierDestination . basename($file));
+                        rename($file, $destinationDirectory . basename($file));
                     }
                 }
             }
@@ -62,7 +61,7 @@ class PrinterService
                     // $process->run();
 
                     if (file_exists($file)) {
-                        rename($file, $fichierDestination . basename($file));
+                        rename($file, $destinationDirectory . basename($file));
                     }
                 }
             }
