@@ -20,7 +20,7 @@ class RequestOdbcInventoryService
     //         ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
 
     //     FROM 
-    //         AQAGESTCOM.AINVENP1 INV
+    //         AQZGESTCOM.AINVENP1 INV
 
     //     WHERE
     //         ETARE <> 'S' and 
@@ -44,7 +44,7 @@ class RequestOdbcInventoryService
     //         ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
 
     //     FROM 
-    //         AQAGESTCOM.AINVENP1 INV
+    //         AQZGESTCOM.AINVENP1 INV
 
     //     WHERE
     //         ETARE <> 'S' and 
@@ -68,7 +68,7 @@ class RequestOdbcInventoryService
     //         ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
 
     //     FROM 
-    //         AQAGESTCOM.AINVENP1 INV
+    //         AQZGESTCOM.AINVENP1 INV
 
     //     WHERE
     //         ETARE <> 'S' and 
@@ -93,7 +93,7 @@ class RequestOdbcInventoryService
             ,0 AS STATUS
             ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
         FROM 
-            AQAGESTCOM.AINVENP1 INV
+            AQZGESTCOM.AINVENP1 INV
         WHERE
             ETARE <> 'S' AND 
             INVST = 'OUI' AND 
@@ -111,7 +111,7 @@ class RequestOdbcInventoryService
             ,0 AS STATUS
             ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
         FROM 
-            AQAGESTCOM.AINVENP1 INV
+            AQZGESTCOM.AINVENP1 INV
         WHERE
             ETARE <> 'S' AND 
             INVST = 'OUI' AND 
@@ -129,7 +129,7 @@ class RequestOdbcInventoryService
             ,0 AS STATUS
             ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
         FROM 
-            AQAGESTCOM.AINVENP1 INV
+            AQZGESTCOM.AINVENP1 INV
         WHERE
             ETARE <> 'S' AND 
             INVST = 'OUI' AND 
@@ -194,9 +194,9 @@ class RequestOdbcInventoryService
     --,'' AS DEP AS DEPOT
     --,'' AS P_DEP
 from
-    AQAGESTCOM.AARTICP1 ART
-    inner join AQAGESTCOM.AINVENP1 INV on ART.NOART = INV.INVAR
-    left outer join AQAGESTCOM.ATAB15P1 UNI on ART.ARTD4 = UNI.LIRPR
+    AQZGESTCOM.AARTICP1 ART
+    inner join AQZGESTCOM.AINVENP1 INV on ART.NOART = INV.INVAR
+    left outer join AQZGESTCOM.ATAB15P1 UNI on ART.ARTD4 = UNI.LIRPR
     and UNI.TYPPR = 'UNI'
 where
     ART.ARDIV <> 'OUI'
