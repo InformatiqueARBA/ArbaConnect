@@ -135,7 +135,7 @@ class InventoryController extends AbstractController
         $em->flush();
 
         // Récupérer les articles
-        $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndArtType($warehouse, $location);
+        $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndArtType($inventoryNumber, $warehouse, $location);
 
         // Trier les articles par ordre alphabétique de location
         // usort($articleParLoc, function ($a, $b) {
@@ -241,7 +241,7 @@ class InventoryController extends AbstractController
 
         // Récupérer les articles
 
-        $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndLovType($warehouse, $location);
+        $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndLovType($inventoryNumber, $warehouse, $location);
         //dd($articleParLoc);
         // Trier les articles par ordre alphabétique de location
         usort($articleParLoc, function ($a, $b) {
@@ -541,11 +541,6 @@ class InventoryController extends AbstractController
 
         return $this->render('InventoryModule/inventory_populate_inventory_articles_db.html.twig', []);
     }
-
-
-
-
-
 
 
 

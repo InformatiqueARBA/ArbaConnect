@@ -13,6 +13,11 @@ body {
   color: rgb(0, 70, 100);
 }
 
+.gray-arba {
+  color: rgb(150, 150, 150);
+  /* Gris neutre */
+}
+
 .logo_arba {
   max-width: 250px;
   height: auto;

@@ -5,82 +5,6 @@ namespace App\InventoryModule\Service;
 class RequestOdbcInventoryService
 {
 
-
-
-    // //Retourne les informations Rubis de localisation pour un inventaire donné
-    // public function getInventory(String $inventoryNumber): String
-    // {
-    //     $sql = "
-    //     SELECT distinct
-
-    //          INV.INVDP AS WAREHOUSE -- Dépôt 
-    //         ,left(INV.LOCAL,5) AS LOCATION -- 1ème Loc sur 5 caractères
-    //         ,CAST(NULL AS VARCHAR(50)) AS REFERENT
-    //         ,0 AS STATUS
-    //         ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
-
-    //     FROM 
-    //         AQZGESTCOM.AINVENP1 INV
-
-    //     WHERE
-    //         ETARE <> 'S' and 
-    //         INVST='OUI' and
-    //         INV.LOCAL <> ' ' and  
-    //         INV.INVNO= '$inventoryNumber'
-    //     ORDER BY LOCATION
-    //     ";
-    //     return $sql;
-    // }
-
-    // public function getInventory2(String $inventoryNumber): String
-    // {
-    //     $sql = "
-    //     SELECT distinct
-
-    //          INV.INVDP AS WAREHOUSE -- Dépôt 
-    //         ,left(INV.LOCA2,5) AS LOCATION -- 2ème Loc sur 5 caractères 
-    //         ,CAST(NULL AS VARCHAR(50)) AS REFERENT
-    //         ,0 AS STATUS
-    //         ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
-
-    //     FROM 
-    //         AQZGESTCOM.AINVENP1 INV
-
-    //     WHERE
-    //         ETARE <> 'S' and 
-    //         INVST='OUI' and
-    //         INV.LOCAL <> ' ' and  
-    //         INV.INVNO= '$inventoryNumber'
-    //     ORDER BY LOCATION
-    //     ";
-    //     return $sql;
-    // }
-
-    // public function getInventory3(String $inventoryNumber): String
-    // {
-    //     $sql = "
-    //     SELECT distinct
-
-    //          INV.INVDP AS WAREHOUSE -- Dépôt  
-    //         ,left(INV.LOCA3,5) AS LOCATION -- 3ème Loc sur 5 caractères
-    //         ,CAST(NULL AS VARCHAR(50)) AS REFERENT
-    //         ,0 AS STATUS
-    //         ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
-
-    //     FROM 
-    //         AQZGESTCOM.AINVENP1 INV
-
-    //     WHERE
-    //         ETARE <> 'S' and 
-    //         INVST='OUI' and
-    //         INV.LOCAL <> ' ' and  
-    //         INV.INVNO= '$inventoryNumber'
-    //     ORDER BY LOCATION
-    //     ";
-    //     return $sql;
-    // }
-
-
     public function getUniqueInventoryLocations(String $inventoryNumber): String
     {
         $sql = "
@@ -93,7 +17,7 @@ class RequestOdbcInventoryService
             ,0 AS STATUS
             ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
         FROM 
-            AQZGESTCOM.AINVENP1 INV
+            AQAGESTCOM.AINVENP1 INV
         WHERE
             ETARE <> 'S' AND 
             INVST = 'OUI' AND 
@@ -111,7 +35,7 @@ class RequestOdbcInventoryService
             ,0 AS STATUS
             ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
         FROM 
-            AQZGESTCOM.AINVENP1 INV
+            AQAGESTCOM.AINVENP1 INV
         WHERE
             ETARE <> 'S' AND 
             INVST = 'OUI' AND 
@@ -129,7 +53,7 @@ class RequestOdbcInventoryService
             ,0 AS STATUS
             ,INV.INVNO AS INVENTORY_NUMBER -- N° d'inventaire
         FROM 
-            AQZGESTCOM.AINVENP1 INV
+            AQAGESTCOM.AINVENP1 INV
         WHERE
             ETARE <> 'S' AND 
             INVST = 'OUI' AND 
@@ -166,7 +90,7 @@ class RequestOdbcInventoryService
     trim(INV.INVAR) as CODE_ARTICLE,
     trim(INV.DESI1) as DESIGNATION1,
     trim(INV.DESI2) as DESIGNATION2,
-    trim(INV.HILOT) as CODE_LOT,
+    trim(INVLO.INLLO) as CODE_LOT,
     trim(ART.TYDIM) as TYPE_DIMENSION,
     trim(ART.CONDI) as CONDITIONNEMENT,
     case
@@ -194,9 +118,10 @@ class RequestOdbcInventoryService
     --,'' AS DEP AS DEPOT
     --,'' AS P_DEP
 from
-    AQZGESTCOM.AARTICP1 ART
-    inner join AQZGESTCOM.AINVENP1 INV on ART.NOART = INV.INVAR
-    left outer join AQZGESTCOM.ATAB15P1 UNI on ART.ARTD4 = UNI.LIRPR
+    AQAGESTCOM.AARTICP1 ART
+    inner join AQAGESTCOM.AINVENP1 INV on ART.NOART = INV.INVAR
+    left outer join AQAGESTCOM.AINVLOP1 INVLO on ART.NOART = INVLO.INLAR
+    left outer join AQAGESTCOM.ATAB15P1 UNI on ART.ARTD4 = UNI.LIRPR
     and UNI.TYPPR = 'UNI'
 where
     ART.ARDIV <> 'OUI'
