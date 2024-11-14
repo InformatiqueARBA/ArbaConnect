@@ -130,23 +130,39 @@ class InventoryCSVRubisService
 
         // dd($inventoryArticleByLoca, $inventoryNumber);
 
+        // $header = [
+        //     'INSNO',  // Inventaire ASINLOP1 
+        //     'INSDP',  // Dépôt ASINLOP1
+        //     'INSBO',  // Bordereau ASINLOP1
+        //     'INSID',  // Identifiant ASINLOP1
+        //     'INLIE',  // Description ATPDINP1
+        //     'INSAR',  // Article ASINLOP1
+        //     'INSLO',  // Lot ASINLOP1
+        //     'INVSN',  // Nombre ATPDINP1 
+        //     'INVSC',  // Conditionnement ATPDINP1
+        //     'INSQS',  // QTE saisie ASINLOP1
+        //     'INSUS',  // Unité de saisie ASINLOP1
+        //     'INVL1'   // 'N' = Génération d'inventaire à non. ATPDINP1
+        // ];
+
         $header = [
-            'INSNO',  // Inventaire ASINLOP1 
-            'INSDP',  // Dépôt ASINLOP1
-            'INSBO',  // Bordereau ASINLOP1
-            'INSID',  // Identifiant ASINLOP1
-            'INLIE',  // Description ATPDINP1
-            'INSAR',  // Article ASINLOP1
-            'INSLO',  // Lot ASINLOP1
-            'INVSN',  // Nombre ATPDINP1 
-            'INVSC',  // Conditionnement ATPDINP1
-            'INSQS',  // QTE saisie ASINLOP1
-            'INSUS',  // Unité de saisie ASINLOP1
+            'INVNO',  // Inventaire
+            'INVDP',  // Dépôt
+            'INVW1',  // Bordereau
+            'INVID',  // Identifiant
+            'INLIE',  // Description
+            'INVAR',  // Article
+            'HILOT',  // Lot
+            'INVSN',  // Nombre
+            'INVSC',  // Conditionnement
+            'INVQS',  // QTE saisie
+            'INVSU',  // Unité de saisie
             'INVL1'   // 'N' = Génération d'inventaire à non. ATPDINP1
+
         ];
 
         // Définition du chemin du fichier CSV
-        $filePath = $this->csvDirectoryInventory . "lot/L_$inventoryNumber.csv";
+        $filePath = $this->csvDirectoryInventory . "lot/I_$inventoryNumber.csv";
         $fileName = basename($filePath);
 
         // Création du fichier CSV
