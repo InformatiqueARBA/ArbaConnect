@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h3>Liste des articles non référencés</h3>
+<div class="container-fluid">
+
+    <!-- Légende ajoutée -->
+    <p class="text-end fw-bold" style="font-size: 14px; margin-top: -10px; margin-bottom: 15px;">
+        <span style="font-size: 16px;">⚠️</span>
+        <em><strong>Note : Les champs en bleu sont obligatoires.</strong></em>
+        <span style="font-size: 16px;">⚠️</span>
+    </p>
+
+    {{ form_start(form) }}
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="width: 130px; font-size:14px; text-align:center;">N° inventaire</th>
+                <th style="width: 130px; font-size:14px; text-align:center;">Dépôt</th>
+                <th style="width: 130px; font-size:14px; text-align:center;">Emplacement</th>
+                <th style="width: 100px; font-size:14px; text-align:center;">Code article</th>
+                <th style="width: 350px; font-size:14px; text-align:center;">Désignation 1</th>
+                <th style="width: 350px; font-size:14px; text-align:center;">Désignation 2</th>
+                <th style="width: 150px; font-size:14px; text-align:center;">N° de lot</th>
+                <th style="width: 100px; font-size:14px; text-align:center;">Quantité</th>
+                <th style="width: 80px; font-size:14px; text-align:center;">Unité</th>
+                <th style="width: 100px; font-size:14px; text-align:center;">Conditionnement</th>
+                <th style="width: 80px; font-size:14px; text-align:center;">Type Article</th>
+                <th style="width: 80px; font-size:14px; text-align:center;">Divisible</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for article in form.articles %}
+            <tr>
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.inventoryNumber) }}</td>
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.warehouse) }}</td>
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.location) }}</td>
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.articleCode) }}</td>
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.designation1) }}</td>
+                <td>{{ form_widget(article.designation2) }}</td>
+                <td>{{ form_widget(article.lotCode) }}</td>
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.quantityLocation1) }}
+                </td>
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.preparationUnit) }}</td>
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.packagingName) }}</td>
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.typeArticle) }}</td>
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.divisible) }}</td>
+                <td><button type="button" class="btn btn-danger btn-sm delete-article"
+                        data-article-id="{{ article.vars.value.id }}">Supprimer</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <style>
+        .custom-btn {
+            border-color: rgb(0, 70, 100);
+            background-color: rgb(0, 70, 100);
+            color: rgb(130, 170, 55);
+            border-radius: 5px;
+            padding: 10px;
+            text-decoration: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .custom-btn:hover,
+        .custom-btn:focus {
+            border: 2px solid transparent;
+            background-color: rgb(130, 170, 55);
+            color: #f2f6eb;
+        }
+    </style>
+
+    <div class="text-end">
+        {{ form_widget(form.save, { 'attr': { 'class': 'btn btn-primary custom-btn' } }) }}
+    </div>
+
+    {{ form_end(form) }}
+</div>
+
+
+{# fonvtionne apres un referesh de la page #}
+
+
+<script src="{{ asset('unknown_article.js') }}"></script>
+{#
+<script src="{{ asset('unknown_article2.js') }}"></script> #}
+
+{% endblock %}

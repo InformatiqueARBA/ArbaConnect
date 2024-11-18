@@ -79,6 +79,9 @@ class InventoryArticle
     #[ORM\Column]
     private ?bool $divisible = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $unknownArticle = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -344,6 +347,18 @@ class InventoryArticle
     public function setDivisible(bool $divisible): static
     {
         $this->divisible = $divisible;
+
+        return $this;
+    }
+
+    public function isUnknownArticle(): ?bool
+    {
+        return $this->unknownArticle;
+    }
+
+    public function setUnknownArticle(?bool $unknownArticle): static
+    {
+        $this->unknownArticle = $unknownArticle;
 
         return $this;
     }

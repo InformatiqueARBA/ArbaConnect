@@ -1,16 +1,22 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<a href="{{ path('app_inventory_lot') }}" id='back-btn'
+<a href="{{ path('app_inventory') }}" id='back-btn'
 	class="custom-btn custom-btn:hover custom-btn:focus mt-3 mb-3">Retour</a>
 
 <div class="container-fluid ">
 
 	<h3 class="mb-3  mt-3">Inventaire n° {{inventoryNumber}} pour l'allée {{ location }} du dépôt : {{
 		warehouse }}
+		{# <a href="{{ path('app_inventory_blank_page') }}" class="float-end">Article non référencé</a> #}
+		<a href="{{ path('app_inventory_blank_page', { 'inventoryNumber': inventoryNumber, 'location': location, 'warehouse': warehouse }) }}"
+			class="float-end">Article non référencé</a>
+
 	</h3>
 
 	{{ form_start(form) }}
+
+
 
 	<table class="table table-striped ">
 		<thead>
@@ -22,39 +28,40 @@
 				<th style=" width: 150px; font-size:14px ; text-align :center;">N° de lot</th>
 				<th style=" width: 100px; font-size:14px ; text-align :center;">Quantité</th>
 				<th style=" width: 80px;  font-size:14px; text-align :center;">Unité</th>
-
-
-
 			</tr>
 		</thead>
 		<tbody>
 			{% for article in form.articles %}
-			<tr>
+			{# dump{{form.article}} #}
 
 
-
-				<td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.location) }}</td>
-				<td>{{ form_widget(article.articleCode) }}</td>
-				<td>{{ form_widget(article.designation1) }}</td>
-				<td>{{ form_widget(article.designation2) }}</td>
-				<td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.lotCode) }}
-				<td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.quantityLocation1) }}
-
-				<td>
-					{% if article.packagingName.vars.value == '' %}
-					{{ form_widget(article.preparationUnit) }}
-					{{ form_widget(article.packagingName, { 'attr': {'style': 'display: none;'} }) }}
-					{% else %}
-					{{ form_widget(article.packagingName) }}
-					{{ form_widget(article.preparationUnit , { 'attr': {'style': 'display: none;'} }) }}
-					{% endif %}
-				</td>
+			{% if article.vars.data.unknownArticle ?? false %}
+			<td style="background-color: rgba(255, 255, 0, 0.3);"> {{ form_widget(article.location) }}</td>
+			{% else %}
+			<td style="background-color: rgba(166, 202, 255, 0.3);"> {{ form_widget(article.location) }}</td>
+			{% endif %}
 
 
-				{{ form_widget(article.quantityLocation2, { 'attr': {'style': 'display: none;'} }) }}
-				{{ form_widget(article.quantityLocation3, { 'attr': {'style': 'display: none;'} }) }}
+			<td>{{ form_widget(article.articleCode) }}</td>
+			<td>{{ form_widget(article.designation1) }}</td>
+			<td>{{ form_widget(article.designation2) }}</td>
+			<td>{{ form_widget(article.lotCode) }}
+			<td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.quantityLocation1) }}
+
+			<td>
+				{% if article.packagingName.vars.value == '' %}
+				{{ form_widget(article.preparationUnit) }}
+				{{ form_widget(article.packagingName, { 'attr': {'style': 'display: none;'} }) }}
+				{% else %}
+				{{ form_widget(article.packagingName) }}
+				{{ form_widget(article.preparationUnit , { 'attr': {'style': 'display: none;'} }) }}
+				{% endif %}
+			</td>
 
 
+			{# {{ form_widget(article.quantityLocation2, { 'attr': {'style': 'display: none;'} }) }}
+			{{ form_widget(article.quantityLocation3, { 'attr': {'style': 'display: none;'} }) }} #}
+			{# {{ form_widget(article.unknownArticle, { 'attr': {'style': 'display: none;'} }) }} #}
 
 			</tr>
 			{% endfor %}

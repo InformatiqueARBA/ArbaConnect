@@ -7,7 +7,7 @@ use App\Entity\Security\InventoryArticle;
 use App\Entity\Security\Location;
 use App\Entity\Security\User;
 use App\InventoryModule\Form\InventoryArticlesCollectionType;
-
+use App\InventoryModule\Form\InventoryArticlesCollectionTypeBlank;
 use App\InventoryModule\Service\CoutingPageXLSXService;
 use App\InventoryModule\Service\DataMapperInventoryService;
 use App\InventoryModule\Service\InventoryCSVRubisService;
@@ -36,17 +36,17 @@ class InventoryController extends AbstractController
 
 
 
-    // Liste des emplacements stock
-    #[Route('/arba/inventaire/liste', name: 'app_inventory')]
-    public function index(ManagerRegistry $managerRegistry): Response
-    {
-        $em = $managerRegistry->getManager('security');
-        $locations = $em->getRepository(Location::class)->findLocationsWithArtArticles();
+    // // Liste des emplacements stock
+    // #[Route('/arba/inventaire/liste', name: 'app_inventory')]
+    // public function index(ManagerRegistry $managerRegistry): Response
+    // {
+    //     $em = $managerRegistry->getManager('security');
+    //     $locations = $em->getRepository(Location::class)->findLocationsWithArtArticles();
 
-        return $this->render('InventoryModule\liste_inventaire.html.twig', [
-            'locations' => $locations,
-        ]);
-    }
+    //     return $this->render('InventoryModule\liste_inventaire.html.twig', [
+    //         'locations' => $locations,
+    //     ]);
+    // }
 
 
 
@@ -54,7 +54,7 @@ class InventoryController extends AbstractController
 
 
     // Liste des emplacements lots
-    #[Route('/arba/inventaire/liste/lot', name: 'app_inventory_lot')]
+    #[Route('/arba/inventaire/liste/lot', name: 'app_inventory')]
     public function indexLot(ManagerRegistry $managerRegistry): Response
     {
         $em = $managerRegistry->getManager('security');
@@ -76,7 +76,7 @@ class InventoryController extends AbstractController
     public function getLocations(ManagerRegistry $managerRegistry): Response
     {
         $em = $managerRegistry->getManager('security');
-        $locations = $em->getRepository(Location::class)->findLocationsWithArtArticles();
+        $locations = $em->getRepository(Location::class)->findLocationsWithLovArticles();
 
         return $this->render('InventoryModule\partials\_locations.html.twig', [
             'locations' => $locations,
@@ -89,20 +89,20 @@ class InventoryController extends AbstractController
 
 
     // Lot
-    #[Route('/arba/inventaire/lot', name: 'app_lot')]
-    public function lot(Request $request): Response
-    {
-        $form = $this->createForm(InventoryArticlesCollectionType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            dd($request);
+    // #[Route('/arba/inventaire/lot', name: 'app_lot')]
+    // public function lot(Request $request): Response
+    // {
+    //     $form = $this->createForm(InventoryArticlesCollectionType::class);
+    //     $form->handleRequest($request);
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         dd($request);
 
-            return $this->redirectToRoute('app_inventory');
-        }
-        return $this->render('InventoryModule\lot.html.twig', [
-            'form' => $form
-        ]);
-    }
+    //         return $this->redirectToRoute('app_inventory');
+    //     }
+    //     return $this->render('InventoryModule\lot.html.twig', [
+    //         'form' => $form
+    //     ]);
+    // }
 
 
 
@@ -242,6 +242,7 @@ class InventoryController extends AbstractController
         // Récupérer les articles
 
         $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndLovType($inventoryNumber, $warehouse, $location);
+
         //dd($articleParLoc);
         // Trier les articles par ordre alphabétique de location
         usort($articleParLoc, function ($a, $b) {
@@ -302,7 +303,7 @@ class InventoryController extends AbstractController
             $em->persist($locationStatus[0]);
             $em->flush();
 
-            return $this->redirectToRoute('app_inventory_lot');
+            return $this->redirectToRoute('app_inventory');
         }
 
         return $this->render('InventoryModule/detail_inventaire_lot.html.twig', [
@@ -317,6 +318,58 @@ class InventoryController extends AbstractController
 
 
 
+
+
+
+    #[Route('/arba/inventaire/blank-page/{inventoryNumber}/{location}/{warehouse}', name: 'app_inventory_blank_page')]
+    public function blankPage(String $warehouse, String $location, String $inventoryNumber, Request $request, ManagerRegistry $managerRegistry): Response
+    {
+        $em = $managerRegistry->getManager('security');
+
+        $articleParLoc = [];
+        for ($i = 0; $i < 1; $i++) {
+            $article = new InventoryArticle(); // Remplacez avec votre entité réelle si elle existe
+            $article->setInventoryNumber($inventoryNumber);
+            $article->setWarehouse($warehouse);
+            $article->setLocation($location);
+            $article->setArticleCode('');
+            $article->setDesignation1('');
+            $article->setDesignation2('');
+            $article->setLotCode('');
+            $article->setPreparationUnit('');
+            $article->setTypeArticle('');
+            $article->setDivisible('');
+            $article->setUnknownArticle(true);
+
+            $articleParLoc[] = $article;
+        }
+
+
+        $formData = ['articles' => $articleParLoc];
+
+        $form = $this->createForm(InventoryArticlesCollectionTypeBlank::class, $formData);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            foreach ($formData['articles'] as $article) {
+                $em->persist($article);
+            }
+            $em->flush();
+            $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
+
+            return $this->redirectToRoute('app_inventory');
+        }
+
+
+        return $this->render('InventoryModule/blank_page.html.twig', [
+            'form' => $form->createView(),
+            //         'location' => $location,
+            //         'warehouse' => $warehouse,
+            //         'inventoryNumber' => $inventoryNumber
+        ]);
+    }
 
 
 
@@ -381,69 +434,69 @@ class InventoryController extends AbstractController
 
 
 
-    // Création des feuilles de comptage articles stockés
-    #[Route('/admin/inventaire/parametrage/edition/feuille-comptage-stock/{data?}', name: 'app_inventory_setting_counting_page_edition_stock')]
-    public function inventoryCountingPageEdition(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry, PrinterService $printerService, $data = null): Response
-    {
-        $inventoryNumber = null;
-        $printerName = null;
-        if ($data != null) {
-            $data = json_decode($data);
-            $inventoryNumber = $data[0];
-            $printerName = $data[1];
-            set_time_limit(300);
-        }
+    // // Création des feuilles de comptage articles stockés
+    // #[Route('/admin/inventaire/parametrage/edition/feuille-comptage-stock/{data?}', name: 'app_inventory_setting_counting_page_edition_stock')]
+    // public function inventoryCountingPageEdition(CoutingPageXLSXService $coutingPageXLSXService, ManagerRegistry $managerRegistry, PrinterService $printerService, $data = null): Response
+    // {
+    //     $inventoryNumber = null;
+    //     $printerName = null;
+    //     if ($data != null) {
+    //         $data = json_decode($data);
+    //         $inventoryNumber = $data[0];
+    //         $printerName = $data[1];
+    //         set_time_limit(300);
+    //     }
 
 
 
-        $em = $managerRegistry->getManager('security');
+    //     $em = $managerRegistry->getManager('security');
 
 
-        // Vérifier si $number est fourni
-        if ($inventoryNumber !== null) {
-            $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($inventoryNumber);
-            $Locations = $em->getRepository(Location::class)->findLocationsWithArtArticlesByinventoryNumber($inventoryNumber);
+    //     // Vérifier si $number est fourni
+    //     if ($inventoryNumber !== null) {
+    //         $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($inventoryNumber);
+    //         $Locations = $em->getRepository(Location::class)->findLocationsWithArtArticlesByinventoryNumber($inventoryNumber);
 
 
-            foreach ($Locations as $Location) {
+    //         foreach ($Locations as $Location) {
 
-                if (null != $Location->getLocation() && trim($Location->getLocation()) != '') {
-                    // récupère tous les articles liés aux localisations d'un dépôt
+    //             if (null != $Location->getLocation() && trim($Location->getLocation()) != '') {
+    //                 // récupère tous les articles liés aux localisations d'un dépôt
 
-                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndArtType($warehouse, $Location->getLocation());
+    //                 $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndArtType($inventoryNumber, $warehouse, $Location->getLocation());
 
-                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/" . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
+    //                 $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/" . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
 
-                    $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber);
+    //                 $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber);
 
-                    //$coutingPageXLSXService->saveSpreadsheet($pdfWriter, $filePath);
-                }
-            }
-        }
+    //                 //$coutingPageXLSXService->saveSpreadsheet($pdfWriter, $filePath);
+    //             }
+    //         }
+    //     }
 
-        $directory = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/';
-        $destinationDirectory = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/printed/stock/";
-        if ($printerName != null) {
+    //     $directory = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/';
+    //     $destinationDirectory = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/printed/stock/";
+    //     if ($printerName != null) {
 
-            $printerService->PDFPrinter($printerName,  $directory, $destinationDirectory);
-        }
+    //         $printerService->PDFPrinter($printerName,  $directory, $destinationDirectory);
+    //     }
 
-        // Récupérer la liste des fichiers dans le répertoire
+    //     // Récupérer la liste des fichiers dans le répertoire
 
-        $files = array_diff(scandir($directory), array('.', '..'));
+    //     $files = array_diff(scandir($directory), array('.', '..'));
 
-        $filesOnly = array_filter($files, function ($file) use ($directory) {
-            return is_file($directory . $file);
-        });
+    //     $filesOnly = array_filter($files, function ($file) use ($directory) {
+    //         return is_file($directory . $file);
+    //     });
 
-        $directoryPrinted = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/printed/stock/';
-        $filesPrinted = array_diff(scandir($directoryPrinted), array('.', '..'));
+    //     $directoryPrinted = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/printed/stock/';
+    //     $filesPrinted = array_diff(scandir($directoryPrinted), array('.', '..'));
 
-        return $this->render('InventoryModule/inventory_setting_counting_page_edition.html.twig', [
-            'files' => $filesOnly,
-            'filesPrinted' => $filesPrinted,
-        ]);
-    }
+    //     return $this->render('InventoryModule/inventory_setting_counting_page_edition.html.twig', [
+    //         'files' => $filesOnly,
+    //         'filesPrinted' => $filesPrinted,
+    //     ]);
+    // }
 
 
 
@@ -479,7 +532,7 @@ class InventoryController extends AbstractController
                 if (null != $Location->getLocation() && trim($Location->getLocation()) != '') {
 
                     // récupère tous les articles liés aux localisations d'un dépôt
-                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndLovType($warehouse, $Location->getLocation());
+                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndLovType($inventoryNumber, $warehouse, $Location->getLocation());
 
                     $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/lot/" . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
 
@@ -562,14 +615,119 @@ class InventoryController extends AbstractController
 
 
     /// Routes vers page delete
-    #[Route(
-        '/admin/deleteInventory',
-        name: 'app_inventory_delete_db'
-    )]
+    #[Route('/admin/deleteInventory', name: 'app_inventory_delete_db')]
     public function inventoryTruncateDB(): Response
     {
         return $this->render('InventoryModule/inventory_delete_db.html.twig', []);
     }
+
+
+
+    #[Route(
+        '/admin/liste-article-non-reference',
+        name: 'app_inventory_list_unknown_article'
+    )]
+    public function inventoryUnknownArticleList(ManagerRegistry $managerRegistry, Request $request): Response
+    {
+        $em = $managerRegistry->getManager('security');
+        $articlesUnknown = $em->getRepository(InventoryArticle::class)->findByUnknownArticleTag();
+
+        $all  = $em->getRepository(InventoryArticle::class)->findall();
+
+        foreach ($articlesUnknown as $articleU) {
+            foreach ($all as $one) {
+                if ($articleU->getArticleCode() === $one->getArticleCode()) {
+                    $articleU->setDivisible() === $one->isDivisible();
+                    break;
+                }
+            }
+        }
+
+        $formData = ['articles' => $articlesUnknown];
+
+        $form = $this->createForm(InventoryArticlesCollectionTypeBlank::class, $formData);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            foreach ($formData['articles'] as $articlesUnknown) {
+                $em->persist($articlesUnknown);
+            }
+            $em->flush();
+            $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
+
+            return $this->redirectToRoute('app_inventory');
+        }
+
+
+
+        //dd($articlesUnknown);
+        return $this->render(
+            'InventoryModule/inventory_unknown_article_list.html.twig',
+            [
+                'articlesUnknown' => $articlesUnknown,
+                'form' => $form
+            ]
+        );
+    }
+
+
+
+
+    #[Route(
+        '/admin/liste-article-non-reference/supprimer/{id}',
+        name: 'app_inventory_delete_unknown_article',
+        methods: ['GET']
+    )]
+    public function deleteUnknownArticle(
+        ManagerRegistry $managerRegistry,
+        int $id
+    ): Response {
+        $em = $managerRegistry->getManager('security');
+
+        // Récupération de l'entité à supprimer
+        $article = $em->getRepository(InventoryArticle::class)->find($id);
+
+        if (!$article) {
+            $this->addFlash('error', 'Article introuvable.');
+            return $this->redirectToRoute('app_inventory_list_unknown_article');
+        }
+
+        try {
+            // Supprimer l'entité
+            $em->remove($article);
+            $em->flush();
+
+            $this->addFlash(
+                'success',
+                'Article supprimé avec succès.'
+            );
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur est survenue lors de la suppression : ' . $e->getMessage());
+        }
+
+        return $this->redirectToRoute('app_inventory_list_unknown_article');
+    }
+
+
+    // Route de suppression des articles inconnus
+    // #[Route('/admin/suppression-article-inconnu/{id?}', name: 'app_inventory_delete_unknown_article')]
+    // public function delete(Request $request, $id, ManagerRegistry $managerRegistry): JsonResponse
+    // {
+    //     $em = $managerRegistry->getManager('security');
+    //     $deletedArticle = $em->getRepository(InventoryArticle::class)->find($id);
+
+    //     if (!$deletedArticle) {
+    //         return new JsonResponse(['status' => 'error', 'message' => 'Article not found'], 404);
+    //     }
+
+    //     $em->remove($deletedArticle);
+    //     $em->flush();
+
+    //     return new JsonResponse(['status' => 'success', 'message' => 'Article deleted']);
+    // }
+
 
 
     // Supprimer une Localisation en base

@@ -55,7 +55,7 @@ class InventoryArticleType extends AbstractType
                 'label' => false
             ])
             ->add('lotCode', null, [
-                //'disabled' => true,
+                'disabled' => true,
                 'attr' => ['style' => 'font-size:14px;text-align :center;'],
                 'label' => false
             ])
@@ -74,14 +74,14 @@ class InventoryArticleType extends AbstractType
                 'attr' => ['style' => 'font-size:14px;text-align :center;'],
                 'label' => false
             ])
-            ->add('quantityLocation2', null, [
-                'attr' => ['style' => 'font-size:14px;text-align :center;'],
-                'label' => false
-            ])
-            ->add('quantityLocation3', null, [
-                'attr' => ['style' => 'font-size:14px;text-align :center;'],
-                'label' => false
-            ])
+            // ->add('quantityLocation2', null, [
+            //     'attr' => ['style' => 'font-size:14px;text-align :center;'],
+            //     'label' => false
+            // ])
+            // ->add('quantityLocation3', null, [
+            //     'attr' => ['style' => 'font-size:14px;text-align :center;'],
+            //     'label' => false
+            // ])
             ->add('packagingName', null, [
                 'disabled' => true,
                 'attr' => ['style' => 'font-size:14px;text-align :center;'],
@@ -113,8 +113,9 @@ class InventoryArticleType extends AbstractType
             //     'attr' => ['style' => 'font-size:14px;'],
             //     'label' => false
             // ])
-
-
+            ->add('unknownArticle', HiddenType::class, [
+                'label' => false,
+            ])
         ;
     }
 

@@ -100,6 +100,7 @@ class CoutingPageXLSXService
             'Article',
             'Désignation 1',
             'Désignation 2',
+            'N° de lot',
             '  Quantité  ',
             'Condi.',
             'Dont qté dép.',
@@ -117,7 +118,7 @@ class CoutingPageXLSXService
 
         // Define pagination
         $currentPage = 1;
-        $rowsPerPage = 32;
+        $rowsPerPage = 35;
         $totalPages = ceil(count($articlesByLocation) / $rowsPerPage); // Calculate total pages based on rows per page
 
         // Loop through articles and fill the Excel file
@@ -128,6 +129,7 @@ class CoutingPageXLSXService
                 $inventoryArticle->getArticleCode(),
                 $inventoryArticle->getDesignation1(),
                 $inventoryArticle->getDesignation2(),
+                $inventoryArticle->getLotCode(),
                 '',
                 // $inventoryArticle->getUnitCode(),
                 $inventoryArticle->getPreparationUnit(),

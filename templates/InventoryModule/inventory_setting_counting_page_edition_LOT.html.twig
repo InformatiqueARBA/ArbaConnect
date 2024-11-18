@@ -6,7 +6,7 @@
 
 <div class="d-flex justify-content-center align-items-center">
 	<form id="inventoryFormLot" method="post" class="p-3 border rounded" style="background-color: #f8f9fa;">
-		<h3 class="text-center blue-arba">Edition feuilles de comptage lot</h3>
+		<h3 class="text-center blue-arba">Edition feuilles de comptage</h3>
 		<div class="d-flex align-items-center mb-3">
 			<label for="inventoryNumber" class="mr-2">Numéro d'inventaire :</label>
 			<input type="text" id="inventoryNumber" name="inventoryNumber" required class="form-control"
@@ -33,7 +33,7 @@
 	</form>
 </div><br>
 
-<h2 class="text-center blue-arba">Liste des feuilles de comptage lot imprimées</h2>
+<h2 class="text-center blue-arba">Liste des feuilles de comptage imprimées</h2>
 <ul>
 	{% for file in filesPrinted %}
 	<li>

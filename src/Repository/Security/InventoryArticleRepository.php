@@ -24,11 +24,11 @@ class InventoryArticleRepository extends ServiceEntityRepository
             ->where('(SUBSTRING(i.location, 1, 5) = :val3)')
             ->andWhere('i.inventoryNumber = :val')
             ->andWhere('i.warehouse = :val2')
-            ->andWhere('i.typeArticle = :typeArticle')
+            //->andWhere('i.typeArticle = :typeArticle')
             ->setParameter('val', $inventoryNumber)
             ->setParameter('val2', $warehouse)
             ->setParameter('val3', $location)
-            ->setParameter('typeArticle', 'ART')
+            //->setParameter('typeArticle', 'ART')
             ->orderBy('i.location', 'ASC')
             ->getQuery()
             ->getResult();
@@ -42,11 +42,23 @@ class InventoryArticleRepository extends ServiceEntityRepository
             ->where('(SUBSTRING(i.location, 1, 5) = :val3)')
             ->andWhere('i.inventoryNumber = :val')
             ->andWhere('i.warehouse = :val2')
-            ->andWhere('i.typeArticle = :typeArticle')
+            // ->andWhere('i.typeArticle = :typeArticle')
             ->setParameter('val', $inventoryNumber)
             ->setParameter('val2', $warehouse)
             ->setParameter('val3', $location)
-            ->setParameter('typeArticle', 'LOV')
+            // ->setParameter('typeArticle', 'LOV')
+            ->orderBy('i.location', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    // Retourne les articles pour la vue des non référencés
+    public function findByUnknownArticleTag(): array
+    {
+
+        return $this->createQueryBuilder('i')
+            ->where('i.unknownArticle = :val')
+            ->setParameter('val', '1')
             ->orderBy('i.location', 'ASC')
             ->getQuery()
             ->getResult();

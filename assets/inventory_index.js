@@ -235,3 +235,58 @@ document.addEventListener("DOMContentLoaded", function () {
   // Rafraîchir toutes les 3 secondes
   setInterval(refreshTable, 3000);
 });
+
+// document.addEventListener("DOMContentLoaded", function () {
+//   function saveFilters() {
+//     // Sauvegarder les valeurs des champs de filtre dans le localStorage
+//     document.querySelectorAll("input[id^='filter-']").forEach((filter) => {
+//       localStorage.setItem(filter.id, filter.value.trim());
+//     });
+//   }
+
+//   function applyFilters() {
+//     // Restaurer les valeurs sauvegardées dans les champs de filtre
+//     document.querySelectorAll("input[id^='filter-']").forEach((filter) => {
+//       const savedValue = localStorage.getItem(filter.id);
+//       if (savedValue !== null) {
+//         filter.value = savedValue;
+//       }
+//     });
+//     filterTable(); // Appliquer les filtres au tableau
+//   }
+
+//   function filterTable() {
+//     const rows = document.querySelectorAll(
+//       "#inventory-locations-table tbody tr"
+//     );
+
+//     rows.forEach((row) => {
+//       let showRow = true;
+
+//       // Vérifier chaque filtre
+//       document.querySelectorAll("input[id^='filter-']").forEach((filter) => {
+//         const columnIndex = parseInt(filter.getAttribute("data-column"), 10);
+//         const filterValue = filter.value.trim().toLowerCase();
+//         const cellValue = row.cells[columnIndex]?.textContent
+//           .trim()
+//           .toLowerCase();
+
+//         if (filterValue && !cellValue.includes(filterValue)) {
+//           showRow = false;
+//         }
+//       });
+
+//       // Afficher ou masquer la ligne
+//       row.style.display = showRow ? "" : "none";
+//     });
+//   }
+
+//   // Appliquer les filtres au chargement de la page
+//   applyFilters();
+
+//   // Sauvegarder les filtres et rafraîchir la page à intervalles réguliers
+//   setInterval(() => {
+//     saveFilters(); // Sauvegarder avant le rafraîchissement
+//     window.location.reload(); // Recharger toute la page
+//   }, 3000); // Modifier l'intervalle si nécessaire
+// });
