@@ -669,9 +669,6 @@ class InventoryController extends AbstractController
             return $this->redirectToRoute('app_inventory');
         }
 
-
-
-        //dd($articlesUnknown);
         return $this->render(
             'InventoryModule/inventory_unknown_article_list.html.twig',
             [
@@ -680,6 +677,45 @@ class InventoryController extends AbstractController
             ]
         );
     }
+
+
+
+
+    #[Route(
+        '/admin/liste-article-non-reference/supprimer/{id}',
+        name: 'app_inventory_delete_unknown_article',
+        methods: ['GET']
+    )]
+    public function deleteUnknownArticle(
+        ManagerRegistry $managerRegistry,
+        int $id
+    ): Response {
+        $em = $managerRegistry->getManager('security');
+
+        // Récupération de l'entité à supprimer
+        $article = $em->getRepository(InventoryArticle::class)->find($id);
+
+        if (!$article) {
+            $this->addFlash('error', 'Article introuvable.');
+            return $this->redirectToRoute('app_inventory_list_unknown_article');
+        }
+
+        try {
+            // Supprimer l'entité
+            $em->remove($article);
+            $em->flush();
+
+            $this->addFlash(
+                'success',
+                'Article supprimé avec succès.'
+            );
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur est survenue lors de la suppression CC: ' . $e->getMessage());
+        }
+        return $this->redirectToRoute('app_inventory_list_unknown_article');
+    }
+
+
 
 
 
