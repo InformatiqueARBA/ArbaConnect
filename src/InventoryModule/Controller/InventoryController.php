@@ -7,12 +7,13 @@ use App\Entity\Security\InventoryArticle;
 use App\Entity\Security\Location;
 use App\Entity\Security\User;
 use App\InventoryModule\Form\InventoryArticlesCollectionType;
-
+use App\InventoryModule\Form\InventoryArticlesCollectionTypeBlank;
 use App\InventoryModule\Service\CoutingPageXLSXService;
 use App\InventoryModule\Service\DataMapperInventoryService;
 use App\InventoryModule\Service\InventoryCSVRubisService;
 use App\InventoryModule\Service\PrinterService;
 use Doctrine\Persistence\ManagerRegistry;
+use PhpParser\Node\Expr\Cast\String_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -203,7 +204,8 @@ class InventoryController extends AbstractController
             'form' => $form->createView(),
             'location' => $location,
             'warehouse' => $warehouse,
-            'inventoryNumber' => $inventoryNumber
+            'inventoryNumber' => $inventoryNumber,
+
         ]);
     }
 
@@ -309,12 +311,78 @@ class InventoryController extends AbstractController
             'form' => $form->createView(),
             'location' => $location,
             'warehouse' => $warehouse,
-            'inventoryNumber' => $inventoryNumber
+            'inventoryNumber' => $inventoryNumber,
+
         ]);
     }
 
 
+    #[Route('/arba/inventaire/blank-page/{inventoryNumber}/{location}/{warehouse}/{typeArticle}', name: 'app_inventory_blank_page')]
+    public function blankPage(String $warehouse, String $location, String $inventoryNumber, String $typeArticle, Request $request, ManagerRegistry $managerRegistry): Response
+    {
+        $em = $managerRegistry->getManager('security');
 
+
+        $articleParLoc = [];
+        for (
+            $i = 0;
+            $i < 1;
+            $i++
+        ) {
+            $article = new InventoryArticle(); // Remplacez avec votre entité réelle si elle existe
+            $article->setInventoryNumber($inventoryNumber);
+            $article->setWarehouse($warehouse);
+            $article->setLocation($location);
+            $article->setArticleCode('');
+            $article->setDesignation1('');
+            $article->setDesignation2('');
+            $article->setLotCode('');
+            $article->setPreparationUnit('');
+            $article->setTypeArticle('');
+            $article->setDivisible('');
+            $article->setUnknownArticle(true);
+
+            $articleParLoc[] = $article;
+        }
+
+
+        $formData = ['articles' => $articleParLoc];
+
+        $form = $this->createForm(InventoryArticlesCollectionTypeBlank::class, $formData);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            foreach ($formData['articles'] as $article) {
+                $em->persist($article);
+            }
+            $em->flush();
+            $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
+
+            if ($typeArticle === 'lot') {
+                return $this->redirectToRoute('app_inventory_detail_lot_edit', [
+                    'warehouse' => $warehouse,
+                    'location' => $location,
+                    'inventoryNumber' => $inventoryNumber
+                ]);
+            } elseif ($typeArticle === 'stock') {
+                return $this->redirectToRoute('app_inventory_detail_edit', [
+                    'warehouse' => $warehouse,
+                    'location' => $location,
+                    'inventoryNumber' => $inventoryNumber
+                ]);
+            }
+        }
+
+
+        return $this->render('InventoryModule/blank_page.html.twig', [
+            'form' => $form->createView(),
+            //         'location' => $location,
+            //         'warehouse' => $warehouse,
+            //         'inventoryNumber' => $inventoryNumber
+        ]);
+    }
 
 
 
@@ -556,6 +624,61 @@ class InventoryController extends AbstractController
         }
 
         return $this->render('InventoryModule/inventory_populate_inventory_locations_db.html.twig', []);
+    }
+
+    #[Route(
+        '/admin/liste-article-non-reference',
+        name: 'app_inventory_list_unknown_article'
+    )]
+    public function inventoryUnknownArticleList(ManagerRegistry $managerRegistry, Request $request): Response
+    {
+        $em = $managerRegistry->getManager('security');
+        $articlesUnknown = $em->getRepository(InventoryArticle::class)->findByUnknownArticleTag();
+
+        $all  = $em->getRepository(InventoryArticle::class)->findall();
+
+        foreach ($articlesUnknown as $articleU) {
+            foreach ($all as $one) {
+                if ($articleU->getArticleCode() === $one->getArticleCode()) {
+                    $articleU->setDivisible($one->isDivisible());
+                    $articleU->setDesignation1($one->getDesignation1());
+                    $articleU->setDesignation2($one->getDesignation2());
+                    $articleU->setPackagingName($one->getPackagingName());
+                    $articleU->setPreparationUnit($one->getPreparationUnit());
+                    $articleU->setTypeArticle($one->getTypeArticle());
+
+                    break;
+                }
+            }
+        }
+
+        $formData = ['articles' => $articlesUnknown];
+
+        $form = $this->createForm(InventoryArticlesCollectionTypeBlank::class, $formData);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            foreach ($formData['articles'] as $articlesUnknown) {
+                $em->persist($articlesUnknown);
+            }
+            $em->flush();
+            $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
+
+            return $this->redirectToRoute('app_inventory');
+        }
+
+
+
+        //dd($articlesUnknown);
+        return $this->render(
+            'InventoryModule/inventory_unknown_article_list.html.twig',
+            [
+                'articlesUnknown' => $articlesUnknown,
+                'form' => $form
+            ]
+        );
     }
 
 

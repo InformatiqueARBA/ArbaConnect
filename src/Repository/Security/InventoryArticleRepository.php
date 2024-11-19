@@ -51,6 +51,18 @@ class InventoryArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    // Retourne les articles pour la vue des non référencés
+    public function findByUnknownArticleTag(): array
+    {
+
+        return $this->createQueryBuilder('i')
+            ->where('i.unknownArticle = :val')
+            ->setParameter('val', '1')
+            ->orderBy('i.location', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 
     // Retourne les articles par inventaire pour les stockés sur les CSV
     public function findByInventoryNumberAndWarehouseAndArtType(string $inventoryNumber, string $warehouse): array

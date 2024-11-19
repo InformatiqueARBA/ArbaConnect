@@ -8,6 +8,8 @@
 
 	<h3 class="mb-3  mt-3">Inventaire n° {{inventoryNumber}} pour l'allée {{ location }} du dépôt : {{
 		warehouse }}
+		<a href="{{ path('app_inventory_blank_page', { 'inventoryNumber': inventoryNumber, 'location': location, 'warehouse': warehouse,'typeArticle' :'stock' }) }}"
+			class="float-end">Article non référencé</a>
 	</h3>
 
 	{{ form_start(form) }}
@@ -32,11 +34,24 @@
 
 
 
-				<td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.location) }}</td>
+
+				{% if article.vars.data.unknownArticle ?? false %}
+				<td style="background-color: rgba(255, 255, 0, 0.3);"> {{ form_widget(article.location) }}</td>
+				{% else %}
+				<td style="background-color: rgba(166, 202, 255, 0.3);"> {{ form_widget(article.location) }}</td>
+				{% endif %}
 				<td>{{ form_widget(article.articleCode) }}</td>
 				<td>{{ form_widget(article.designation1) }}</td>
 				<td>{{ form_widget(article.designation2) }}</td>
+				{% if article.vars.data.unknownArticle ?? false %}
+
+				<td style="background-color: rgba(255, 255, 0, 0.3);">{{ form_widget(article.quantityLocation1) }}</td>
+				{% else %}
+
 				<td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.quantityLocation1) }}
+				</td>
+				{% endif %}
+
 
 				<td>
 					{% if article.packagingName.vars.value == '' %}
@@ -49,9 +64,9 @@
 				</td>
 
 
-				{{ form_widget(article.lotCode , { 'attr': {'style': 'display: none;'} }) }}
 				{{ form_widget(article.quantityLocation2, { 'attr': {'style': 'display: none;'} }) }}
 				{{ form_widget(article.quantityLocation3, { 'attr': {'style': 'display: none;'} }) }}
+				{{ form_widget(article.lotCode, { 'attr': {'style': 'display: none;'} }) }}
 
 
 

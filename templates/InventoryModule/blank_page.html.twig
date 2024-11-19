@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<a href="{{ path('app_inventory') }}" id='back-btn'
+    class="custom-btn custom-btn:hover custom-btn:focus mt-3 mb-3">Retour</a>
+
+<!-- Légende ajoutée -->
+<p class="text-end fw-bold" style="font-size: 14px; margin-top: -10px; margin-bottom: 15px;">
+    <span style="font-size: 16px;">⚠️</span>
+    <em><strong>Note : Seuls les champs Emplacement, Code article, N° de lot (si concerné) &amp; Quantité sont nécessaires. L'application indiquera les informations complémentaires.</strong></em>
+    <span style="font-size: 16px;">⚠️</span>
+</p>
+
+
+
+<div class="container-fluid ">
+
+
+
+    {{ form_start(form) }}
+
+    <table class="table table-striped ">
+        <thead>
+            <tr>
+                <th style=" width: 130px; font-size:14px; text-align :center;">N° inventaire</th>
+                <th style=" width: 130px; font-size:14px; text-align :center;">Dépôt</th>
+                <th style=" width: 130px; font-size:14px; text-align :center;">Emplacement</th>
+                <th style=" width: 100px; font-size:14px; text-align :center;">Code article</th>
+                <th style=" width: 350px; font-size:14px; text-align :center;">Désignation 1</th>
+                <th style=" width: 350px; font-size:14px; text-align :center;">Désignation 2</th>
+                <th style=" width: 150px; font-size:14px ; text-align :center;">N° de lot</th>
+                <th style=" width: 100px; font-size:14px ; text-align :center;">Quantité</th>
+                <th style=" width: 80px;  font-size:14px; text-align :center;">Unité</th>
+                <th style=" width: 80px;  font-size:14px; text-align :center;">Conditionnement</th>
+                <th style=" width: 80px;  font-size:14px; text-align :center;">Type Article</th>
+                <th style=" width: 80px;  font-size:14px; text-align :center;">Divisible</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for article in form.articles %}
+            <tr>
+
+                <td>{{ form_widget(article.inventoryNumber) }}</td>
+                <td>{{ form_widget(article.warehouse) }}</td>
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.location) }}</td>
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.articleCode) }}</td>
+                <td>{{ form_widget(article.designation1) }}</td>
+                <td>{{ form_widget(article.designation2) }}</td>
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.lotCode) }}
+                <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.quantityLocation1) }}
+                <td>{{ form_widget(article.preparationUnit) }}</td>
+                <td>{{ form_widget(article.packagingName) }}</td>
+                <td>{{ form_widget(article.typeArticle) }}</td>
+                <td>{{ form_widget(article.divisible) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <style>
+        /* bouton connexion */
+        .custom-btn {
+            border-color: rgb(0, 70, 100);
+            background-color: rgb(0, 70, 100);
+            color: rgb(130, 170, 55);
+            border-radius: 5px;
+            /* Bordure arrondie */
+            padding: 10px;
+            text-decoration: none;
+
+            /* Ajout d'une bordure par défaut transparente */
+            transition: border-color 0.3s ease;
+            /* Transition douce pour la bordure */
+        }
+
+        .custom-btn:hover,
+        .custom-btn:focus {
+            border: 2px solid transparent;
+            background-color: rgb(130, 170, 55);
+            color: #f2f6eb;
+            /* Couleur de la bordure au survol */
+        }
+    </style>
+
+    <div class="text-end">
+        {{ form_widget(form.save, { 'attr': { 'class': 'btn btn-primary custom-btn' } }) }}
+    </div>
+
+
+
+
+    {{ form_end(form) }}
+</div>
+
+{% endblock %}

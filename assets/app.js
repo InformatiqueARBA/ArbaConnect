@@ -22,5 +22,3 @@ let csvFilePath = '/csv/tour_code/tour_code.csv';
 import './styles/app.css';
 import './styles/style_login_page.css';
 import './styles/style_detail_commande_page.css';
-
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
