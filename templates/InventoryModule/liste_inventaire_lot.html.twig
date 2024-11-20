@@ -76,10 +76,9 @@
 	</table>
 </div>
 
-
-{#
-<script src="{{ asset('inventory_index.js') }}"></script> #}
-
-
+ {% block javascripts %}
+{{parent()}}
+<script src="{{ asset('inventory_index.js') }}"></script>
+ {% endblock %}
 
 {% endblock %}

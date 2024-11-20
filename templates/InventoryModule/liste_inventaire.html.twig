@@ -74,13 +74,10 @@
 
 	</table>
 </div>
-<script src="{{ asset('inventory_index.js') }}"></script>
 
-{# {% block javascripts %}
-{# fonvtionne apres un referesh de la page #}
-{#
+ {% block javascripts %}
+{{parent()}}
 <script src="{{ asset('inventory_index.js') }}"></script>
-{# {% endblock %} #}
-
+ {% endblock %}
 
 {% endblock %}

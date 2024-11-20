@@ -78,8 +78,11 @@
     </div>
 
     {{ form_end(form) }}
-
-    <script src="{{ asset('unknown_article.js') }}"></script>
 </div>
+
+ {% block javascripts %}
+{{parent()}}
+<script src="{{ asset('unknown_article.js') }}"></script>
+ {% endblock %}
 
 {% endblock %}

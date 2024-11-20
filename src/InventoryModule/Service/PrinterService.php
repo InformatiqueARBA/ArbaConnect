@@ -56,6 +56,7 @@ class PrinterService
                     // Affiche le nom du fichier au lieu d'imprimer physiquement
                     // echo "Impression simulée boucle ELSE : " . $file->getRealPath() . "\n";
 
+
                     // $command = ['lp', '-d', $printerName, $file->getRealPath()];
                     // $process = new Process($command);
                     // $process->run();

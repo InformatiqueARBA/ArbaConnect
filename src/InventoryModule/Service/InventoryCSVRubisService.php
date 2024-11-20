@@ -162,7 +162,7 @@ class InventoryCSVRubisService
         ];
 
         // Définition du chemin du fichier CSV
-        $filePath = $this->csvDirectoryInventory . "lot/I_$inventoryNumber.csv";
+        $filePath = $this->csvDirectoryInventory . "lot/IL$inventoryNumber.csv";
         $fileName = basename($filePath);
 
         // Création du fichier CSV

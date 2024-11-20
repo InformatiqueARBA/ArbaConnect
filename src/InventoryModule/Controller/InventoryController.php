@@ -478,11 +478,11 @@ class InventoryController extends AbstractController
                 if (null != $Location->getLocation() && trim($Location->getLocation()) != '') {
                     // récupère tous les articles liés aux localisations d'un dépôt
 
-                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndArtType($warehouse, $Location->getLocation());
+                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndArtType($inventoryNumber, $warehouse, $Location->getLocation());
 
                     $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/" . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
 
-                    $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber);
+                    $coutingPageXLSXService->generateCountingXLSXStock($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber);
 
                     //$coutingPageXLSXService->saveSpreadsheet($pdfWriter, $filePath);
                 }
@@ -547,12 +547,12 @@ class InventoryController extends AbstractController
                 if (null != $Location->getLocation() && trim($Location->getLocation()) != '') {
 
                     // récupère tous les articles liés aux localisations d'un dépôt
-                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndLovType($warehouse, $Location->getLocation());
+                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndLovType($inventoryNumber, $warehouse, $Location->getLocation());
 
                     $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/lot/" . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
 
 
-                    $coutingPageXLSXService->generateCountingXLSX($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber);
+                    $coutingPageXLSXService->generateCountingXLSXLot($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber);
                 }
             }
         }
@@ -574,6 +574,9 @@ class InventoryController extends AbstractController
 
         $directoryPrinted = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/printed/lot/';
         $filesPrinted = array_diff(scandir($directoryPrinted), array('.', '..'));
+
+
+
 
         return $this->render('InventoryModule/inventory_setting_counting_page_edition_LOT.html.twig', [
             'files' => $filesOnly,
