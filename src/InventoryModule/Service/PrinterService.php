@@ -19,7 +19,8 @@ class PrinterService
             foreach ($files as $file) {
                 if (substr(basename($file), 0, 5) == 'AQA_M' && ctype_digit(substr(basename($file), 5, 1)) && $file->getExtension() === 'pdf') {
 
-                    $printerName = 'Menuiserie';
+                    $printerName = 'AccueilARBA1bis';
+                    // $printerName = 'Menuiserie';
                     // $command = ['lp', '-d', $printerName, $file->getRealPath()];
                     // $process = new Process($command);
                     // $process->run();
@@ -35,9 +36,9 @@ class PrinterService
                 if (!preg_match('/^AQA_M\d/', basename($file)) && $file->getExtension() === 'pdf') {
 
                     $printerName = 'AccueilARBA1bis';
-                    // $command = ['lp', '-d', $printerName, $file->getRealPath()];
-                    // $process = new Process($command);
-                    // $process->run();
+                    $command = ['lp', '-d', $printerName, $file->getRealPath()];
+                    $process = new Process($command);
+                    $process->run();
 
                     if (file_exists($file)) {
                         rename($file, $destinationDirectory . basename($file));
