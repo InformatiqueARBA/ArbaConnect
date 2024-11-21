@@ -32,14 +32,11 @@ class DataMapperInventoryService
             $existingLocation = $this->em->getRepository(Location::class)
                 ->findOneBy(['inventoryNumber' => $result['INVENTORY_NUMBER']]);
 
-            // if (!$existingLocation) {
             if (!$existingLocation && $result['LOCATION'] != null) {
                 // Si l'INVENTORY_NUMBER n'existe pas, on crée une nouvelle location
                 $location = new Location();
                 $location->setWarehouse($result['WAREHOUSE']);
                 $location->setLocation($result['LOCATION']);
-                //$location->setLocation2($result['LOCATION2']);
-                //$location->setLocation3($result['LOCATION3']);
                 $location->setReferent($result['REFERENT']);
                 $location->setStatus(0);
                 $location->setInventoryNumber($result['INVENTORY_NUMBER']);
@@ -78,7 +75,6 @@ class DataMapperInventoryService
                 $inventoryArticle->setQuantityLocation1($result['QUANTITE_LOC1']);
                 $inventoryArticle->setPreparationUnit($result['UNITE_PREPARATION']);
                 $inventoryArticle->setQuantity2Location1($result['QUANTITE2_LOC1']);
-                // $inventoryArticle->setUnitCode($result['CODE_UNITE']);
                 $inventoryArticle->setTypeArticle($result['TYPE_ARTICLE']);
                 $inventoryArticle->setDivisible($result['DIVISIBLE']);
 
@@ -101,7 +97,6 @@ class DataMapperInventoryService
                 $inventoryArticle->setQuantityLocation1($result['QUANTITE_LOC1']);
                 $inventoryArticle->setPreparationUnit($result['UNITE_PREPARATION']);
                 $inventoryArticle->setQuantity2Location1($result['QUANTITE2_LOC1']);
-                // $inventoryArticle->setUnitCode($result['CODE_UNITE']);
                 $inventoryArticle->setTypeArticle($result['TYPE_ARTICLE']);
                 $inventoryArticle->setDivisible($result['DIVISIBLE']);
 
@@ -124,7 +119,6 @@ class DataMapperInventoryService
                 $inventoryArticle->setQuantityLocation1($result['QUANTITE_LOC1']);
                 $inventoryArticle->setPreparationUnit($result['UNITE_PREPARATION']);
                 $inventoryArticle->setQuantity2Location1($result['QUANTITE2_LOC1']);
-                // $inventoryArticle->setUnitCode($result['CODE_UNITE']);
                 $inventoryArticle->setTypeArticle($result['TYPE_ARTICLE']);
                 $inventoryArticle->setDivisible($result['DIVISIBLE']);
 

@@ -67,9 +67,9 @@ class InventoryCSVRubisService
                 $data = [
                     $inventoryArticle->getInventoryNumber(),   // N° inventaire INVNO
                     $inventoryArticle->getWarehouse(),         // Dépôts INVDP
-                    $inventoryArticle->getLocation(), // N° bordereau INVW1
+                    $inventoryArticle->getLocation(),          // N° bordereau INVW1
                     'INV_GEN',                                 // Identifiant INVID
-                    'Inventaire test',                         // N° de demande INLIE  ATPDINP1
+                    'Inventaire stock',                        // N° de demande INLIE  ATPDINP1
                     $inventoryArticle->getArticleCode(),       // Code article INVAR
                     $inventoryArticle->getLotCode(),           // N° de lot HILOT
 
@@ -96,7 +96,7 @@ class InventoryCSVRubisService
                         : $inventoryArticle->getQuantityLocation1(),
 
                     $inventoryArticle->getPreparationUnit(),
-                    'N'                                    // Introuvable dans les ASAINVP1, paramètre de provenance ? INVL1
+                    'N'
 
                 ];
 
@@ -109,14 +109,6 @@ class InventoryCSVRubisService
 
         // Copie le CSV vers le QDLS
         $this->csvToRubisService->sendCsvToRubis($this->csvDirectoryInventory . "stock/", $fileName, $this->ERPDirProdINV);
-
-        // Déplace le fichier CSV vers le dossier de sauvegarde (si nécessaire)
-        //$this->moveCsvToSaveDirectory($fileName);
-
-        // return [
-        //     'header' => $header,
-        //     'fileName' => $fileName
-        // ];
     }
 
 
@@ -127,23 +119,6 @@ class InventoryCSVRubisService
 
     public function inventoryLotCsvArray(array $inventoryArticleByLoca, $inventoryNumber)
     {
-
-        // dd($inventoryArticleByLoca, $inventoryNumber);
-
-        // $header = [
-        //     'INSNO',  // Inventaire ASINLOP1 
-        //     'INSDP',  // Dépôt ASINLOP1
-        //     'INSBO',  // Bordereau ASINLOP1
-        //     'INSID',  // Identifiant ASINLOP1
-        //     'INLIE',  // Description ATPDINP1
-        //     'INSAR',  // Article ASINLOP1
-        //     'INSLO',  // Lot ASINLOP1
-        //     'INVSN',  // Nombre ATPDINP1 
-        //     'INVSC',  // Conditionnement ATPDINP1
-        //     'INSQS',  // QTE saisie ASINLOP1
-        //     'INSUS',  // Unité de saisie ASINLOP1
-        //     'INVL1'   // 'N' = Génération d'inventaire à non. ATPDINP1
-        // ];
 
         $header = [
             'INVNO',  // Inventaire
@@ -182,13 +157,13 @@ class InventoryCSVRubisService
                     $inventoryArticle->getWarehouse(),         // Dépôts INSDP
                     $inventoryArticle->getLocation(), // N° bordereau INSBO
                     'INV_LOT', // Identifiant
-                    'Inventaire test lot', // Description ATPDINP1
+                    'Inventaire lot', // Description ATPDINP1
                     $inventoryArticle->getArticleCode(),  // Code article INSAR
                     $inventoryArticle->getLotCode(),  // N° de lot INSLO
                     $inventoryArticle->getQuantityLocation1(), // Nombre ATPDINP1 
                     $inventoryArticle->getPackaging(), // Conditionnement ATPDINP1
                     $inventoryArticle->getQuantityLocation1() !== null ?
-                        $inventoryArticle->getQuantityLocation1() : 0,  // Quantité en unité de saisie INSQS, mettre 0 si null
+                    $inventoryArticle->getQuantityLocation1() : 0,  // Quantité en unité de saisie INSQS, mettre 0 si null
                     $inventoryArticle->getPreparationUnit(),  // Unité de saisie
                     'N' // 'N' = Génération d'inventaire à non. ATPDINP1
 

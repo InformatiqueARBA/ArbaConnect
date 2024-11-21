@@ -4,7 +4,7 @@ namespace App\InventoryModule\Service;
 
 class RequestOdbcInventoryService
 {
-
+    // Retourne les allées de l'inventaire Rubis
     public function getUniqueInventoryLocations(String $inventoryNumber): String
     {
         $sql = "

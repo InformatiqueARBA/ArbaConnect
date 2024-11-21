@@ -32,10 +32,6 @@
 		<tbody>
 			{% for article in form.articles %}
 			<tr>
-
-
-
-
 				{% if article.vars.data.unknownArticle ?? false %}
 				<td style="background-color: rgba(255, 255, 0, 0.3);"> {{ form_widget(article.location) }}</td>
 				{% else %}
@@ -63,13 +59,8 @@
 					{{ form_widget(article.preparationUnit , { 'attr': {'style': 'display: none;'} }) }}
 					{% endif %}
 				</td>
-
-
 				{{ form_widget(article.quantityLocation2, { 'attr': {'style': 'display: none;'} }) }}
 				{{ form_widget(article.quantityLocation3, { 'attr': {'style': 'display: none;'} }) }}
-
-
-
 			</tr>
 			{% endfor %}
 		</tbody>
@@ -102,9 +93,6 @@
 	<div class="text-end">
 		{{ form_widget(form.save, { 'attr': { 'class': 'btn btn-primary custom-btn' } }) }}
 	</div>
-
-
-
 
 	{{ form_end(form) }}
 </div>

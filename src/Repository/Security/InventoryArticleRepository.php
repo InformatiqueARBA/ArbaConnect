@@ -6,9 +6,7 @@ use App\Entity\Security\InventoryArticle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<InventoryArticle>
- */
+
 class InventoryArticleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,6 +14,9 @@ class InventoryArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, InventoryArticle::class);
     }
 
+
+
+    
     // Retourne les articles pour la vue & l'impression PDF par allée stockée
     public function findByLocationAndWarehouseAndArtType(string $inventoryNumber, string $warehouse, string $location): array
     {
@@ -34,6 +35,9 @@ class InventoryArticleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+
+
+
     // Retourne les articles pour la vue & l'impression PDF par allée lot
     public function findByLocationAndWarehouseAndLovType(string $inventoryNumber, string $warehouse, string $location): array
     {
@@ -51,6 +55,10 @@ class InventoryArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+
+
+
     // Retourne les articles pour la vue des non référencés
     public function findByUnknownArticleTag(): array
     {
@@ -62,6 +70,8 @@ class InventoryArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+
 
 
     // Retourne les articles par inventaire pour les stockés sur les CSV
@@ -79,6 +89,9 @@ class InventoryArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+
+
 
     // Retourne les articles par inventaire pour les lots sur les CSV
     public function findByInventoryNumberAndWarehouseAndLovType(string $inventoryNumber, string $warehouse): array

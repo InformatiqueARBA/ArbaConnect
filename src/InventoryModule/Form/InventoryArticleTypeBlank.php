@@ -38,12 +38,10 @@ class InventoryArticleTypeBlank extends AbstractType
                 'label' => false
             ])
             ->add('location', null, [
-                // 'disabled' => true,
                 'attr' => ['style' => 'font-size:14px; text-align :center;'],
                 'label' => false
             ])
             ->add('articleCode', null, [
-                // 'disabled' => true,
                 'attr' => ['style' => 'font-size:14px;text-align :center;'],
                 'label' => false
             ])
@@ -58,7 +56,6 @@ class InventoryArticleTypeBlank extends AbstractType
                 'label' => false
             ])
             ->add('lotCode', null, [
-                // 'disabled' => true,
                 'attr' => ['style' => 'font-size:14px;text-align :center;'],
                 'label' => false
             ])
@@ -81,13 +78,6 @@ class InventoryArticleTypeBlank extends AbstractType
                 'attr' => ['style' => 'font-size:14px;text-align :center;'],
                 'label' => false
             ])
-            // ->add('divisible', ChoiceType::class, [
-            //     'choices' => [
-            //         'Oui' => true,
-            //         'Non' => false,
-            //     ],
-            //     'required' => true,
-            // ]);
             ->add('divisible', null, [
                 'disabled' => !$isEditable,
                 'attr' => ['style' => 'font-size:14px; text-align :center;'],

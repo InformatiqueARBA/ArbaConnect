@@ -14,31 +14,11 @@ class InventoryArticleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            // ->add('inventoryNumber', null, [
-            //     'disabled' => true,
-            //     'attr' => ['style' => 'font-size:14px;'],
-            //     'label' => false
-            // ])
-            // ->add('warehouse', null, [
-            //     'disabled' => true,
-            //     'attr' => ['style' => 'display:none; font-size:14px;'],
-            //     'label' => false
-            // ])
             ->add('location', null, [
                 'disabled' => true,
                 'attr' => ['style' => 'font-size:14px; text-align :center;'],
                 'label' => false
             ])
-            // ->add('location2', null, [
-            //     'disabled' => true,
-            //     'attr' => ['style' => 'font-size:14px;text-align :center;'],
-            //     'label' => false
-            // ])
-            // ->add('location3', null, [
-            //     'disabled' => true,
-            //     'attr' => ['style' => 'font-size:14px;text-align :center;'],
-            //     'label' => false
-            // ])
             ->add('articleCode', null, [
                 'disabled' => true,
                 'attr' => ['style' => 'font-size:14px;text-align :center;'],
@@ -59,17 +39,6 @@ class InventoryArticleType extends AbstractType
                 'attr' => ['style' => 'font-size:14px;text-align :center;'],
                 'label' => false
             ])
-            // ->add('dimensionType', null, [
-            //     'disabled' => true,
-            //     'attr' => ['style' => 'font-size:14px;'],
-            //     'label' => false
-            // ])
-            // ->add('packaging', null, [
-            //     'disabled' => true,
-            //     'attr' => ['style' => 'font-size:14px;text-align :center;'],
-            //     'label' => false
-            // ])
-
             ->add('quantityLocation1', null, [
                 'attr' => ['style' => 'font-size:14px;text-align :center;'],
                 'label' => false
@@ -92,29 +61,6 @@ class InventoryArticleType extends AbstractType
                 'attr' => ['style' => 'font-size:14px;text-align :center;'],
                 'label' => false
             ])
-
-            // // TODO: voir pour recomptage
-            // ->add('quantity2Location1', null, [
-            //     'attr' => ['style' => 'display:none; font-size:14px;'],
-            //     'label' => false
-            // ])
-            // ->add('quantity2Location2', null, [
-            //     'disabled' => true,
-            //     'attr' => ['style' => 'display:none; font-size:14px;'],
-            //     'label' => false
-            // ])
-            // ->add('quantity2Location3', null, [
-            //     'disabled' => true,
-            //     'attr' => ['style' => 'display:none; font-size:14px;'],
-            //     'label' => false
-            // ])
-            // ->add('dimensionType', HiddenType::class, [
-            //     'disabled' => true,
-            //     'attr' => ['style' => 'font-size:14px;'],
-            //     'label' => false
-            // ])
-
-
         ;
     }
 
