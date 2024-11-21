@@ -18,7 +18,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Lock\Exception\LockConflictedException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\Store\FlockStore;
 
 class InventoryController extends AbstractController
 {
@@ -41,7 +44,9 @@ class InventoryController extends AbstractController
     #[Route('/arba/inventaire/liste', name: 'app_inventory')]
     public function index(ManagerRegistry $managerRegistry): Response
     {
+
         $em = $managerRegistry->getManager('security');
+
         $locations = $em->getRepository(Location::class)->findLocationsWithArtArticles();
 
         return $this->render('InventoryModule\liste_inventaire.html.twig', [
@@ -73,37 +78,21 @@ class InventoryController extends AbstractController
 
 
     //partials pour mise a jour du statut sur page locations
-    #[Route('/arba/inventaire/locations', name: 'app_inventory_locations')]
-    public function getLocations(ManagerRegistry $managerRegistry): Response
-    {
-        $em = $managerRegistry->getManager('security');
-        $locations = $em->getRepository(Location::class)->findLocationsWithArtArticles();
+    // #[Route('/arba/inventaire/locations', name: 'app_inventory_locations')]
+    // public function getLocations(ManagerRegistry $managerRegistry): Response
+    // {
+    //     $em = $managerRegistry->getManager('security');
+    //     $locations = $em->getRepository(Location::class)->findLocationsWithArtArticles();
 
-        return $this->render('InventoryModule\partials\_locations.html.twig', [
-            'locations' => $locations,
-        ]);
-    }
-
-
+    //     return $this->render('InventoryModule\partials\_locations.html.twig', [
+    //         'locations' => $locations,
+    //     ]);
+    // }
 
 
 
 
-    // Lot
-    #[Route('/arba/inventaire/lot', name: 'app_lot')]
-    public function lot(Request $request): Response
-    {
-        $form = $this->createForm(InventoryArticlesCollectionType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            dd($request);
 
-            return $this->redirectToRoute('app_inventory');
-        }
-        return $this->render('InventoryModule\lot.html.twig', [
-            'form' => $form
-        ]);
-    }
 
 
 
@@ -116,10 +105,10 @@ class InventoryController extends AbstractController
     #[Route('/arba/inventaire/detail/{warehouse}/{location}/{inventoryNumber}/edit', name: 'app_inventory_detail_edit')]
     public function inventoryDetailEdit(String $warehouse, String $location, String $inventoryNumber, Request $request, ManagerRegistry $managerRegistry): Response
     {
-        $location = str_replace('®', '/', $location);
-        //$location = urldecode($location);
-        //dd($location);
         $em = $managerRegistry->getManager('security');
+        $Location = $em->getRepository(Location::class)->findByLocation($location);
+
+        $location = str_replace('®', '/', $location);
 
         // Récupérer le user connecté pour affecter le référent de la saisie
         $user = $this->getUser();
@@ -129,22 +118,9 @@ class InventoryController extends AbstractController
             throw new \LogicException('The user is not valid.');
         }
 
-        // Changement du statut de l'objet Location à actif
-        $Location = $em->getRepository(Location::class)->findByLocation($location);
-        $Location[0]->setStatus(1);
-        $em->persist($Location[0]);
-        $em->flush();
 
         // Récupérer les articles
         $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndArtType($inventoryNumber, $warehouse, $location);
-
-        // Trier les articles par ordre alphabétique de location
-        // usort($articleParLoc, function ($a, $b) {
-        //     return strcmp(
-        //         $a->getLocation(),
-        //         $b->getLocation()
-        //     );
-        // });
 
         // Créer un tableau d'articles pour le formulaire
         $formData = ['articles' => $articleParLoc];
@@ -186,8 +162,6 @@ class InventoryController extends AbstractController
 
             $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
 
-            // Changement du statut de l'objet Location à inactif
-            $Location[0]->setStatus(0);
 
             // Only set the referent if at least one article has been modified
             if ($shouldSetReferent) {
@@ -196,6 +170,7 @@ class InventoryController extends AbstractController
 
             $em->persist($Location[0]);
             $em->flush();
+            // Supprimer le cookie ici après flush
 
             return $this->redirectToRoute('app_inventory');
         }
@@ -216,16 +191,13 @@ class InventoryController extends AbstractController
 
 
 
-
-
-
-
     #[Route('/arba/inventaire/detail/lot/{warehouse}/{location}/{inventoryNumber}/edit', name: 'app_inventory_detail_lot_edit')]
     public function inventoryDetailLotEdit(String $warehouse, String $location, String $inventoryNumber, Request $request, ManagerRegistry $managerRegistry): Response
     {
         $location = urldecode($location);
 
         $em = $managerRegistry->getManager('security');
+        $Location = $em->getRepository(Location::class)->findByLocation($location);
 
         // Récupérer le user connecté pour affecter le référent de la saisie
         $user = $this->getUser();
@@ -235,17 +207,10 @@ class InventoryController extends AbstractController
             throw new \LogicException('The user is not valid.');
         }
 
-        // Changement du statut de l'objet Location à actif
-        $locationStatus = $em->getRepository(Location::class)->findByLocation($location);
-        $locationStatus[0]->setStatus(1);
-        $em->persist($locationStatus[0]);
-        $em->flush();
 
-        // Récupérer les articles
 
         $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndLovType($inventoryNumber, $warehouse, $location);
-        //dd($articleParLoc);
-        // Trier les articles par ordre alphabétique de location
+
         usort($articleParLoc, function ($a, $b) {
             return strcmp(
                 $a->getLocation(),
@@ -293,19 +258,17 @@ class InventoryController extends AbstractController
 
             $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
 
-            // Changement du statut de l'objet Location à inactif
-            $locationStatus[0]->setStatus(0);
-
-            // Only set the referent if at least one article has been modified
             if ($shouldSetReferent) {
-                $locationStatus[0]->setReferent($user->getLogin());
+                $Location[0]->setReferent($user->getLogin());
             }
-
-            $em->persist($locationStatus[0]);
+            $em->persist($Location[0]);
             $em->flush();
 
             return $this->redirectToRoute('app_inventory_lot');
         }
+
+        // Changement du statut de l'objet Location à inactif
+
 
         return $this->render('InventoryModule/detail_inventaire_lot.html.twig', [
             'form' => $form->createView(),
@@ -338,7 +301,14 @@ class InventoryController extends AbstractController
             $article->setDesignation2('');
             $article->setLotCode('');
             $article->setPreparationUnit('');
-            $article->setTypeArticle('');
+            if ($typeArticle == 'stock') {
+                $article->setTypeArticle('ART');
+            } elseif ($typeArticle == 'lot') {
+                $article->setTypeArticle('LOV');
+            } else {
+                $article->setTypeArticle('');
+            }
+
             $article->setDivisible('');
             $article->setUnknownArticle(true);
 
@@ -354,9 +324,28 @@ class InventoryController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $existingArticles  = $em->getRepository(InventoryArticle::class)->findall();
+
             foreach ($formData['articles'] as $article) {
+                foreach ($existingArticles as $one) {
+                    if ($article->getArticleCode() === $one->getArticleCode()) {
+                        $article->setDivisible($one->isDivisible());
+                        $article->setDesignation1($one->getDesignation1());
+                        $article->setDesignation2($one->getDesignation2());
+                        $article->setPackagingName($one->getPackagingName());
+                        $article->setPreparationUnit($one->getPreparationUnit());
+                        $article->setTypeArticle($one->getTypeArticle());
+
+                        break;
+                    }
+                }
+                // dd($article);
                 $em->persist($article);
             }
+
+
+
+            // dd($article);
             $em->flush();
             $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
 
@@ -629,6 +618,10 @@ class InventoryController extends AbstractController
         return $this->render('InventoryModule/inventory_populate_inventory_locations_db.html.twig', []);
     }
 
+
+
+
+
     #[Route(
         '/admin/liste-article-non-reference',
         name: 'app_inventory_list_unknown_article'
@@ -638,22 +631,22 @@ class InventoryController extends AbstractController
         $em = $managerRegistry->getManager('security');
         $articlesUnknown = $em->getRepository(InventoryArticle::class)->findByUnknownArticleTag();
 
-        $all  = $em->getRepository(InventoryArticle::class)->findall();
+        // $existingArticles  = $em->getRepository(InventoryArticle::class)->findall();
 
-        foreach ($articlesUnknown as $articleU) {
-            foreach ($all as $one) {
-                if ($articleU->getArticleCode() === $one->getArticleCode()) {
-                    $articleU->setDivisible($one->isDivisible());
-                    $articleU->setDesignation1($one->getDesignation1());
-                    $articleU->setDesignation2($one->getDesignation2());
-                    $articleU->setPackagingName($one->getPackagingName());
-                    $articleU->setPreparationUnit($one->getPreparationUnit());
-                    $articleU->setTypeArticle($one->getTypeArticle());
+        // foreach ($articlesUnknown as $articleU) {
+        //     foreach ($existingArticles as $one) {
+        //         if ($articleU->getArticleCode() === $one->getArticleCode()) {
+        //             $articleU->setDivisible($one->isDivisible());
+        //             $articleU->setDesignation1($one->getDesignation1());
+        //             $articleU->setDesignation2($one->getDesignation2());
+        //             $articleU->setPackagingName($one->getPackagingName());
+        //             $articleU->setPreparationUnit($one->getPreparationUnit());
+        //             $articleU->setTypeArticle($one->getTypeArticle());
 
-                    break;
-                }
-            }
-        }
+        //             break;
+        //         }
+        //     }
+        // }
 
         $formData = ['articles' => $articlesUnknown];
 

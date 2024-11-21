@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<a href="{{ path('app_inventory') }}" id='back-btn'
+<a href="{{ path('app_inventory', {'location': location}) }}" id='back-btn'
 	class="custom-btn custom-btn:hover custom-btn:focus mt-3 mb-3">Retour</a>
 
 <div class="container-fluid ">

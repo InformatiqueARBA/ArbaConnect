@@ -77,21 +77,21 @@ class InventoryCSVRubisService
                     $INVSN = in_array($inventoryArticle->getPreparationUnit(), $unitTabs) ||
                         ($inventoryArticle->getPreparationUnit() === 'UN' &&
                             ($inventoryArticle->getPackaging() === '' || $inventoryArticle->getPackaging() === null) &&
-                            $inventoryArticle->getDivisible() === false)
+                            $inventoryArticle->isDivisible() === false)
                         ? $inventoryArticle->getQuantityLocation1() : 0,
 
                     // Conditionnement ATPDINP1
                     $INVSC = in_array($inventoryArticle->getPreparationUnit(), $unitTabs) ||
                         ($inventoryArticle->getPreparationUnit() === 'UN' &&
                             ($inventoryArticle->getPackaging() === '' || $inventoryArticle->getPackaging() === null) &&
-                            $inventoryArticle->getDivisible() === false)
+                            $inventoryArticle->isDivisible() === false)
                         ? $inventoryArticle->getPackaging()
                         : 0,
                     // Unité de saisie
                     $INVSU = in_array($inventoryArticle->getPreparationUnit(), $unitTabs) ||
                         ($inventoryArticle->getPreparationUnit() === 'UN' &&
                             ($inventoryArticle->getPackaging() === '' || $inventoryArticle->getPackaging() === null) &&
-                            $inventoryArticle->getDivisible() === false)
+                            $inventoryArticle->isDivisible() === false)
                         ? $inventoryArticle->getQuantityLocation1() * $inventoryArticle->getPackaging()
                         : $inventoryArticle->getQuantityLocation1(),
 
