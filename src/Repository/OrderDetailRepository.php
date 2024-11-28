@@ -10,6 +10,18 @@ use Doctrine\ORM\EntityRepository;
 class OrderDetailRepository extends EntityRepository
 {
 
+
+    public function findByOrderId(string $orderId): array
+    {
+        return $this->createQueryBuilder('od')
+            ->andWhere('od.command = :orderId')
+            ->setParameter('orderId', $orderId)
+            ->orderBy('od.receptionDate', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
     // public function findByCommandId($commandId): array
     // {
     //     return $this->createQueryBuilder('o')

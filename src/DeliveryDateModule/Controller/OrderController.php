@@ -14,6 +14,7 @@ use App\DeliveryDateModule\Service\TourCodeService;
 use App\Entity\Acdb\Order;
 use App\Entity\Security\User;
 use App\DeliveryDateModule\Form\OrderType;
+use App\Entity\Acdb\OrderDetail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -101,11 +102,9 @@ class OrderController extends AbstractController
     {
         $em = $databaseSwitcherService->getEntityManager();
         $order = $em->getRepository(Order::class)->find($id);
-
+        $orderDetails = $em->getRepository(OrderDetail::class)->findByOrderId($id);
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
-
-
 
 
         // si le formulaire est soumis, qu'il n'est pas valide et que l'erreur est "La date de livraison n'a pas été modifiée." envoi un flash à l'utilsateur
@@ -117,33 +116,41 @@ class OrderController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // changement du statut de la commande en EDITED TODO: pour le moment le bouton
-            // change de couleur et devient vert de façon permanente (voir si pertinant )
-            // dd($order);
-
-            $order->setOrderStatus(Status::EDITED);
-
-            //------------------------------------------
-
-            $nobon = $order->getId();
 
             $date = $order->getDeliveryDate();
-            $formattedDate = $date->format('d/m/Y');
+            $isValid = true;
+            $flashDate = '';
 
+            // Boucle pour récupérer toutes les dates de réception fournisseur le cas échéant.
+            foreach ($orderDetails as $orderDetail) {
 
-            $user = $this->getUser();
+                $receptionDateOriginal = $orderDetail->getReceptionDate();
 
+                // Ajoute 7 jours à la date fournisseur la plus grande et teste le délai Arba (Order by géré dans le repo)
+                if ($receptionDateOriginal != null) {
+                    $receptionDatePlus7 = new \DateTime($receptionDateOriginal->format('d-m-Y'));
+                    $receptionDatePlus7->modify('+7 days');
+                }
 
+                if ($receptionDatePlus7 != '' && $receptionDatePlus7 > $date) {
+                    $isValid = false;
 
-            if (!$user instanceof User) {
-                throw new \LogicException('The user is not valid.');
+                    $flashDate = $orderDetail->getReceptionDate()->format('d-m-Y');
+                    break;
+                }
+            }
+
+            // Délai non respecté, information transmise à l'adh
+            if ($isValid == false) {
+                $this->addFlash('warning', "Un délai de 7 jours est demandé à partir de la date de réception de votre commande soit: " . $flashDate . " + 7 jours");
+                return $this->redirectToRoute('app_edit', ['id' => $id]);
             }
 
 
-
-            //persistance en DB
+            $order->setOrderStatus(Status::EDITED);
             $em->persist($order);
             $em->flush();
+
 
             // création d'un message flash pour avertir de la modification
             $this->addFlash('success', 'la date de livraison à bien été modifiée');
@@ -151,6 +158,12 @@ class OrderController extends AbstractController
             // Appel au service CsvGeneratorService pour générer le fichier csv RUBIS
             // Pendant la phase de test autorise uniquement ces Users ou l'env DEV. 
             //TODO: Vérifier pertinence FICTIF & travailler sur la casse login
+
+
+            $user = $this->getUser();
+            if (!$user instanceof User) {
+                throw new \LogicException('The user is not valid.');
+            }
 
             $allowedLogins = ['016253', '016FICTIF', '016god'];
             $login = $user->getLogin();
@@ -168,8 +181,6 @@ class OrderController extends AbstractController
                 return $this->redirectToRoute('app_dates_livraisons_adherent');
             }
         }
-
-
 
         return $this->render('DeliveryDateModule/order/detail_commande.html.twig', [
             'form' => $form,
