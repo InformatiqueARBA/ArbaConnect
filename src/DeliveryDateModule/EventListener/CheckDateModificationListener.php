@@ -2,6 +2,7 @@
 
 namespace App\DeliveryDateModule\EventListener;
 
+use DateTime;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\FormError;
@@ -22,12 +23,28 @@ final class CheckDateModificationListener
 
     public function onPreSubmit(FormEvent $event)
     {
+        $this->dateValidator($event);
+    }
+
+    public function dateValidator(FormEvent $event)
+    {
+
         $form = $event->getForm();
         $data = $event->getData(); // Valeur de l'utilisateur
-        $originalData = $form->getData()->getDeliveryDate(); // Valeur pré setter
+        $originalDeliveryDate = $form->getData()->getDeliveryDate(); // Valeur pré setter
+        $originalOrderDate = $form->getData()->getOrderDate(); // Valeur pré setter
+
         // Comparer les 2 dates pour obliger le changement de date si validation
-        if ($data['deliveryDate'] === $originalData->format('d/m/Y')) {
-            $form->addError(new FormError('Erreur_DDL'));
+        if ($data['deliveryDate'] === $originalDeliveryDate->format('d/m/Y')) {
+            $form->addError(new FormError('Err_Saisie'));
+        }
+        // Conversion date de commande en DateTime + 90jrs pour délai max
+        $deliveryDate = DateTime::createFromFormat('d/m/Y', $data['deliveryDate']);
+        $originalOrderDate->modify('+90 days');
+
+        // Comparaison date saisie avec délai max
+        if ($deliveryDate > $originalOrderDate) {
+            $form->addError(new FormError('Err_90jours'));
         }
     }
 }

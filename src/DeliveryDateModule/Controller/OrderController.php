@@ -109,8 +109,11 @@ class OrderController extends AbstractController
 
 
         // si le formulaire est soumis, qu'il n'est pas valide et que l'erreur est "La date de livraison n'a pas été modifiée." envoi un flash à l'utilsateur
-        if ($form->isSubmitted() && !$form->isValid() &&  $form->getErrors()[0]->getMessage() == "Erreur_DDL") {
+        if ($form->isSubmitted() && !$form->isValid() &&  $form->getErrors()[0]->getMessage() == "Err_Saisie") {
             $this->addFlash('warning', "Veuillez renseigner la nouvelle date de livraison");
+        }
+        if ($form->isSubmitted() && !$form->isValid() &&  $form->getErrors()[0]->getMessage() == "Err_90jours") {
+            $this->addFlash('warning', "La date de livraison ne peut excéder 90 jours par rapport à sa date de création.");
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
