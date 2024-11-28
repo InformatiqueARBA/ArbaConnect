@@ -114,9 +114,6 @@ class InventoryCSVRubisService
 
 
 
-
-
-
     public function inventoryLotCsvArray(array $inventoryArticleByLoca, $inventoryNumber)
     {
 
@@ -163,7 +160,7 @@ class InventoryCSVRubisService
                     $inventoryArticle->getQuantityLocation1(), // Nombre ATPDINP1 
                     $inventoryArticle->getPackaging(), // Conditionnement ATPDINP1
                     $inventoryArticle->getQuantityLocation1() !== null ?
-                    $inventoryArticle->getQuantityLocation1() : 0,  // Quantité en unité de saisie INSQS, mettre 0 si null
+                        $inventoryArticle->getQuantityLocation1() : 0,  // Quantité en unité de saisie INSQS, mettre 0 si null
                     $inventoryArticle->getPreparationUnit(),  // Unité de saisie
                     'N' // 'N' = Génération d'inventaire à non. ATPDINP1
 

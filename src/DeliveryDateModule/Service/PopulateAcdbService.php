@@ -29,10 +29,13 @@ class PopulateAcdbService
     //     $this->variableDataSwitcher = $params->get('variables_app_directory');
     // }
 
-    public function populateAcdb(DataMapperService $dataMapperService, DatabaseSwitcherService $databaseSwitcherService, ParameterBagInterface $params, OdbcService $odbcService, RequestOdbcDeliveryDateService $requestOdbcDeliveryDateService): Void
-    {
-
-
+    public function populateAcdb(
+        DataMapperService $dataMapperService,
+        DatabaseSwitcherService $databaseSwitcherService,
+        ParameterBagInterface $params,
+        OdbcService $odbcService,
+        RequestOdbcDeliveryDateService $requestOdbcDeliveryDateService
+    ): void {
         // Construire le chemin complet vers le fichier variableDataSwitcher.txt
         $filePath = $params->get('variables_app_directory') . DIRECTORY_SEPARATOR . 'variableDataSwitcher.txt';
 
@@ -41,48 +44,43 @@ class PopulateAcdbService
             throw new \Exception("Le fichier $filePath n'existe pas.");
         }
 
-
-        // Get the connection from the entity manager
+        // Obtenir la connexion à partir de l'EntityManager
         $connection = $databaseSwitcherService->getEntityManagerPopulate()->getConnection();
-        // dd($connection);
 
         try {
-            // Start the transaction
-            $connection->beginTransaction();
+            // Désactiver temporairement les contraintes de clés étrangères
+            $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 0');
 
-            // // Truncate the member table
-            $connection->executeStatement('DELETE FROM Member');
+            // Truncate des tables
+            $connection->executeStatement('TRUNCATE TABLE Member');
+            $connection->executeStatement('TRUNCATE TABLE OrderDetail');
+            $connection->executeStatement('TRUNCATE TABLE `order`');
+            $connection->executeStatement('TRUNCATE TABLE Corporation');
 
-            // // Truncate the order table
-            $connection->executeStatement('DELETE FROM `order`');
+            // Réactiver les contraintes de clés étrangères
+            $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
 
-            // Truncate the corporation table
-            $connection->executeStatement('DELETE FROM Corporation');
-            $this->logger->critical('************************DELETE **************************** ');
-
-            // Commit the transaction if all statements are successful
-            $connection->commit();
+            $this->logger->critical('************************TRUNCATE SUCCESSFUL **************************** ');
         } catch (\Exception $e) {
-            // Rollback the transaction in case of error
-            $connection->rollBack();
-            $this->logger->critical('************************ROLLBACK **************************** ');
+            // En cas d'erreur, réactiver les contraintes (par précaution)
+            $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
+            $this->logger->critical('************************TRUNCATE FAILED **************************** ');
             throw $e;
+        } finally {
+            $connection->close();
         }
-        $connection->close();
 
-
+        // Appel des méthodes de mapping
         $dataMapperService->corporationMapper($databaseSwitcherService, $odbcService, $requestOdbcDeliveryDateService);
         $dataMapperService->orderMapper($databaseSwitcherService, $odbcService, $requestOdbcDeliveryDateService);
+        $dataMapperService->orderDetailMapper($databaseSwitcherService, $odbcService, $requestOdbcDeliveryDateService);
         $dataMapperService->MemberMapper($databaseSwitcherService, $odbcService, $requestOdbcDeliveryDateService);
-        // r+ :Ouvre en lecture et écriture et place le pointeur de fichier au début du fichier.
+
+        // Mise à jour du fichier variableDataSwitcher.txt
         $file = fopen($filePath, "r+");
         $dbByDefault = file_get_contents($filePath);
 
-        if ($dbByDefault == 1) {
-            fwrite($file, 0);
-        } else {
-            fwrite($file, 1);
-        }
+        fwrite($file, $dbByDefault == 1 ? 0 : 1);
         fclose($file);
     }
 }

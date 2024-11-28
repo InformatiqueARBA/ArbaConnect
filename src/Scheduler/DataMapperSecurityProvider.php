@@ -14,7 +14,7 @@ class DataMapperSecurityProvider implements ScheduleProviderInterface
     public function getSchedule(): Schedule
     { {
             return (new Schedule())->add(
-                RecurringMessage::cron('30 22 * * *', new DataMapperSecurityMessage())
+                RecurringMessage::cron('30 23 * * *', new DataMapperSecurityMessage())
             );
         }
     }

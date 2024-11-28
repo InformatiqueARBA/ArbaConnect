@@ -228,6 +228,16 @@ class OrderController extends AbstractController
 
 
 
+    #[Route('/commandes/orderDetail', name: 'orderDetail')]
+    public function orderDetail(DataMapperService $dataMapperService, DatabaseSwitcherService $databaseSwitcherService, OdbcService $odbcService, RequestOdbcDeliveryDateService $requestOdbcDeliveryDateService): Response
+    {
+        $dataMapperService->orderDetailMapper($databaseSwitcherService, $odbcService, $requestOdbcDeliveryDateService,);
+
+        return new Response('orderDetails are up to date.');
+    }
+
+
+
     #[Route('/arba/commandes/code', name: 'code')]
     public function code(TourCodeService $tourCodeService): Response
     {
