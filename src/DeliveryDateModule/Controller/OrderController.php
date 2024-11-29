@@ -15,6 +15,7 @@ use App\Entity\Acdb\Order;
 use App\Entity\Security\User;
 use App\DeliveryDateModule\Form\OrderType;
 use App\Entity\Acdb\OrderDetail;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -121,10 +122,22 @@ class OrderController extends AbstractController
             $isValid = true;
             $flashDate = '';
 
+            // Si la commande est ORA : test de livraison à J+10 mini
+            if ($order->getType() == 'Sur ordre') {
+                $minDateORA = (new DateTime())->modify('+10 days')->format('d/m/Y');
+
+                // Délai non respecté, information transmise à l'adh
+                if ($order->getDeliveryDate()->format('d/m/Y') < $minDateORA) {
+                    $this->addFlash('warning', "Un délai de 10 jours est demandé pour les commandes sur ordre. La livraison est possible à partir du : " . $minDateORA);
+                    return $this->redirectToRoute('app_edit', ['id' => $id]);
+                }
+            }
+
             // Boucle pour récupérer toutes les dates de réception fournisseur le cas échéant.
             foreach ($orderDetails as $orderDetail) {
 
                 $receptionDateOriginal = $orderDetail->getReceptionDate();
+                $receptionDatePlus7 = '';
 
                 // Ajoute 7 jours à la date fournisseur la plus grande et teste le délai Arba (Order by géré dans le repo)
                 if ($receptionDateOriginal != null) {
