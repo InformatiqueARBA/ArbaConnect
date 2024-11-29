@@ -28,19 +28,38 @@ class CsvGeneratorService
     {
 
         $timestamp = date('_H:i:s');
+        $orderType = $order->getType();
+        //dd($orderType);
 
-        $header = [
-            'SNOCLI',
-            'SNOBON',
-            'SNTA02',
-            'SNTC07',
-            'SNTPRO',
-            'SNTLIS',
-            'SNTLIA',
-            'SNTLIM',
-            'SNTLIJ',
-            'SNTROF'
-        ];
+        //Génère l'entête du fichier CSV avec le type de bon si une ORA a été modifiée
+        if ($orderType == 'ORC') {
+            $header = [
+                'SNOCLI',
+                'SNOBON',
+                'SNTA02',
+                'SNTC07',
+                'SNTPRO',
+                'SNTLIS',
+                'SNTLIA',
+                'SNTLIM',
+                'SNTLIJ',
+                'SNTB40',
+                'SNTROF'
+            ];
+        } else {
+            $header = [
+                'SNOCLI',
+                'SNOBON',
+                'SNTA02',
+                'SNTC07',
+                'SNTPRO',
+                'SNTLIS',
+                'SNTLIA',
+                'SNTLIM',
+                'SNTLIJ',
+                'SNTROF'
+            ];
+        }
 
         $orderId = $order->getId();
 
@@ -63,18 +82,35 @@ class CsvGeneratorService
         $corporationId = $order->getCorporation()->getId();
         $deliveryDateString = $order->getDeliveryDate()->format('d-m-Y');
 
-        $data = [
-            $corporationId,
-            $orderId . $timestamp,
-            '2',
-            $orderId,
-            'AC',
-            substr($deliveryDateString, 6, 2),
-            substr($deliveryDateString, 8, 2),
-            substr($deliveryDateString, 3, 2),
-            substr($deliveryDateString, 0, 2),
-            'R'
-        ];
+        //Génère les lignes du fichier CSV avec le type de bon si une ORA a été modifiée
+        if ($orderType == 'ORC') {
+            $data = [
+                $corporationId,
+                $orderId . $timestamp,
+                '2',
+                $orderId,
+                'AC',
+                substr($deliveryDateString, 6, 2),
+                substr($deliveryDateString, 8, 2),
+                substr($deliveryDateString, 3, 2),
+                substr($deliveryDateString, 0, 2),
+                'ORC',
+                'R'
+            ];
+        } else {
+            $data = [
+                $corporationId,
+                $orderId . $timestamp,
+                '2',
+                $orderId,
+                'AC',
+                substr($deliveryDateString, 6, 2),
+                substr($deliveryDateString, 8, 2),
+                substr($deliveryDateString, 3, 2),
+                substr($deliveryDateString, 0, 2),
+                'R'
+            ];
+        }
         fputcsv($file, $data, ';');
 
         // Copie le CSV sur le QDLS RUBIS

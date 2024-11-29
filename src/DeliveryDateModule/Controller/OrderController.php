@@ -130,6 +130,9 @@ class OrderController extends AbstractController
                 if ($order->getDeliveryDate()->format('d/m/Y') < $minDateORA) {
                     $this->addFlash('warning', "Un délai de 10 jours est demandé pour les commandes sur ordre. La livraison est possible à partir du : " . $minDateORA);
                     return $this->redirectToRoute('app_edit', ['id' => $id]);
+                    // Indique en base/CSV que le bon n'est plus un ORA
+                } else {
+                    $order->setType('ORC');
                 }
             }
 
