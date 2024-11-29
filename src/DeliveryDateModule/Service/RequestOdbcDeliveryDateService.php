@@ -55,6 +55,7 @@ class RequestOdbcDeliveryDateService
                 when trim(ENT_CMD.ENT30) = 'P' THEN 'prepared' 
                 when trim(ENT_CMD.ENT30) in ('R/P','R/F') THEN 'not editable' -- CMD partiellement préparée/facturée
                 when ENT_CMD.ENTB40 = 'ORC' THEN 'not editable' -- La cmd ORA a reçu une date de liv. donc plus modifiable
+                when ENT_CMD.ENTB37 = 'IMP' THEN 'not editable' -- Qualifiant date de livraison / commande impérative
                 when trim(ENT_CMD.ENT30)= 'F' THEN 'delivred' 
                 when ENT_CMD.ENPRM = 'AC' THEN 'edited' 
                 else 'editable'end as ORDERSTATUS
@@ -62,9 +63,10 @@ class RequestOdbcDeliveryDateService
             ,CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(ENT_CMD.DSECS, ENT_CMD.DSECA), '-'),ENT_CMD.DSECM),'-'),ENT_CMD.DSECJ) as ORDERDATE
             ,CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(ENT_CMD.DLSSB, ENT_CMD.DLasB), '-'),ENT_CMD.DLMSB),'-'),ENT_CMD.DLJSB) as DELIVERYDATE
             ,case 
+                when ENT_CMD.ENTB37 = 'IMP' THEN 'Commande impérative'
                 when ENT_CMD.ENTB40 = 'ORA' THEN 'Sur ordre'
                 when ENT_CMD.ENTB40 = 'ORC' THEN 'Sur ordre déclenché'
-				when TYVTE = 'LIV' THEN 'Livraison'
+                when TYVTE = 'LIV' THEN 'Livraison'
 				when TYVTE = 'EMP' THEN 'À emporter'  
                 else ENT_CMD.TYVTE END as TYPE
             ,case

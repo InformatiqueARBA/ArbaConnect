@@ -29,7 +29,6 @@ class CsvGeneratorService
 
         $timestamp = date('_H:i:s');
         $orderType = $order->getType();
-        //dd($orderType);
 
         //Génère l'entête du fichier CSV avec le type de bon si une ORA a été modifiée
         if ($orderType == 'ORC') {
