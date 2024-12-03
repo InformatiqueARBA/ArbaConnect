@@ -122,19 +122,26 @@ class CoutingPageXLSXService
 
         // Loop through articles and fill the Excel file
         foreach ($articlesByLocation as $index => $inventoryArticle) {
-            // Fill data
+            $countingUnit = '';
+            if ($inventoryArticle->getPackagingName() == '') {
+                $countingUnit = $inventoryArticle->getPreparationUnit();
+            } else {
+                $countingUnit = $inventoryArticle->getPackagingName();
+            }
             $data = [
                 $inventoryArticle->getLocation(),
                 $inventoryArticle->getArticleCode(),
                 $inventoryArticle->getDesignation1(),
                 $inventoryArticle->getDesignation2(),
                 '',
-                // $inventoryArticle->getUnitCode(),
-                $inventoryArticle->getPreparationUnit(),
+                $countingUnit,
                 '',
                 '',
                 ''
             ];
+
+
+
 
             // Write data
             $columnIndex = 1;
