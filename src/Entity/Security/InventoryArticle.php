@@ -82,6 +82,9 @@ class InventoryArticle
     #[ORM\Column(nullable: true)]
     private ?bool $unknownArticle = null;
 
+    #[ORM\Column(length: 3)]
+    private ?string $servedFromStock = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -359,6 +362,18 @@ class InventoryArticle
     public function setUnknownArticle(?bool $unknownArticle): static
     {
         $this->unknownArticle = $unknownArticle;
+
+        return $this;
+    }
+
+    public function getServedFromStock(): ?string
+    {
+        return $this->servedFromStock;
+    }
+
+    public function setServedFromStock(string $servedFromStock): static
+    {
+        $this->servedFromStock = $servedFromStock;
 
         return $this;
     }

@@ -77,6 +77,7 @@ class DataMapperInventoryService
                 $inventoryArticle->setQuantity2Location1($result['QUANTITE2_LOC1']);
                 $inventoryArticle->setTypeArticle($result['TYPE_ARTICLE']);
                 $inventoryArticle->setDivisible($result['DIVISIBLE']);
+                $inventoryArticle->setServedFromStock($result['SERVED_FROM_STOCK']);
 
                 $this->em->persist($inventoryArticle);
             }
@@ -99,6 +100,8 @@ class DataMapperInventoryService
                 $inventoryArticle->setQuantity2Location1($result['QUANTITE2_LOC1']);
                 $inventoryArticle->setTypeArticle($result['TYPE_ARTICLE']);
                 $inventoryArticle->setDivisible($result['DIVISIBLE']);
+                $inventoryArticle->setServedFromStock($result['SERVED_FROM_STOCK']);
+
 
                 $this->em->persist($inventoryArticle);
             }
@@ -121,6 +124,8 @@ class DataMapperInventoryService
                 $inventoryArticle->setQuantity2Location1($result['QUANTITE2_LOC1']);
                 $inventoryArticle->setTypeArticle($result['TYPE_ARTICLE']);
                 $inventoryArticle->setDivisible($result['DIVISIBLE']);
+                $inventoryArticle->setServedFromStock($result['SERVED_FROM_STOCK']);
+
 
                 $this->em->persist($inventoryArticle);
             }

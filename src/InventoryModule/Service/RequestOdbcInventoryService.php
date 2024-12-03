@@ -110,13 +110,8 @@ class RequestOdbcInventoryService
         when trim(ART.CDCON) = 'OUI' then 1
         else 1
     end as DIVISIBLE
-    --case
-       -- when (UNI.COD15 <> '') and ART.CDCON = 'NON' then trim(UNI.COD15)
-        --else trim(ART.ULPRE)
-    --end as CODE_UNITE
     , trim(ART.ART32) as TYPE_ARTICLE
-    --,'' AS DEP AS DEPOT
-    --,'' AS P_DEP
+    , ART.SERST as SERVED_FROM_STOCK
 from
     AQAGESTCOM.AARTICP1 ART
     inner join AQAGESTCOM.AINVENP1 INV on ART.NOART = INV.INVAR
@@ -129,11 +124,7 @@ where
     INV.ETARE <> 'S'
     and -- Non suspendu
     INV.LOCAL <> ''
-    and -- Hors localisation 1 vide
-    INV.SERST = 'OUI'
-    and -- Articles stockés uniquement (fiche article)
-    INV.INVST = 'OUI'
-    and -- Articles stockés uniquement (fiche stock)
+    and 
     INV.INVNO = '$inventoryNumber'
 order by
     LOCATION,
