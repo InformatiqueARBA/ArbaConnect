@@ -4,72 +4,87 @@
 {% endblock %}
 
 {% block body %}
-	<div class="content-container  sfp-regular-text">
+<div class="content-container  sfp-regular-text">
 
-		<div class="form-container light-blue-bg">
-			<h3>Détail commande</h3>
-			{{ form_start(form, {'attr': {'class': 'change-delivery-date-form'}, 'action': path('app_edit', {'id': order.id})}) }}
+	<div class="form-container light-blue-bg">
+		<h3>Détail commande</h3>
+		{{ form_start(form, {'attr': {'class': 'change-delivery-date-form'}, 'action': path('app_edit', {'id':
+		order.id})}) }}
 
-			<div class="form-group">
-				{{ form_label(form.id, 'N° de bon', {'label_attr': {'class': 'custom-typography'}}) }}
-				{{ form_widget(form.id, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
-			</div>
-
-			<div class="form-group">
-				{{ form_widget(form.orderStatus, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
-			</div>
-
-			<div class="form-group mt-3">
-				{{ form_label(form.reference, 'Référence', {'label_attr': {'class': 'custom-typography'}}) }}
-				{{ form_widget(form.reference, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
-			</div>
-
-			<div class="form-group mt-3">
-				{{ form_label(form.orderDate, 'Date de commande', {'label_attr': {'class': 'custom-typography'}}) }}
-				{{ form_widget(form.orderDate, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
-			</div>
-
-			<div class="form-group mt-3">
-				{{ form_label(form.deliveryDate, 'Date de livraison', {'label_attr': {'class': 'custom-typography'}}) }}
-				{{ form_widget(form.deliveryDate, {'attr': {'class': 'form-control custom-typography flatpickr-input', 'placeholder': 'Sélectionner une date', 'data-date-format': 'd/m/Y'}}) }}
-			</div>
-
-			<div class="form-group">
-				{{ form_widget(form.type, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
-			</div>
-
-			<div class="form-group mt-3">
-				{{ form_label(form.seller, 'Vendeur', {'label_attr': {'class': 'custom-typography'}}) }}
-				{{ form_widget(form.seller, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
-			</div>
-
-			<div class="form-group">
-				{{ form_widget(form.corporation, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
-			</div>
-
-			<div class="form-group mt-3 w-100">
-				{{ form_widget(form.submit, {'attr': {'class': 'form-control custom-btn btn btn-lg'}}) }}
-			</div>
-
-			{{ form_end(form) }}
+		<div class="form-group">
+			{{ form_label(form.id, 'N° de bon', {'label_attr': {'class': 'custom-typography'}}) }}
+			{{ form_widget(form.id, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
 		</div>
+
+		<div class="form-group">
+			{{ form_widget(form.orderStatus, {'attr': {'class': 'form-control custom-typography', 'disabled':
+			'disabled'}}) }}
+		</div>
+
+		<div class="form-group mt-3">
+			{{ form_label(form.reference, 'Référence', {'label_attr': {'class': 'custom-typography'}}) }}
+			{{ form_widget(form.reference, {'attr': {'class': 'form-control custom-typography', 'disabled':
+			'disabled'}}) }}
+		</div>
+
+		<div class="form-group mt-3">
+			{{ form_label(form.orderDate, 'Date de commande', {'label_attr': {'class': 'custom-typography'}}) }}
+			{{ form_widget(form.orderDate, {'attr': {'class': 'form-control custom-typography', 'disabled':
+			'disabled'}}) }}
+		</div>
+
+		<div class="form-group mt-3">
+			{{ form_label(form.deliveryDate, 'Date de livraison', {'label_attr': {'class': 'custom-typography'}}) }}
+			{{ form_widget(form.deliveryDate, {'attr': {'class': 'form-control custom-typography flatpickr-input',
+			'placeholder': 'Sélectionner une date', 'data-date-format': 'd/m/Y'}}) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_widget(form.type, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
+		</div>
+
+		<div class="form-group mt-3">
+			{{ form_label(form.seller, 'Vendeur', {'label_attr': {'class': 'custom-typography'}}) }}
+			{{ form_widget(form.seller, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}})
+			}}
+		</div>
+
+		<div class="form-group">
+			{{ form_widget(form.corporation, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
+		</div>
+
+		<div class="form-group mt-3 w-100">
+			{{ form_widget(form.submit, {'attr': {'class': 'form-control custom-btn btn btn-lg'}}) }}
+		</div>
+
+		{{ form_end(form) }}
 	</div>
+</div>
 
-	<div class="button-container">
-		<a href="{{ path('app_dates_livraisons_adherent') }}" class="btn btn-primary return-btn custom-btn">
-			Retour
-		</a>
-	</div>
+<div class="button-container">
+	<a href="{{ path('app_dates_livraisons_adherent') }}" class="btn btn-primary return-btn custom-btn">
+		Retour
+	</a>
+</div>
 
-	<div class="bottom-left-image-douchette">
-		<img src="{{ asset('images/Entrepot.svg') }}" alt="entrepot">
-	</div>
+<div class="bottom-left-image-douchette">
+	<img src="{{ asset('images/Entrepot.svg') }}" alt="entrepot">
+</div>
 
-	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-		<script>
-			var tc = "{{ app.user.tourCode }}";
-		</script>
-	{% endif %}
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
-	<script src="{{ asset('order_detail.js') }}"></script>
+
+{% if zipCode is empty %}
+<script>
+	var tc = "{{ app.user.tourCode }}";
+</script>
+{% else %}
+<script>
+	var tc = "{{ zipCode }}";
+</script>
+{% endif %}
+
+{% endif %}
+
+<script src="{{ asset('order_detail.js') }}"></script>
 {% endblock %}

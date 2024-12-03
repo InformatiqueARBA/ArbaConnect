@@ -97,6 +97,7 @@ class DataMapperService
             $order->setType($result['TYPE']);
             $order->setSeller($result['SELLER']);
             $order->setComment($result['COMMENT']);
+            $order->setZipCode($result['ZIPCODE']);
 
             $em->persist($order);
         }
@@ -162,7 +163,8 @@ class DataMapperService
                 }
             } catch (\Exception $e) {
                 // Log l'erreur avec le bon en cause
-                $this->logger->critical('Erreur lors du traitement de NUM_BON ' . $result['NUM_BON'] . ': ' . $e->getMessage());
+                // TODO: a décommenter quand corriger
+                // $this->logger->critical('Erreur lors du traitement de NUM_BON ' . $result['NUM_BON'] . ': ' . $e->getMessage());
                 // Continuer la boucle pour traiter les autres résultats
                 continue;
             }

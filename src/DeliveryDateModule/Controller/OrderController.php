@@ -15,7 +15,9 @@ use App\Entity\Acdb\Order;
 use App\Entity\Security\User;
 use App\DeliveryDateModule\Form\OrderType;
 use App\Entity\Acdb\OrderDetail;
+use App\Entity\Security\ArbaTour;
 use DateTime;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -99,10 +101,12 @@ class OrderController extends AbstractController
 
     // TODO: interdire la soumission du form si la dte n'a pas été changée voir doc:https://symfony.com/doc/current/form/events.html
     #[Route('/commandes/detail/{id}/edit', name: 'app_edit')]
-    public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService): Response
+    public function edit(Request $request, CsvGeneratorService $csvG, String $id, DatabaseSwitcherService $databaseSwitcherService, ManagerRegistry $managerRegistry): Response
     {
         $em = $databaseSwitcherService->getEntityManager();
         $order = $em->getRepository(Order::class)->find($id);
+        $emSecurity = $managerRegistry->getManager('security');
+        $zipCode = $emSecurity->getRepository(ArbaTour::class)->findTourCodeByZipCode($order->getZipCode());
         $orderDetails = $em->getRepository(OrderDetail::class)->findByOrderId($id);
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
@@ -200,7 +204,8 @@ class OrderController extends AbstractController
 
         return $this->render('DeliveryDateModule/order/detail_commande.html.twig', [
             'form' => $form,
-            'order' => $order
+            'order' => $order,
+            'zipCode' => $zipCode
         ]);
     }
 

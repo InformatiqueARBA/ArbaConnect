@@ -74,14 +74,17 @@ class RequestOdbcDeliveryDateService
             when ENT_CMD.LIVSB = 'DFE' then 'DFIWEB'
             else 'ARBA' end as SELLER
             ,trim(ENT_CMD.COMED) as COMMENT -- TODO: À supprimer/modifier ce champ sur la V2
+            ,ADR.CPOLV as ZIPCODE
         from
             AQAGESTCOM.AENTBOP1 ENT_CMD
         inner join
             AQAGESTCOM.ACLIENP1 CLI ON CLI.NOCLI = ENT_CMD.NOCLI
         inner join
             AQAGESTCOM.ADETBOP1 DET_CMD ON DET_CMD.NOBON = ENT_CMD.NOBON
-
-        where /* Récupère les commandes non éditées */
+        left outer join
+            AQAGESTCOM.ALIVADP1 ADR ON ADR.NOCLI = ENT_CMD.NOCLI and ADR.NOLIV  = ENT_CMD.NOLIV
+        where 
+        /* Récupère les commandes non éditées */
 
             (
 			CLDI1 = 'AD' -- ADH uniquement

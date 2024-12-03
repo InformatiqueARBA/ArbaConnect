@@ -47,6 +47,9 @@ class Order
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $SupplierDeliveryDate = null;
 
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $zipCode = null;
+
     public function getId(): ?string
     {
         return $this->id;
@@ -175,6 +178,18 @@ class Order
     public function setSupplierDeliveryDate(?\DateTimeInterface $SupplierDeliveryDate): static
     {
         $this->SupplierDeliveryDate = $SupplierDeliveryDate;
+
+        return $this;
+    }
+
+    public function getZipCode(): ?string
+    {
+        return $this->zipCode;
+    }
+
+    public function setZipCode(?string $zipCode): static
+    {
+        $this->zipCode = $zipCode;
 
         return $this;
     }
