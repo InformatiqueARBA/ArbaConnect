@@ -412,32 +412,37 @@ class InventoryController extends AbstractController
         if ($inventoryNumber !== null) {
             $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($inventoryNumber);
             $Locations = $em->getRepository(Location::class)->findLocationsWithArtArticlesByinventoryNumber($inventoryNumber);
-
+            // dd($Locations);
             $cptMax = 0;
+            $cptFile  = 1000;
             foreach ($Locations as $Location) {
+
                 if (null != $Location->getLocation() && trim($Location->getLocation()) != '') {
                     // Récupérer tous les articles liés à cette localisation
                     $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)
                         ->findByLocationAndWarehouseAndArtType($inventoryNumber, $warehouse, $Location->getLocation());
 
                     $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/"
-                        . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
+                        . str_replace(['/', ' '], ['_', '_'], $cptFile . $Location->getWarehouse() . '_' . $Location->getLocation())  . ".pdf";
 
                     $cptMax = $coutingPageXLSXService->countingMax($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber);
+                    $cptFile++;
                 }
             }
 
-
+            $cptFile  = 1000;
             foreach ($Locations as $Location) {
+
                 if (null != $Location->getLocation() && trim($Location->getLocation()) != '') {
                     // Récupérer tous les articles liés à cette localisation
                     $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)
                         ->findByLocationAndWarehouseAndArtType($inventoryNumber, $warehouse, $Location->getLocation());
 
                     $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/"
-                        . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
+                        . str_replace(['/', ' '], ['_', '_'], $cptFile . $Location->getWarehouse() . '_' . $Location->getLocation())  . ".pdf";
 
                     $coutingPageXLSXService->generateCountingXLSXStock($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber, $cptMax);
+                    $cptFile++;
                 }
             }
         }
@@ -490,7 +495,24 @@ class InventoryController extends AbstractController
             $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($inventoryNumber);
             $Locations = $em->getRepository(Location::class)->findLocationsWithLovArticlesByinventoryNumber($inventoryNumber);
 
+            $cptMax = 0;
+            $cptFile  = 1000;
+            foreach ($Locations as $Location) {
 
+                if (null != $Location->getLocation() && trim($Location->getLocation()) != '') {
+                    // Récupérer tous les articles liés à cette localisation
+                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)
+                        ->findByLocationAndWarehouseAndLovType($inventoryNumber, $warehouse, $Location->getLocation());
+
+                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/"
+                        . str_replace(['/', ' '], ['_', '_'], $cptFile . $Location->getWarehouse() . '_' . $Location->getLocation())  . ".pdf";
+
+                    $cptMax = $coutingPageXLSXService->countingMaxLot($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber);
+                    $cptFile++;
+                }
+            }
+
+            $cptFile  = 1000;
             foreach ($Locations as $Location) {
 
                 if (null != $Location->getLocation() && trim($Location->getLocation()) != '') {
@@ -498,10 +520,11 @@ class InventoryController extends AbstractController
                     // récupère tous les articles liés aux localisations d'un dépôt
                     $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndLovType($inventoryNumber, $warehouse, $Location->getLocation());
 
-                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/lot/" . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
+                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/lot/" . str_replace(['/', ' '], ['_', '_'], $cptFile . $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
 
 
-                    $coutingPageXLSXService->generateCountingXLSXLot($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber);
+                    $coutingPageXLSXService->generateCountingXLSXLot($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber, $cptMax);
+                    $cptFile++;
                 }
             }
         }
