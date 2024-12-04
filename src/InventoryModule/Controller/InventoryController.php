@@ -269,6 +269,8 @@ class InventoryController extends AbstractController
 
             $article->setDivisible('');
             $article->setUnknownArticle(true);
+            $article->setServedFromStock('OUI');
+
 
             $articleParLoc[] = $article;
         }
