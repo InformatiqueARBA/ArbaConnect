@@ -406,27 +406,38 @@ class InventoryController extends AbstractController
             set_time_limit(300);
         }
 
-
-
         $em = $managerRegistry->getManager('security');
-
 
         // Vérifier si $number est fourni
         if ($inventoryNumber !== null) {
             $warehouse = $em->getRepository(Location::class)->findWarehouseByInventoryNumber($inventoryNumber);
             $Locations = $em->getRepository(Location::class)->findLocationsWithArtArticlesByinventoryNumber($inventoryNumber);
 
+            $cptMax = 0;
+            foreach ($Locations as $Location) {
+                if (null != $Location->getLocation() && trim($Location->getLocation()) != '') {
+                    // Récupérer tous les articles liés à cette localisation
+                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)
+                        ->findByLocationAndWarehouseAndArtType($inventoryNumber, $warehouse, $Location->getLocation());
+
+                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/"
+                        . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
+
+                    $cptMax = $coutingPageXLSXService->countingMax($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber);
+                }
+            }
+
 
             foreach ($Locations as $Location) {
-
                 if (null != $Location->getLocation() && trim($Location->getLocation()) != '') {
-                    // récupère tous les articles liés aux localisations d'un dépôt
+                    // Récupérer tous les articles liés à cette localisation
+                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)
+                        ->findByLocationAndWarehouseAndArtType($inventoryNumber, $warehouse, $Location->getLocation());
 
-                    $inventoryArticleByLoca = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndArtType($inventoryNumber, $warehouse, $Location->getLocation());
+                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/"
+                        . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
 
-                    $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/" . str_replace(['/', ' '], ['_', ''], $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
-
-                    $coutingPageXLSXService->generateCountingXLSXStock($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber);
+                    $coutingPageXLSXService->generateCountingXLSXStock($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber, $cptMax);
                 }
             }
         }
@@ -434,14 +445,11 @@ class InventoryController extends AbstractController
         $directory = '/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/';
         $destinationDirectory = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/printed/stock/";
         if ($printerName != null) {
-
-            $printerService->PDFPrinter($printerName,  $directory, $destinationDirectory);
+            $printerService->PDFPrinter($printerName, $directory, $destinationDirectory);
         }
 
         // Récupérer la liste des fichiers dans le répertoire
-
         $files = array_diff(scandir($directory), array('.', '..'));
-
         $filesOnly = array_filter($files, function ($file) use ($directory) {
             return is_file($directory . $file);
         });
@@ -454,6 +462,7 @@ class InventoryController extends AbstractController
             'filesPrinted' => $filesPrinted,
         ]);
     }
+
 
 
 
