@@ -72,13 +72,13 @@ class RequestOdbcInventoryService
     public function getArticlesWithLocation(String $inventoryNumber): String
     {
         $sql = "
-    select distinct
+            select distinct
     INV.INVNO as INVENTORY_NUMBER,
     INV.INVDP as WAREHOUSE,
     case
         when trim(INV.LOCAL) = '' then cast(null as varchar(12))
         else trim(INV.LOCAL)
-    end as LOCATION,
+    end as location,
     case
         when trim(INV.LOCA2) = '' then cast(null as varchar(12))
         else trim(INV.LOCA2)
@@ -94,7 +94,8 @@ class RequestOdbcInventoryService
     trim(ART.TYDIM) as TYPE_DIMENSION,
     trim(ART.CONDI) as CONDITIONNEMENT,
     case
-        when (UNI.COD15 <> '') and ART.CDCON = 'NON' then trim(ART.ARTD4)
+        when (UNI.COD15 <> '')
+        and ART.CDCON = 'NON' then trim(ART.ARTD4)
         else trim(ART.ULPRE)
     end as LIBELLE_CONDI,
     cast(null as decimal(8)) as QUANTITE_LOC1,
@@ -104,33 +105,56 @@ class RequestOdbcInventoryService
     cast(null as decimal(8)) as QUANTITE2_LOC1,
     cast(null as decimal(8)) as QUANTITE2_LOC2,
     cast(null as decimal(8)) as QUANTITE2_LOC3,
-    case 
+    case
         when trim(ART.CDCON) = 'NON' then 0
         when trim(ART.CDCON) = '' then 0
         when trim(ART.CDCON) = 'OUI' then 1
         else 1
-    end as DIVISIBLE
-    , trim(ART.ART32) as TYPE_ARTICLE
-    , ART.SERST as SERVED_FROM_STOCK
+    end as DIVISIBLE,
+    trim(ART.ART32) as TYPE_ARTICLE,
+    ART.SERST as SERVED_FROM_STOCK
 from
     AQAGESTCOM.AARTICP1 ART
     inner join AQAGESTCOM.AINVENP1 INV on ART.NOART = INV.INVAR
+    left outer join AQAGESTCOM.ASTOLOP1 LOT on LOT.LOART = ART.NOART
     left outer join AQAGESTCOM.AINVLOP1 INVLO on ART.NOART = INVLO.INLAR
     left outer join AQAGESTCOM.ATAB15P1 UNI on ART.ARTD4 = UNI.LIRPR
     and UNI.TYPPR = 'UNI'
 where
+(   
+    ART.ART32 = 'ART'
+    and
     ART.ARDIV <> 'OUI'
     and -- Hors articles divers
-    INV.ETARE <> 'S'
+    ART.ETARE <> 'S'
     and -- Non suspendu
     INV.LOCAL <> ''
     and 
     INV.INVNO = '$inventoryNumber'
+)
+    
+ or 
+
+(    
+    ART.ART32 = 'LOV'
+    and
+    ART.ARDIV <> 'OUI'
+    and -- Hors articles divers
+    ART.ETARE <> 'S'
+    and -- Non suspendu
+    INV.LOCAL <> ''
+    and 
+    LOT.LOLOT = INVLO.INLLO
+    and 
+    LOINV > 0.000
+    and 
+    INV.INVNO = '$inventoryNumber'
+)
 order by
-    LOCATION,
+    location,
     LOCATION2,
     LOCATION3
-                ";
+     ";
         return $sql;
     }
 }

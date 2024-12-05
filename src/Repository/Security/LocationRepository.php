@@ -51,15 +51,18 @@ class LocationRepository extends ServiceEntityRepository
 
 
 
-
-    // Retourne les allées ayant des articles lot associés 
     public function findLocationsWithLovArticles(): array
     {
-        return $this->createQueryBuilder('l')
-            ->join('App\Entity\Security\InventoryArticle', 'ia', 'WITH', 'l.inventoryNumber = ia.inventoryNumber')
+        $qb = $this->createQueryBuilder('l');
+
+        return $qb->join('App\Entity\Security\InventoryArticle', 'ia', 'WITH', 'l.inventoryNumber = ia.inventoryNumber')
             ->where('ia.typeArticle = :typeArticle')
             ->andWhere('SUBSTRING(ia.location, 1, 5) = l.location')
+            ->andWhere($qb->expr()->isNotNull('ia.articleCode')) // Vérifie que le code article n'est pas null
+            ->andWhere($qb->expr()->neq('ia.articleCode', "''"))  // Vérifie que le code article n'est pas vide
+            ->andWhere('ia.servedFromStock = :servedFromStock') // Vérifie que servedFromStock = 'oui'
             ->setParameter('typeArticle', 'LOV')
+            ->setParameter('servedFromStock', 'oui')
             ->orderBy('l.warehouse', 'ASC') // Ordre par entrepôt (warehouse) en premier
             ->addOrderBy('l.location', 'ASC') // Puis ordre par emplacement (location)
             ->getQuery()
@@ -68,15 +71,18 @@ class LocationRepository extends ServiceEntityRepository
 
 
 
-
-    // Retourne les allées ayant des articles stockés associés, ordonnées par warehouse et location
     public function findLocationsWithArtArticles(): array
     {
-        return $this->createQueryBuilder('l')
-            ->join('App\Entity\Security\InventoryArticle', 'ia', 'WITH', 'l.inventoryNumber = ia.inventoryNumber')
+        $qb = $this->createQueryBuilder('l');
+
+        return $qb->join('App\Entity\Security\InventoryArticle', 'ia', 'WITH', 'l.inventoryNumber = ia.inventoryNumber')
             ->where('ia.typeArticle = :typeArticle')
             ->andWhere('SUBSTRING(ia.location, 1, 5) = l.location')
+            ->andWhere($qb->expr()->isNotNull('ia.articleCode')) // Vérifie que le code article n'est pas null
+            ->andWhere($qb->expr()->neq('ia.articleCode', "''"))  // Vérifie que le code article n'est pas vide
+            ->andWhere('ia.servedFromStock = :servedFromStock') // Vérifie que servedFromStock = 'oui'
             ->setParameter('typeArticle', 'ART')
+            ->setParameter('servedFromStock', 'oui')
             ->orderBy('l.warehouse', 'ASC') // Ordre par entrepôt (warehouse) en premier
             ->addOrderBy('l.location', 'ASC') // Puis ordre par emplacement (location)
             ->getQuery()
@@ -94,11 +100,17 @@ class LocationRepository extends ServiceEntityRepository
             ->where('ia.typeArticle = :typeArticle')
             ->andWhere('SUBSTRING(ia.location, 1, 5) = l.location')
             ->andwhere('l.inventoryNumber = :inventoryNumber')
+            ->andWhere('ia.servedFromStock = :servedFromStock') // Vérifie que servedFromStock = 'oui'
             ->setParameter('inventoryNumber', $inventoryNumber)
+            ->setParameter('servedFromStock', 'oui')
             ->setParameter('typeArticle', 'LOV')
+            ->orderBy('l.warehouse', 'ASC') // Ordre par entrepôt (warehouse) en premier
+            ->addOrderBy('l.location', 'ASC') // Puis ordre par emplacement (location)
             ->getQuery()
             ->getResult();
     }
+
+
 
 
 
@@ -111,10 +123,13 @@ class LocationRepository extends ServiceEntityRepository
             ->where('ia.typeArticle = :typeArticle')
             ->andWhere('SUBSTRING(ia.location, 1, 5) = l.location')
             ->andwhere('l.inventoryNumber = :inventoryNumber')
+            ->andWhere('ia.servedFromStock = :servedFromStock') // Vérifie que servedFromStock = 'oui'
             ->setParameter('inventoryNumber', $inventoryNumber)
+            ->setParameter('servedFromStock', 'oui')
             ->setParameter('typeArticle', 'ART')
+            ->orderBy('l.warehouse', 'ASC') // Ordre par entrepôt (warehouse) en premier
+            ->addOrderBy('l.location', 'ASC') // Puis ordre par emplacement (location)
             ->getQuery()
             ->getResult();
     }
-
 }
