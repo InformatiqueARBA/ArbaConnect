@@ -19,7 +19,7 @@
 </head>
 
 <body>
-	<nav class="navbar navbar-expand-lg nav-color sticky-top">
+	{# <nav class="navbar navbar-expand-lg nav-color sticky-top">
 		<div class="container-fluid">
 			<div class="mr-auto text-center">
 				<a class="text-decoration-none" href="{{ path('app_home') }}">
@@ -50,6 +50,39 @@
 								<a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a>
 							</li>
 						</ul>
+					</li>
+					<h1 class='green-text mt-4'>ADH
+						{{ app.user.enterprise }}</h1>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</nav> #}
+
+	<nav class="navbar navbar-expand-lg nav-color sticky-top">
+		<div class="container-fluid">
+			<div class="mr-auto text-center">
+				<a class="text-decoration-none" href="{{ path('app_home') }}">
+					<img class="logo_arba" src="{{ asset('images/arba_connect_vert.png') }}" alt="">
+				</a>
+			</div>
+			{% if app.user and is_granted('ROLE_ADMIN') %}
+			<a class="text-decoration-none ms-4" href="{{ path('admin_dashboard') }}">
+				<span class="green-text mt-4">AdminDashboard</span>
+			</a>
+			{% endif %}
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
+				aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse ms-auto">
+				<ul class="navbar-nav ms-auto me-2">
+					{% if app.user %}
+					<li class="nav-item">
+						<a class="nav-link text-uppercase green-text" href="{{ path('app_logout') }}">
+							<img src="{{ asset('images/door-open.svg') }}" alt="exit-door"
+								class="exit-door-icon green-exit-door">
+						</a>
 					</li>
 					<h1 class='green-text mt-4'>ADH
 						{{ app.user.enterprise }}</h1>
