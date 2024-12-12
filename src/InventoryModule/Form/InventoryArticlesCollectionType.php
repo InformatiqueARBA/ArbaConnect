@@ -13,6 +13,7 @@ class InventoryArticlesCollectionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
         $builder
             ->add('articles', CollectionType::class, [
                 'entry_type' => InventoryArticleType::class,
@@ -29,6 +30,7 @@ class InventoryArticlesCollectionType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => null, // Pas de classe associée directement
+            'attr' => ['autocomplete' => 'off'],
         ]);
     }
 }

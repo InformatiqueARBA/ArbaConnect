@@ -24,18 +24,7 @@ class DataMapperService
         $this->logger = $logger;
     }
 
-    // private $requestOdbcService;
-    // // private $odbcService;
-    // private $em;
 
-
-
-    // public function __construct(RequestOdbcService $requestOdbcService, OdbcService $odbcService)
-    // {
-    //     $this->requestOdbcService = $requestOdbcService;
-    //     // $this->odbcService = $odbcService;
-    //     //$this->em = $databaseSwitcherService->getEntityManagerPopulate();
-    // }
 
 
 
@@ -50,10 +39,7 @@ class DataMapperService
         $em = $databaseSwitcherService->getEntityManagerPopulate();
 
         foreach ($results as $result) {
-            // Vérifie si la corporation existe déjà dans la base de données
 
-
-            // Sinon, on crée une nouvelle corporation
             $corporation = new Corporation();
             $corporation->setId($result['ID']);
             $corporation->setName($result['NAME']);
@@ -63,7 +49,6 @@ class DataMapperService
         }
 
         $em->flush();
-        //$em->close();
     }
 
 
@@ -98,6 +83,8 @@ class DataMapperService
             $order->setSeller($result['SELLER']);
             $order->setComment($result['COMMENT']);
             $order->setZipCode($result['ZIPCODE']);
+
+
 
             $em->persist($order);
         }
@@ -205,6 +192,5 @@ class DataMapperService
         }
 
         $em->flush();
-        // $em->Optimisation des requêtes orderDetail();
     }
 }

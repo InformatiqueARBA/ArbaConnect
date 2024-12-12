@@ -26,6 +26,7 @@ class LocationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Location::class,
+            'attr' => ['autocomplete' => 'off'],
         ]);
     }
 }

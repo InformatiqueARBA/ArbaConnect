@@ -106,7 +106,12 @@ class OrderController extends AbstractController
         $em = $databaseSwitcherService->getEntityManager();
         $order = $em->getRepository(Order::class)->find($id);
         $emSecurity = $managerRegistry->getManager('security');
-        $zipCode = $emSecurity->getRepository(ArbaTour::class)->findTourCodeByZipCode($order->getZipCode());
+        // dd($order);
+        if ($order->getZipCode() != null) {
+            $zipCode = $emSecurity->getRepository(ArbaTour::class)->findTourCodeByZipCode($order->getZipCode());
+        } else {
+            $zipCode = '';
+        }
         $orderDetails = $em->getRepository(OrderDetail::class)->findByOrderId($id);
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);

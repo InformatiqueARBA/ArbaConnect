@@ -23,6 +23,7 @@ class ACCommentType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ACComment::class,
+            'attr' => ['autocomplete' => 'off'],
         ]);
     }
 }

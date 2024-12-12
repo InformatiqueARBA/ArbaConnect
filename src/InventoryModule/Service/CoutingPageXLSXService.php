@@ -29,7 +29,7 @@ class CoutingPageXLSXService
         $writer->save($filePath);
     }
 
-    public function generateCountingXLSXStock(array $articlesByLocation, $location, string $filePath, $inventoryNumber, $cptMax): PdfWriter
+    public function generateCountingXLSXStock(array $articlesByLocation, $location, string $filePath, $inventoryNumber, $cptMax, $warehouse): PdfWriter
     {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -52,7 +52,7 @@ class CoutingPageXLSXService
         $sheet->mergeCells('A1:' . Coordinate::stringFromColumnIndex($totalColumns) . '1');
 
         // Set the complete text in the merged cell
-        $sheet->setCellValue('A1', 'Compté par :  ........ / .........' . str_repeat("\u{00A0}", 36) .  'Inventaire n° ' . $inventoryNumber . ' du ' . $currentDate . ' - Allée : ' . trim($location)  . str_repeat("\u{00A0}", 35) . '    Saisie par :  ..............');
+        $sheet->setCellValue('A1', 'Compté par :  ........ / .........' . str_repeat("\u{00A0}", 36) .  'Inventaire ' . $warehouse . ' n°' . $inventoryNumber . ' du ' . $currentDate . ' - Allée : ' . trim($location)  . str_repeat("\u{00A0}", 35) . '    Saisie par :  ..............');
 
         // Appliquer un style de police personnalisé à la cellule A1
         $headerFontStyle = [
@@ -236,7 +236,7 @@ class CoutingPageXLSXService
         $sheet->mergeCells('A1:' . Coordinate::stringFromColumnIndex($totalColumns) . '1');
 
         // Set the complete text in the merged cell
-        $sheet->setCellValue('A1', 'Compté par :  ........ / .........' . str_repeat("\u{00A0}", 36) .  'Inventaire n° ' . $inventoryNumber . ' du ' . $currentDate . ' - Allée : ' . trim($location)  . str_repeat("\u{00A0}", 35) . '    Saisie par :  ..............');
+        $sheet->setCellValue('A1', 'Compté par :  ........ / .........' . str_repeat("\u{00A0}", 36) .  'Inventaire  n°' . $inventoryNumber . ' du ' . $currentDate . ' - Allée : ' . trim($location)  . str_repeat("\u{00A0}", 35) . '    Saisie par :  ..............');
 
         // Appliquer un style de police personnalisé à la cellule A1
         $headerFontStyle = [
@@ -406,7 +406,7 @@ class CoutingPageXLSXService
 
 
 
-    public function generateCountingXLSXLot(array $articlesByLocation, $location, string $filePath, $inventoryNumber, $cptMax): PdfWriter
+    public function generateCountingXLSXLot(array $articlesByLocation, $location, string $filePath, $inventoryNumber, $cptMax, $warehouse): PdfWriter
     {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -429,7 +429,7 @@ class CoutingPageXLSXService
         $sheet->mergeCells('A1:' . Coordinate::stringFromColumnIndex($totalColumns) . '1');
 
         // Set the complete text in the merged cell
-        $sheet->setCellValue('A1', 'Compté par :  ........ / .........' . str_repeat("\u{00A0}", 36) .  'Inventaire n° ' . $inventoryNumber . ' du ' . $currentDate . ' - Allée : ' . trim($location)  . str_repeat("\u{00A0}", 35) . '    Saisie par :  ..............');
+        $sheet->setCellValue('A1', 'Compté par :  ........ / .........' . str_repeat("\u{00A0}", 36) .  'Inventaire ' . $warehouse . ' n°' . $inventoryNumber . ' du ' . $currentDate . ' - Allée : ' . trim($location)  . str_repeat("\u{00A0}", 35) . '    Saisie par :  ..............');
 
         // Appliquer un style de police personnalisé à la cellule A1
         $headerFontStyle = [
@@ -610,7 +610,7 @@ class CoutingPageXLSXService
         $sheet->mergeCells('A1:' . Coordinate::stringFromColumnIndex($totalColumns) . '1');
 
         // Set the complete text in the merged cell
-        $sheet->setCellValue('A1', 'Compté par :  ........ / .........' . str_repeat("\u{00A0}", 36) .  'Inventaire n° ' . $inventoryNumber . ' du ' . $currentDate . ' - Allée : ' . trim($location)  . str_repeat("\u{00A0}", 35) . '    Saisie par :  ..............');
+        $sheet->setCellValue('A1', 'Compté par :  ........ / .........' . str_repeat("\u{00A0}", 36) .  'Inventaire n°' . $inventoryNumber . ' du ' . $currentDate . ' - Allée : ' . trim($location)  . str_repeat("\u{00A0}", 35) . '    Saisie par :  ..............');
 
         // Appliquer un style de police personnalisé à la cellule A1
         $headerFontStyle = [

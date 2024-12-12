@@ -443,7 +443,7 @@ class InventoryController extends AbstractController
                     $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/stock/"
                         . str_replace(['/', ' '], ['_', '_'], $cptFile . $Location->getWarehouse() . '_' . $Location->getLocation())  . ".pdf";
 
-                    $coutingPageXLSXService->generateCountingXLSXStock($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber, $cptMax);
+                    $coutingPageXLSXService->generateCountingXLSXStock($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber, $cptMax, $warehouse);
                     $cptFile++;
                 }
             }
@@ -525,7 +525,7 @@ class InventoryController extends AbstractController
                     $filePath = "/var/www/ArbaConnect/public/csv/inventory/counting_sheets/PDF/lot/" . str_replace(['/', ' '], ['_', '_'], $cptFile . $Location->getWarehouse() . '_' . $Location->getLocation()) . ".pdf";
 
 
-                    $coutingPageXLSXService->generateCountingXLSXLot($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber, $cptMax);
+                    $coutingPageXLSXService->generateCountingXLSXLot($inventoryArticleByLoca, $Location->getLocation(), $filePath, $inventoryNumber, $cptMax, $warehouse);
                     $cptFile++;
                 }
             }

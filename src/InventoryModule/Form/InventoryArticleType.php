@@ -13,6 +13,7 @@ class InventoryArticleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
         $builder
             ->add('location', null, [
                 'disabled' => true,
@@ -68,6 +69,7 @@ class InventoryArticleType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => InventoryArticle::class,
+            'attr' => ['autocomplete' => 'off'],
         ]);
     }
 }
