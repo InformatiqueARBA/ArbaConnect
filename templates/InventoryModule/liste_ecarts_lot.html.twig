@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des écarts Lot
+{% endblock %}
+
+
+
+{% block body %}
+<div class="container-fluid my-4 inventory-container sfp-regular-text">
+    <h3>Ecarts inventaire des lots 2024
+    </h3>
+    <table id="inventory-locations-table" class="table table-hover centered-table">
+        <thead class="table-light">
+            <tr>
+                <th>
+                    <div class="mb-2"><input type="text" id="filter-inventory-number" class="form-control"
+                            data-column="0" placeholder="N° Inventaire" style="text-align: center;"></div>
+                </th>
+                <th>
+                    <div class="mb-2"><input type="text" id="filter-warehouse" class="form-control" data-column="1"
+                            placeholder="Entrepôt" style="text-align: center;"></div>
+                </th>
+                </th>
+                <th>
+                    <div class="mb-2"><input type="text" id="filter-location" class="form-control" data-column="2"
+                            placeholder="Emplacement" style="text-align: center;"></div>
+                </th>
+                <th>
+                    <div class="mb-2"><input type="text" id="filter-referent" class="form-control" data-column="3"
+                            placeholder="Référent" style="text-align: center;"></div>
+                </th>
+
+                <th>
+                    <div class="mb-2"><input type="text" id="filter-action" class="form-control" data-column="5"
+                            placeholder="Liste des articles" style="text-align: center;"></div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for location in locations %}
+            <tr>
+                <td style="text-align: center;">{{ location.inventoryNumber|e }}</td>
+                <td style="text-align: center;">{{ location.warehouse|e }}</td>
+                <td style="text-align: center;">{{ location.location|e }}</td>
+                <td style="text-align: center;">{{ location.referent is not null ? location.referent|e : '-' }}</td>
+
+                <td class="text-dark" style="background-color: rgba(0, 70, 100, 0.8); text-align: center;">
+                    <a style="color: rgb(130, 170, 55);"
+                        href="{{ path('app_inventory_ecarts_lot_detail', {warehouse: location.warehouse, location: location.location | url_encode, inventoryNumber: location.inventoryNumber}) }}">Afficher</a>
+                </td>
+
+
+
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+{% block javascripts %}
+{{ parent() }}
+<script>
+    document.addEventListener('input', () => {
+        // Fonction pour filtrer les lignes du tableau
+        const filterTable = () => {
+            const filters = [
+                document.getElementById('filter-inventory-number').value.toLowerCase(),
+                document.getElementById('filter-warehouse').value.toLowerCase(),
+                document.getElementById('filter-location').value.toLowerCase(),
+                document.getElementById('filter-referent').value.toLowerCase(),
+                document.getElementById('filter-action').value.toLowerCase(),
+            ];
+
+            const table = document.getElementById('inventory-locations-table');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+            for (const row of rows) {
+                const cells = row.getElementsByTagName('td');
+                let isMatch = true;
+
+                filters.forEach((filter, index) => {
+                    if (filter && cells[index] && !cells[index].textContent.toLowerCase().includes(filter)) {
+                        isMatch = false;
+                    }
+                });
+
+                row.style.display = isMatch ? '' : 'none';
+            }
+        };
+
+        // Ajouter un événement input sur chaque champ de filtre
+        const filterInputs = document.querySelectorAll('input[data-column]');
+        filterInputs.forEach(input => {
+            input.addEventListener('input', filterTable);
+        });
+    });
+</script>
+{% endblock %}
+
+
+
+{% endblock %}

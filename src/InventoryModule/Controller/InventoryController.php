@@ -29,6 +29,13 @@ class InventoryController extends AbstractController
         return $this->render('InventoryModule\select.html.twig', []);
     }
 
+    // Menu selection Ecarts (inventaire/lot)
+    #[Route('/admin/inventaire/selection-ecart', name: 'app_selection_ecart')]
+    public function selectEcarts(): Response
+    {
+        return $this->render('InventoryModule\select_ecart.html.twig', []);
+    }
+
 
 
 
@@ -744,5 +751,50 @@ class InventoryController extends AbstractController
         $stmt->executeStatement();
         $this->addFlash('success', "La table 'InventoryArticle' a été vidée.");
         return $this->redirectToRoute('admin_inventory');
+    }
+
+
+
+
+    //------------------------------------------------------------------------------------------------------
+
+    // ADMIN  | affiche les localisations ecarts
+    #[Route('/admin/admin-ecarts', name: 'app_inventory_ecarts')]
+    public function ecarts(ManagerRegistry $managerRegistry): Response
+    {
+
+        $em = $managerRegistry->getManager('security');
+        $locations = $em->getRepository(Location::class)->findLocationsWithArtArticles();
+
+        return $this->render('InventoryModule/liste_ecarts.html.twig', [
+            'locations' => $locations,
+        ]);
+    }
+
+    // ADMIN  | affiche les localisations ecarts
+    #[Route('/admin/admin-ecarts-lot', name: 'app_inventory_ecarts_lot')]
+    public function ecartsLot(ManagerRegistry $managerRegistry): Response
+    {
+
+        $em = $managerRegistry->getManager('security');
+        $locations = $em->getRepository(Location::class)->findLocationsWithLovArticles();
+
+        return $this->render('InventoryModule/liste_ecarts_lot.html.twig', [
+            'locations' => $locations,
+        ]);
+    }
+
+    // ADMIN  | affiche le détail des localisations ecarts
+    #[Route('/admin/admin-ecarts/detail/{warehouse}/{location}/{inventoryNumber}/edit', name: 'app_inventory_ecarts_detail')]
+    public function ecartsDetail(String $warehouse, String $location, String $inventoryNumber, Request $request, ManagerRegistry $managerRegistry): Response
+    {
+        return $this->render('InventoryModule/detail_ecarts.html.twig', []);
+    }
+
+    // ADMIN  | affiche le détail des localisations ecarts Lot
+    #[Route('/admin/admin-ecarts-lot/detail/{warehouse}/{location}/{inventoryNumber}/edit', name: 'app_inventory_ecarts_lot_detail')]
+    public function ecartsDetailLot(String $warehouse, String $location, String $inventoryNumber, Request $request, ManagerRegistry $managerRegistry): Response
+    {
+        return $this->render('InventoryModule/detail_ecarts_lot.html.twig', []);
     }
 }
