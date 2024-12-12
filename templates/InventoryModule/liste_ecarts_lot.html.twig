@@ -44,9 +44,10 @@
                 <td style="text-align: center;">{{ location.location|e }}</td>
                 <td style="text-align: center;">{{ location.referent is not null ? location.referent|e : '-' }}</td>
 
-                <td class="text-dark" style="background-color: rgba(0, 70, 100, 0.8); text-align: center;">
-                    <a style="color: rgb(130, 170, 55);"
-                        href="{{ path('app_inventory_ecarts_lot_detail', {warehouse: location.warehouse, location: location.location | url_encode, inventoryNumber: location.inventoryNumber}) }}">Afficher</a>
+                <td class="text-dark" style="background-color: rgba(230, 165, 15, 0.8); text-align: center;">
+                    <a style="color: rgb(17, 18, 15);"
+                        href="{{ path('app_inventory_ecarts_lot_detail', {warehouse: location.warehouse, location: location.location | url_encode, inventoryNumber: location.inventoryNumber}) }}">Afficher
+                        les Ecarts</a>
                 </td>
 
 
