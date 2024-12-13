@@ -788,7 +788,39 @@ class InventoryController extends AbstractController
     #[Route('/admin/admin-ecarts/detail/{warehouse}/{location}/{inventoryNumber}/edit', name: 'app_inventory_ecarts_detail')]
     public function ecartsDetail(String $warehouse, String $location, String $inventoryNumber, Request $request, ManagerRegistry $managerRegistry): Response
     {
-        return $this->render('InventoryModule/detail_ecarts.html.twig', []);
+        $em = $managerRegistry->getManager('security');
+        // $Location = $em->getRepository(Location::class)->findByLocation($location);
+
+        // permet la récupération des / présent dans le nom des allées via url
+        $location = str_replace('®', '/', $location);
+
+        $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndArtType($inventoryNumber, $warehouse, $location);
+        $articleIdentique = array();
+
+        // Créer un tableau d'articles pour le formulaire
+        $formData = ['articles' => $articleParLoc];
+
+        // Stocker les valeurs originales des articles
+        $originalArticlesData = [];
+        foreach ($articleParLoc as $article) {
+            $originalArticlesData[$article->getId()] = [
+                'quantityLocation1' => $article->getQuantityLocation1()
+            ];
+            $articleIdentique = $em->getRepository(InventoryArticle::class)->findArticleCodeWithLocations($article->getArticleCode());
+        }
+        // dd($articleIdentique);
+        // Créer le formulaire parent avec la collection d'articles
+        $form = $this->createForm(InventoryArticlesCollectionType::class, $formData);
+
+        $form->handleRequest($request);
+
+        return $this->render('InventoryModule/detail_ecarts.html.twig', [
+            'form' => $form,
+            'location' => $location,
+            'warehouse' => $warehouse,
+            'inventoryNumber' => $inventoryNumber,
+            'articleIdentique' => $articleIdentique
+        ]);
     }
 
     // ADMIN  | affiche le détail des localisations ecarts Lot

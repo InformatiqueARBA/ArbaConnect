@@ -145,4 +145,21 @@ class InventoryArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+
+
+
+
+    // retourner tous les articles (codesArticle) et leurs localisations associées en fonction d'un codesArticle
+    public function findArticleCodeWithLocations(string $articleCode): array
+    {
+        return $this->createQueryBuilder('i')
+            // ->select('i.articleCode, i.location, i.location2, i.location3, i.quantityLocation1')
+            ->select('i.articleCode, i.location, i.quantityLocation1')
+            ->where('i.articleCode = :articleCode')
+            ->setParameter('articleCode', $articleCode)
+            ->orderBy('i.articleCode', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

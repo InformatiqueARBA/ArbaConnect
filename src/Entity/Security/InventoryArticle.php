@@ -85,6 +85,15 @@ class InventoryArticle
     #[ORM\Column(length: 3)]
     private ?string $servedFromStock = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $theoricalQuantity = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $gap = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $totalQuantity = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -374,6 +383,42 @@ class InventoryArticle
     public function setServedFromStock(string $servedFromStock): static
     {
         $this->servedFromStock = $servedFromStock;
+
+        return $this;
+    }
+
+    public function getTheoricalQuantity(): ?float
+    {
+        return $this->theoricalQuantity;
+    }
+
+    public function setTheoricalQuantity(?float $theoricalQuantity): static
+    {
+        $this->theoricalQuantity = $theoricalQuantity;
+
+        return $this;
+    }
+
+    public function getGap(): ?float
+    {
+        return $this->gap;
+    }
+
+    public function setGap(?float $gap): static
+    {
+        $this->gap = $gap;
+
+        return $this;
+    }
+
+    public function getTotalQuantity(): ?float
+    {
+        return $this->totalQuantity;
+    }
+
+    public function setTotalQuantity(?float $totalQuantity): static
+    {
+        $this->totalQuantity = $totalQuantity;
 
         return $this;
     }
