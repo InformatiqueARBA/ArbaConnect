@@ -78,6 +78,7 @@ class DataMapperInventoryService
                 $inventoryArticle->setTypeArticle($result['TYPE_ARTICLE']);
                 $inventoryArticle->setDivisible($result['DIVISIBLE']);
                 $inventoryArticle->setServedFromStock($result['SERVED_FROM_STOCK']);
+                $inventoryArticle->setTheoricalQuantity($result['QUANTITE_THEORIQUE']);
 
                 $this->em->persist($inventoryArticle);
             }
@@ -101,6 +102,7 @@ class DataMapperInventoryService
                 $inventoryArticle->setTypeArticle($result['TYPE_ARTICLE']);
                 $inventoryArticle->setDivisible($result['DIVISIBLE']);
                 $inventoryArticle->setServedFromStock($result['SERVED_FROM_STOCK']);
+                $inventoryArticle->setTheoricalQuantity($result['QUANTITE_THEORIQUE']);
 
 
                 $this->em->persist($inventoryArticle);
@@ -125,6 +127,7 @@ class DataMapperInventoryService
                 $inventoryArticle->setTypeArticle($result['TYPE_ARTICLE']);
                 $inventoryArticle->setDivisible($result['DIVISIBLE']);
                 $inventoryArticle->setServedFromStock($result['SERVED_FROM_STOCK']);
+                $inventoryArticle->setTheoricalQuantity($result['QUANTITE_THEORIQUE']);
 
 
                 $this->em->persist($inventoryArticle);

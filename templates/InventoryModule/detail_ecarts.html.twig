@@ -70,32 +70,62 @@
                 </td>
 
 
-
-
-                {# quantité totale #}
+                {#
+                <pre>{{ articleIdentiques.1|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre> #}
+                {# Quantité totale #}
                 <td style="text-align: center; vertical-align: middle;">
                     {% set totalQuantity = 0 %}
-                    {% for articleIdentique in articleIdentique %}
+                    {% for group in articleIdentiquesList %}
+                    {% for articleIdentique in group %}
                     {% if article.articleCode.vars.value == articleIdentique.articleCode %}
-                    {% set totalQuantity = totalQuantity + articleIdentique.quantityLocation1 %}
+                    {% set totalQuantity = totalQuantity + (articleIdentique.quantityLocation1|default(0)) %}
                     {% endif %}
+                    {% endfor %}
                     {% endfor %}
                     {{ totalQuantity }}
                 </td>
 
-                <td style="text-align: center; vertical-align: middle;"></td>
-                <td style="text-align: center; vertical-align: middle;"></td>
-
+                {# Quantité théorique #}
                 <td style="text-align: center; vertical-align: middle;">
-                    {% for articleIdentique in articleIdentique %}
+                    {{ article.theoricalQuantity.vars.value|default('-') }}
+                </td>
+
+                {# Différence entre Quantité théorique et Quantité totale #}
+                <td style="text-align: center; vertical-align: middle;">
+                    {% set theoricalQuantity = article.theoricalQuantity.vars.value|default(null) %}
+                    {% if theoricalQuantity is null or totalQuantity is null %}
+                    <span>-</span>
+                    {% else %}
+                    {% set difference = (theoricalQuantity * 1) - (totalQuantity * 1) %}
+                    {% if difference == 0 %}
+                    <span style="color: green; font-weight: bold;">OK</span>
+                    {% else %}
+                    <span style="color: red; font-weight: bold;">{{ difference }}</span>
+                    {% endif %}
+                    {% endif %}
+                </td>
+
+                {# Localisation et Quantité par article #}
+                <td style="text-align: center; vertical-align: middle;">
+                    {% set displayedLocations = [] %} {# Liste pour suivre les localisations déjà affichées #}
+                    {% for group in articleIdentiquesList %}
+                    {% for articleIdentique in group %}
+                    {% if articleIdentique.location not in displayedLocations %}
                     {% if article.articleCode.vars.value == articleIdentique.articleCode %}
                     <div>
                         {{ articleIdentique.location }} :
-                        <span style="color: rgb(193, 16, 143);">{{ articleIdentique.quantityLocation1 }}</span>
+                        <span style="color: rgb(193, 16, 143);">
+                            {{ articleIdentique.quantityLocation1|default('0') }}
+                        </span>
                     </div>
+                    {% set displayedLocations = displayedLocations | merge([articleIdentique.location]) %}
+                    {% endif %}
                     {% endif %}
                     {% endfor %}
+                    {% endfor %}
                 </td>
+
+
 
 
 
@@ -104,6 +134,9 @@
                 {{ form_widget(article.quantityLocation2, { 'attr': {'style': 'display: none;'} }) }}
                 {{ form_widget(article.quantityLocation3, { 'attr': {'style': 'display: none;'} }) }}
                 {{ form_widget(article.lotCode, { 'attr': {'style': 'display: none;'} }) }}
+                {{ form_widget(article.theoricalQuantity, { 'attr': {'style': 'display: none;'} }) }}
+                {{ form_widget(article.gap, { 'attr': {'style': 'display: none;'} }) }}
+                {{ form_widget(article.totalQuantity, { 'attr': {'style': 'display: none;'} }) }}
 
 
 

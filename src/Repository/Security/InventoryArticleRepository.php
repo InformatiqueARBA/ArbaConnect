@@ -155,7 +155,18 @@ class InventoryArticleRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('i')
             // ->select('i.articleCode, i.location, i.location2, i.location3, i.quantityLocation1')
-            ->select('i.articleCode, i.location, i.quantityLocation1')
+            ->select('i.articleCode, i.location, i.quantityLocation1,i.totalQuantity')
+            ->where('i.articleCode = :articleCode')
+            ->setParameter('articleCode', $articleCode)
+            ->orderBy('i.articleCode', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    public function findArticleCodeWithLocations2(string $articleCode): array
+    {
+        return $this->createQueryBuilder('i')
             ->where('i.articleCode = :articleCode')
             ->setParameter('articleCode', $articleCode)
             ->orderBy('i.articleCode', 'ASC')

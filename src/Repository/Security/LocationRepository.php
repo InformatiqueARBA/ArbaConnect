@@ -132,4 +132,37 @@ class LocationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+
+    public function findCountOfGapByLocation(string $location, string $inventoryNumber): array
+    {
+        $qb = $this->createQueryBuilder('l');
+
+        // Requête principale
+        $results = $qb->select('l.location, l.inventoryNumber, COUNT(ia.gap) as countGap')
+            ->leftJoin('App\Entity\Security\InventoryArticle', 'ia', 'WITH', 'l.inventoryNumber = ia.inventoryNumber')
+            ->where($qb->expr()->orX(
+                $qb->expr()->gte('ia.gap', ':zero'),    // Inclure gap >= 0
+                $qb->expr()->isNull('ia.gap')          // Inclure les gaps NULL
+            ))
+            ->andWhere($qb->expr()->isNotNull('l.location')) // Assurez-vous que la localisation est active
+            ->andWhere('SUBSTRING(ia.location, 1, 5) = l.location') // Vérification de la localisation
+            ->andWhere('l.location = :location') // Filtre par localisation
+            ->andWhere('l.inventoryNumber = :inventoryNumber') // Filtre par localisation
+            ->setParameter('zero', 0)
+            ->setParameter('location', $location)
+            ->setParameter('inventoryNumber', $inventoryNumber)
+            ->groupBy('l.location') // Regrouper par localisation
+            ->getQuery()
+            ->getResult();
+
+        // Post-traitement : Ajouter "non compté" pour les locations sans valeur
+        foreach ($results as &$result) {
+            if ($result['countGap'] === null || $result['countGap'] == 0) {
+                $result['countGap'] = 'non compté';
+            }
+        }
+
+        return $results;
+    }
 }

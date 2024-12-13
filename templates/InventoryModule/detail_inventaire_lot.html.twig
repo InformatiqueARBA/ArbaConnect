@@ -62,7 +62,13 @@
 				{{ form_widget(article.quantityLocation2, { 'attr': {'style': 'display: none;'} }) }}
 				{{ form_widget(article.quantityLocation3, { 'attr': {'style': 'display: none;'} }) }}
 			</tr>
+			{{ form_widget(article.theoricalQuantity, { 'attr': {'style': 'display: none;'} }) }}
+			{{ form_widget(article.gap, { 'attr': {'style': 'display: none;'} }) }}
+			{{ form_widget(article.totalQuantity, { 'attr': {'style': 'display: none;'} }) }}
+
 			{% endfor %}
+
+
 		</tbody>
 	</table>
 	<style>

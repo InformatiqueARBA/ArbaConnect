@@ -108,11 +108,17 @@ class InventoryController extends AbstractController
 
         $form->handleRequest($request);
 
+
+
         if ($form->isSubmitted() && $form->isValid()) {
             $shouldSetReferent = false; // Initialize flag
 
             // Traiter chaque article et vérifier les modifications
             foreach ($formData['articles'] as $article) {
+
+                $articleIdentiquesList = [];
+
+
                 $originalData = $originalArticlesData[$article->getId()];
 
                 // Vérifier si les quantités ont changé
@@ -122,7 +128,43 @@ class InventoryController extends AbstractController
                     $shouldSetReferent = true;
                 }
 
-                // Persister l'article dans tous les cas
+
+                $articleIdentiques = $em->getRepository(InventoryArticle::class)->findArticleCodeWithLocations2($article->getArticleCode());
+
+                if (is_array($articleIdentiques) && count($articleIdentiques) >= 2) { // Vérifie qu'il y a au moins 2 résultats
+                    $articleIdentiquesList[] = $articleIdentiques;
+                }
+
+                $totalQuantity = 0;
+                foreach ($articleIdentiquesList as $articlesGroup) { // Parcourt chaque groupe d'articles identiques
+                    foreach ($articlesGroup as $article2) { // Parcourt chaque article dans un groupe
+                        if ($article2->getQuantityLocation1() != null && $article2->getLocation() != $article->getLocation()) { // Vérifie que la clé existe
+                            $totalQuantity += $article2->getQuantityLocation1();
+                        }
+                    }
+                }
+
+
+                foreach ($articleIdentiquesList as $articlesGroup) { // Parcourt chaque groupe d'articles identiques
+                    foreach ($articlesGroup as $article2) { // Parcourt chaque article dans un groupe
+                        if ($article2->getQuantityLocation1() != null && $article2->getLocation() != $article->getLocation()) { // Vérifie que la clé existe
+                            $article2->setTotalQuantity($totalQuantity + $article->getQuantityLocation1());
+                        }
+                    }
+                }
+                $totalQuantity += $article->getQuantityLocation1();
+                $article->setTotalQuantity($totalQuantity);
+
+                foreach ($articleIdentiquesList as $articlesGroup) { // Parcourt chaque groupe d'articles identiques
+                    foreach ($articlesGroup as $article2) { // Parcourt chaque article dans un groupe
+                        if ($article2->getQuantityLocation1() != null && $article2->getLocation()) { // Vérifie que la clé existe
+                            $article2->setGap($article2->getTheoricalQuantity() - $totalQuantity);
+                            $em->persist($article2);
+                        }
+                    }
+                }
+
+                $article->setGap($article->getTheoricalQuantity() - $article->getTotalQuantity());
                 $em->persist($article);
             }
 
@@ -765,22 +807,29 @@ class InventoryController extends AbstractController
 
         $em = $managerRegistry->getManager('security');
         $locations = $em->getRepository(Location::class)->findLocationsWithArtArticles();
+        $ecarts = [];
+        foreach ($locations as $location) {
+            $ecarts[] = $em->getRepository(Location::class)->findCountOfGapByLocation($location->getLocation(), $location->getInventoryNumber());
+        }
 
         return $this->render('InventoryModule/liste_ecarts.html.twig', [
             'locations' => $locations,
+            'ecarts' => $ecarts,
         ]);
     }
 
-    // ADMIN  | affiche les localisations ecarts
+    // ADMIN  | affiche les localisations ecarts lots
     #[Route('/admin/admin-ecarts-lot', name: 'app_inventory_ecarts_lot')]
     public function ecartsLot(ManagerRegistry $managerRegistry): Response
     {
 
         $em = $managerRegistry->getManager('security');
         $locations = $em->getRepository(Location::class)->findLocationsWithLovArticles();
+        $ecarts = $em->getRepository(Location::class)->findSumOfGapByLocation();
 
         return $this->render('InventoryModule/liste_ecarts_lot.html.twig', [
             'locations' => $locations,
+            'ecarts' => $ecarts,
         ]);
     }
 
@@ -795,20 +844,28 @@ class InventoryController extends AbstractController
         $location = str_replace('®', '/', $location);
 
         $articleParLoc = $em->getRepository(InventoryArticle::class)->findByLocationAndWarehouseAndArtType($inventoryNumber, $warehouse, $location);
-        $articleIdentique = array();
 
         // Créer un tableau d'articles pour le formulaire
         $formData = ['articles' => $articleParLoc];
 
         // Stocker les valeurs originales des articles
         $originalArticlesData = [];
+        $articleIdentiquesList = [];
+
+
         foreach ($articleParLoc as $article) {
             $originalArticlesData[$article->getId()] = [
                 'quantityLocation1' => $article->getQuantityLocation1()
             ];
-            $articleIdentique = $em->getRepository(InventoryArticle::class)->findArticleCodeWithLocations($article->getArticleCode());
+
+            $articleIdentiques = $em->getRepository(InventoryArticle::class)->findArticleCodeWithLocations2($article->getArticleCode());
+
+            if (is_array($articleIdentiques) && count($articleIdentiques) >= 2) { // Vérifie qu'il y a au moins 2 résultats
+                $articleIdentiquesList[] = $articleIdentiques;
+            }
         }
-        // dd($articleIdentique);
+
+        // dd($articleIdentiquesList);
         // Créer le formulaire parent avec la collection d'articles
         $form = $this->createForm(InventoryArticlesCollectionType::class, $formData);
 
@@ -819,7 +876,7 @@ class InventoryController extends AbstractController
             'location' => $location,
             'warehouse' => $warehouse,
             'inventoryNumber' => $inventoryNumber,
-            'articleIdentique' => $articleIdentique
+            'articleIdentiquesList' => $articleIdentiquesList
         ]);
     }
 

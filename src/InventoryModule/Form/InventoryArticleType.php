@@ -62,7 +62,21 @@ class InventoryArticleType extends AbstractType
                 'attr' => ['style' => 'font-size:14px;text-align :center;'],
                 'label' => false
             ])
-        ;
+            ->add('theoricalQuantity', null, [
+                'attr' => ['style' => 'font-size:14px;text-align :center;'],
+                'disabled' => true,
+                'label' => false
+            ])
+            ->add('gap', null, [
+                'attr' => ['style' => 'font-size:14px;text-align :center;'],
+                'disabled' => true,
+                'label' => false
+            ])
+            ->add('totalQuantity', null, [
+                'attr' => ['style' => 'font-size:14px;text-align :center;'],
+                'disabled' => true,
+                'label' => false
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
