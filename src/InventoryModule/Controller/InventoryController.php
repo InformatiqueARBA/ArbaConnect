@@ -112,6 +112,7 @@ class InventoryController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $shouldSetReferent = false; // Initialize flag
+            $unitTabs = ['M2', 'M3', 'ML', 'PCES',];
 
             // Traiter chaque article et vérifier les modifications
             foreach ($formData['articles'] as $article) {
@@ -129,32 +130,49 @@ class InventoryController extends AbstractController
                 }
 
 
+                // on récupère tous les articles (des autres localisations) ayant le même code article 
                 $articleIdentiques = $em->getRepository(InventoryArticle::class)->findArticleCodeWithLocations2($article->getArticleCode());
 
-                if (is_array($articleIdentiques) && count($articleIdentiques) >= 2) { // Vérifie qu'il y a au moins 2 résultats
+                // Vérifie qu'il y a au moins 2 résultats, cela signifie qu'il y a notre article plus au moins l'article d'une autre loc
+                if (is_array($articleIdentiques) && count($articleIdentiques) >= 2) {
                     $articleIdentiquesList[] = $articleIdentiques;
                 }
 
+                /*
+
+                in_array($inventoryArticle->getPreparationUnit(), $unitTabs) ||
+                        ($inventoryArticle->getPreparationUnit() === 'UN' &&
+                            ($inventoryArticle->getPackaging() === '' || $inventoryArticle->getPackaging() === null) &&
+                            $inventoryArticle->isDivisible() === false)
+                        ? $inventoryArticle->getQuantityLocation1() * $inventoryArticle->getPackaging()
+                        : $inventoryArticle->getQuantityLocation1() 
+                */
+
                 $totalQuantity = 0;
+
+                // on parcourt le tableau d'article identique et on ajoute les quantités dans la variable $totalQuantity  (sauf pour l'article de notre allée)
                 foreach ($articleIdentiquesList as $articlesGroup) { // Parcourt chaque groupe d'articles identiques
-                    foreach ($articlesGroup as $article2) { // Parcourt chaque article dans un groupe
-                        if ($article2->getQuantityLocation1() != null && $article2->getLocation() != $article->getLocation()) { // Vérifie que la clé existe
+                    foreach ($articlesGroup as $article2) {
+                        if ($article2->getQuantityLocation1() != null && $article2->getLocation() != $article->getLocation()) {
                             $totalQuantity += $article2->getQuantityLocation1();
                         }
                     }
                 }
 
-
-                foreach ($articleIdentiquesList as $articlesGroup) { // Parcourt chaque groupe d'articles identiques
-                    foreach ($articlesGroup as $article2) { // Parcourt chaque article dans un groupe
+                // on parcourt le tableau d'article identique et on affecte $totalQuantity + la quantité de l'article de notre allée aux articles  (sauf pour l'article de notre allée)
+                foreach ($articleIdentiquesList as $articlesGroup) {
+                    foreach ($articlesGroup as $article2) {
                         if ($article2->getQuantityLocation1() != null && $article2->getLocation() != $article->getLocation()) { // Vérifie que la clé existe
                             $article2->setTotalQuantity($totalQuantity + $article->getQuantityLocation1());
                         }
                     }
                 }
+
+                //on affecte $totalQuantity + la quantité de l'article de l'allée à l'article de notre allée)
                 $totalQuantity += $article->getQuantityLocation1();
                 $article->setTotalQuantity($totalQuantity);
 
+                // on parcourt le tableau d'article identique (ici on garde l'article de notre allée) on calcul l'écart et on l'affacte aux articles (gap = theoricalQuantity - totalQuantity)
                 foreach ($articleIdentiquesList as $articlesGroup) { // Parcourt chaque groupe d'articles identiques
                     foreach ($articlesGroup as $article2) { // Parcourt chaque article dans un groupe
                         if ($article2->getQuantityLocation1() != null && $article2->getLocation()) { // Vérifie que la clé existe
