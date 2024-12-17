@@ -80,8 +80,10 @@ class DataMapperInventoryService
                 $inventoryArticle->setServedFromStock($result['SERVED_FROM_STOCK']);
                 $inventoryArticle->setTheoricalQuantity($this->calculateTheoricalQuantity($inventoryArticle, $result['QUANTITE_THEORIQUE']));
                 $inventoryArticle->setActivity($result['ACT']);
-                $inventoryArticle->setPurchasePrice($result['PX_ACHAT']);
-                $inventoryArticle->setPurchaseUnity($result['UN_ACHAT']);
+                if ($inventoryArticle->getTypeArticle() === 'ART') {
+                    $inventoryArticle->setPurchasePrice($result['PX_ACHAT']);
+                    $inventoryArticle->setPurchaseUnity($result['UN_ACHAT']);
+                }
                 $inventoryArticle->setinputCounter(0);
 
                 $this->em->persist($inventoryArticle);
@@ -108,8 +110,10 @@ class DataMapperInventoryService
                 $inventoryArticle->setServedFromStock($result['SERVED_FROM_STOCK']);
                 $inventoryArticle->setTheoricalQuantity($this->calculateTheoricalQuantity($inventoryArticle, $result['QUANTITE_THEORIQUE']));
                 $inventoryArticle->setActivity($result['ACT']);
-                $inventoryArticle->setPurchasePrice($result['PX_ACHAT']);
-                $inventoryArticle->setPurchaseUnity($result['UN_ACHAT']);
+                if ($inventoryArticle->getTypeArticle() === 'ART') {
+                    $inventoryArticle->setPurchasePrice($result['PX_ACHAT']);
+                    $inventoryArticle->setPurchaseUnity($result['UN_ACHAT']);
+                }
                 $inventoryArticle->setinputCounter(0);
 
 
@@ -137,8 +141,10 @@ class DataMapperInventoryService
                 $inventoryArticle->setServedFromStock($result['SERVED_FROM_STOCK']);
                 $inventoryArticle->setTheoricalQuantity($this->calculateTheoricalQuantity($inventoryArticle, $result['QUANTITE_THEORIQUE']));
                 $inventoryArticle->setActivity($result['ACT']);
-                $inventoryArticle->setPurchasePrice($result['PX_ACHAT']);
-                $inventoryArticle->setPurchaseUnity($result['UN_ACHAT']);
+                if ($inventoryArticle->getTypeArticle() === 'ART') {
+                    $inventoryArticle->setPurchasePrice($result['PX_ACHAT']);
+                    $inventoryArticle->setPurchaseUnity($result['UN_ACHAT']);
+                }
                 $inventoryArticle->setinputCounter(0);
 
 
@@ -160,9 +166,9 @@ class DataMapperInventoryService
 
 
         if (
-            in_array($article->getPreparationUnit(), $unitTabs) ||
+            in_array($article->getPreparationUnit(), $unitTabs) && $article->getTypeArticle() === 'ART' ||
             (
-                $article->getPreparationUnit() === 'UN' &&
+                $article->getPreparationUnit() === 'UN' && $article->getTypeArticle() === 'ART' &&
                 ($article->getPackaging() === '' || $article->getPackaging() === null) &&
                 $article->isDivisible() === false
             )

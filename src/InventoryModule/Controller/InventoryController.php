@@ -112,7 +112,6 @@ class InventoryController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $shouldSetReferent = false; // Initialize flag
-            $unitTabs = ['M2', 'M3', 'ML', 'PCES',];
 
             // Traiter chaque article et vérifier les modifications
             foreach ($formData['articles'] as $article) {
@@ -286,9 +285,9 @@ class InventoryController extends AbstractController
             $this->addFlash('success', 'Tous les articles ont été mis à jour avec succès.');
 
             if ($shouldSetReferent) {
-                $Location[0]->setReferent($user->getLogin());
+                $Location->setReferent($user->getLogin());
             }
-            $em->persist($Location[0]);
+            $em->persist($Location);
             $em->flush();
 
             return $this->redirectToRoute('app_inventory_lot');

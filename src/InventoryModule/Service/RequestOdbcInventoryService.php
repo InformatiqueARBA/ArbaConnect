@@ -245,8 +245,8 @@ where
     LOT.LOLOT = INVLO.INLLO
     and 
     LOINV > 0.000
-    and
-    PX_ACH.PRV03 ='E' 
+    --and
+    --PX_ACH.PRV03 ='E' 
     and 
     INV.INVNO = '$inventoryNumber'
 )
