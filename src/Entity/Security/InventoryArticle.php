@@ -94,6 +94,21 @@ class InventoryArticle
     #[ORM\Column(nullable: true)]
     private ?float $totalQuantity = null;
 
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $activity = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $purchasePrice = null;
+
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $purchaseUnity = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $gapValue = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $inputCounter = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -419,6 +434,66 @@ class InventoryArticle
     public function setTotalQuantity(?float $totalQuantity): static
     {
         $this->totalQuantity = $totalQuantity;
+
+        return $this;
+    }
+
+    public function getActivity(): ?string
+    {
+        return $this->activity;
+    }
+
+    public function setActivity(?string $activity): static
+    {
+        $this->activity = $activity;
+
+        return $this;
+    }
+
+    public function getPurchasePrice(): ?float
+    {
+        return $this->purchasePrice;
+    }
+
+    public function setPurchasePrice(?float $purchasePrice): static
+    {
+        $this->purchasePrice = $purchasePrice;
+
+        return $this;
+    }
+
+    public function getPurchaseUnity(): ?string
+    {
+        return $this->purchaseUnity;
+    }
+
+    public function setPurchaseUnity(string $purchaseUnity): static
+    {
+        $this->purchaseUnity = $purchaseUnity;
+
+        return $this;
+    }
+
+    public function getGapValue(): ?float
+    {
+        return $this->gapValue;
+    }
+
+    public function setGapValue(?float $gapValue): static
+    {
+        $this->gapValue = $gapValue;
+
+        return $this;
+    }
+
+    public function isInputCounter(): ?bool
+    {
+        return $this->inputCounter;
+    }
+
+    public function setInputCounter(?bool $inputCounter): static
+    {
+        $this->inputCounter = $inputCounter;
 
         return $this;
     }

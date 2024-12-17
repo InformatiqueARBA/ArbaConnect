@@ -78,7 +78,11 @@ class DataMapperInventoryService
                 $inventoryArticle->setTypeArticle($result['TYPE_ARTICLE']);
                 $inventoryArticle->setDivisible($result['DIVISIBLE']);
                 $inventoryArticle->setServedFromStock($result['SERVED_FROM_STOCK']);
-                $inventoryArticle->setTheoricalQuantity($result['QUANTITE_THEORIQUE']);
+                $inventoryArticle->setTheoricalQuantity($this->calculateTheoricalQuantity($inventoryArticle, $result['QUANTITE_THEORIQUE']));
+                $inventoryArticle->setActivity($result['ACT']);
+                $inventoryArticle->setPurchasePrice($result['PX_ACHAT']);
+                $inventoryArticle->setPurchaseUnity($result['UN_ACHAT']);
+                $inventoryArticle->setinputCounter(0);
 
                 $this->em->persist($inventoryArticle);
             }
@@ -102,7 +106,11 @@ class DataMapperInventoryService
                 $inventoryArticle->setTypeArticle($result['TYPE_ARTICLE']);
                 $inventoryArticle->setDivisible($result['DIVISIBLE']);
                 $inventoryArticle->setServedFromStock($result['SERVED_FROM_STOCK']);
-                $inventoryArticle->setTheoricalQuantity($result['QUANTITE_THEORIQUE']);
+                $inventoryArticle->setTheoricalQuantity($this->calculateTheoricalQuantity($inventoryArticle, $result['QUANTITE_THEORIQUE']));
+                $inventoryArticle->setActivity($result['ACT']);
+                $inventoryArticle->setPurchasePrice($result['PX_ACHAT']);
+                $inventoryArticle->setPurchaseUnity($result['UN_ACHAT']);
+                $inventoryArticle->setinputCounter(0);
 
 
                 $this->em->persist($inventoryArticle);
@@ -127,7 +135,12 @@ class DataMapperInventoryService
                 $inventoryArticle->setTypeArticle($result['TYPE_ARTICLE']);
                 $inventoryArticle->setDivisible($result['DIVISIBLE']);
                 $inventoryArticle->setServedFromStock($result['SERVED_FROM_STOCK']);
-                $inventoryArticle->setTheoricalQuantity($result['QUANTITE_THEORIQUE']);
+                $inventoryArticle->setTheoricalQuantity($this->calculateTheoricalQuantity($inventoryArticle, $result['QUANTITE_THEORIQUE']));
+                $inventoryArticle->setActivity($result['ACT']);
+                $inventoryArticle->setPurchasePrice($result['PX_ACHAT']);
+                $inventoryArticle->setPurchaseUnity($result['UN_ACHAT']);
+                $inventoryArticle->setinputCounter(0);
+
 
 
                 $this->em->persist($inventoryArticle);
@@ -135,5 +148,28 @@ class DataMapperInventoryService
         }
 
         $this->em->flush();
+    }
+
+
+
+
+
+    function calculateTheoricalQuantity($article, $theoricalQuantity)
+    {
+        $unitTabs = ['M2', 'M3', 'ML', 'PCES'];
+
+
+        if (
+            in_array($article->getPreparationUnit(), $unitTabs) ||
+            (
+                $article->getPreparationUnit() === 'UN' &&
+                ($article->getPackaging() === '' || $article->getPackaging() === null) &&
+                $article->isDivisible() === false
+            )
+        ) {
+            return $theoricalQuantity / $article->getPackaging();
+        }
+
+        return $theoricalQuantity;
     }
 }

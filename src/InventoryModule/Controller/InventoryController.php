@@ -75,7 +75,7 @@ class InventoryController extends AbstractController
     public function inventoryDetailEdit(String $warehouse, String $location, String $inventoryNumber, Request $request, ManagerRegistry $managerRegistry): Response
     {
         $em = $managerRegistry->getManager('security');
-        $Location = $em->getRepository(Location::class)->findByLocation($location);
+        $Location = $em->getRepository(Location::class)->findByLocation($location, $inventoryNumber);
 
         // permet la récupération des / présent dans le nom des allées via url
         $location = str_replace('®', '/', $location);
@@ -138,16 +138,6 @@ class InventoryController extends AbstractController
                     $articleIdentiquesList[] = $articleIdentiques;
                 }
 
-                /*
-
-                in_array($inventoryArticle->getPreparationUnit(), $unitTabs) ||
-                        ($inventoryArticle->getPreparationUnit() === 'UN' &&
-                            ($inventoryArticle->getPackaging() === '' || $inventoryArticle->getPackaging() === null) &&
-                            $inventoryArticle->isDivisible() === false)
-                        ? $inventoryArticle->getQuantityLocation1() * $inventoryArticle->getPackaging()
-                        : $inventoryArticle->getQuantityLocation1() 
-                */
-
                 $totalQuantity = 0;
 
                 // on parcourt le tableau d'article identique et on ajoute les quantités dans la variable $totalQuantity  (sauf pour l'article de notre allée)
@@ -176,13 +166,27 @@ class InventoryController extends AbstractController
                 foreach ($articleIdentiquesList as $articlesGroup) { // Parcourt chaque groupe d'articles identiques
                     foreach ($articlesGroup as $article2) { // Parcourt chaque article dans un groupe
                         if ($article2->getQuantityLocation1() != null && $article2->getLocation()) { // Vérifie que la clé existe
-                            $article2->setGap($article2->getTheoricalQuantity() - $totalQuantity);
+                            $article2->setGap($totalQuantity - $article2->getTheoricalQuantity());
                             $em->persist($article2);
                         }
                     }
                 }
 
-                $article->setGap($article->getTheoricalQuantity() - $article->getTotalQuantity());
+                $unitTabs = ['M2', 'M3', 'ML', 'PCES'];
+                foreach ($articleIdentiquesList as $articlesGroup) { // Parcourt chaque groupe d'articles identiques
+                    foreach ($articlesGroup as $article2) { // Parcourt chaque article dans un groupe
+                        if ($article2->getQuantityLocation1() != null && $article2->getLocation() &&  in_array($article2->getPreparationUnit(), $unitTabs)) { // Vérifie que la clé existe
+                            $article2->setGapValue(($article2->getPurchasePrice() * $article2->getPackaging()) * $article2->getGap());
+                            $em->persist($article2);
+                        } else {
+                            $article2->setGapValue($article2->getPurchasePrice() * $article2->getGap());
+                            $em->persist($article2);
+                        }
+                    }
+                }
+
+                $article->setGap($article->getTotalQuantity() - $article->getTheoricalQuantity());
+                $article->setinputCounter(1);
                 $em->persist($article);
             }
 
@@ -193,10 +197,10 @@ class InventoryController extends AbstractController
 
             // Only set the referent if at least one article has been modified
             if ($shouldSetReferent) {
-                $Location[0]->setReferent($user->getLogin());
+                $Location->setReferent($user->getLogin());
             }
 
-            $em->persist($Location[0]);
+            $em->persist($Location);
             $em->flush();
 
             return $this->redirectToRoute('app_inventory');
@@ -221,7 +225,7 @@ class InventoryController extends AbstractController
         $location = urldecode($location);
 
         $em = $managerRegistry->getManager('security');
-        $Location = $em->getRepository(Location::class)->findByLocation($location);
+        $Location = $em->getRepository(Location::class)->findByLocation($location, $inventoryNumber);
 
         // Récupérer le user connecté pour affecter le référent de la saisie
         $user = $this->getUser();
@@ -843,11 +847,11 @@ class InventoryController extends AbstractController
 
         $em = $managerRegistry->getManager('security');
         $locations = $em->getRepository(Location::class)->findLocationsWithLovArticles();
-        $ecarts = $em->getRepository(Location::class)->findSumOfGapByLocation();
+        // $ecarts = $em->getRepository(Location::class)->findSumOfGapByLocation();
 
         return $this->render('InventoryModule/liste_ecarts_lot.html.twig', [
             'locations' => $locations,
-            'ecarts' => $ecarts,
+            // 'ecarts' => $ecarts,
         ]);
     }
 
@@ -856,7 +860,7 @@ class InventoryController extends AbstractController
     public function ecartsDetail(String $warehouse, String $location, String $inventoryNumber, Request $request, ManagerRegistry $managerRegistry): Response
     {
         $em = $managerRegistry->getManager('security');
-        // $Location = $em->getRepository(Location::class)->findByLocation($location);
+        // $Location = $em->getRepository(Location::class)->findByLocation($location, $inventoryNumber);
 
         // permet la récupération des / présent dans le nom des allées via url
         $location = str_replace('®', '/', $location);

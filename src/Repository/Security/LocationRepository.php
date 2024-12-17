@@ -22,14 +22,28 @@ class LocationRepository extends ServiceEntityRepository
 
 
     // Permet de récupérer la localisation dont le status est à verrouiller
-    public function findByLocation(string $value): array
+    // public function findByLocation(string $value, string $warehouse): array
+    // {
+    //     return $this->createQueryBuilder('i')
+    //         ->where('i.location = :val')
+    //         ->andWhere('i.warehouse = :val2')
+    //         ->setParameter('val', $value)
+    //         ->setParameter('val2', $warehouse)
+    //         ->getQuery()
+    //         ->getResult();
+    // }
+    // Permet de récupérer la localisation dont le status est à verrouiller
+    public function findByLocation(string $value, string $inventoryNumber): ?object
     {
         return $this->createQueryBuilder('i')
             ->where('i.location = :val')
+            ->andWhere('i.inventoryNumber = :val2')
             ->setParameter('val', $value)
+            ->setParameter('val2', $inventoryNumber)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
+
 
 
 

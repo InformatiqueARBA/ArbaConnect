@@ -45,15 +45,21 @@
                 {% else %}
                 <td style="background-color: rgba(166, 202, 255, 0.3);"> {{ form_widget(article.location) }}</td>
                 {% endif %}
+
+
+
+
                 <td>{{ form_widget(article.articleCode) }}</td>
+
+
+
+
                 <td>{{ form_widget(article.designation1) }}</td>
 
 
                 {% if article.vars.data.unknownArticle ?? false %}
-
                 <td style="background-color: rgba(255, 255, 0, 0.3);">{{ form_widget(article.quantityLocation1) }}</td>
                 {% else %}
-
                 <td style="background-color: rgba(166, 202, 255, 0.3);">{{ form_widget(article.quantityLocation1) }}
                 </td>
                 {% endif %}
@@ -73,7 +79,7 @@
                 {#
                 <pre>{{ articleIdentiques.1|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre> #}
                 {# Quantité totale #}
-                <td style="text-align: center; vertical-align: middle;">
+                {# <td style="text-align: center; vertical-align: middle;">
                     {% set totalQuantity = 0 %}
                     {% for group in articleIdentiquesList %}
                     {% for articleIdentique in group %}
@@ -83,15 +89,18 @@
                     {% endfor %}
                     {% endfor %}
                     {{ totalQuantity }}
-                </td>
+                </td> #}
+
+                <td>{{ form_widget(article.totalQuantity) }}</td>
 
                 {# Quantité théorique #}
                 <td style="text-align: center; vertical-align: middle;">
-                    {{ article.theoricalQuantity.vars.value|default('-') }}
+                    {{ form_widget(article.theoricalQuantity) }}
+                    {# {{ article.theoricalQuantity.vars.value|default('-') }} #}
                 </td>
 
                 {# Différence entre Quantité théorique et Quantité totale #}
-                <td style="text-align: center; vertical-align: middle;">
+                {# <td style="text-align: center; vertical-align: middle;">
                     {% set theoricalQuantity = article.theoricalQuantity.vars.value|default(null) %}
                     {% if theoricalQuantity is null or totalQuantity is null %}
                     <span>-</span>
@@ -103,7 +112,9 @@
                     <span style="color: red; font-weight: bold;">{{ difference }}</span>
                     {% endif %}
                     {% endif %}
-                </td>
+                </td> #}
+
+                <td>{{ form_widget(article.gap) }}</td>
 
                 {# Localisation et Quantité par article #}
                 <td style="text-align: center; vertical-align: middle;">
@@ -134,9 +145,9 @@
                 {{ form_widget(article.quantityLocation2, { 'attr': {'style': 'display: none;'} }) }}
                 {{ form_widget(article.quantityLocation3, { 'attr': {'style': 'display: none;'} }) }}
                 {{ form_widget(article.lotCode, { 'attr': {'style': 'display: none;'} }) }}
-                {{ form_widget(article.theoricalQuantity, { 'attr': {'style': 'display: none;'} }) }}
+                {# {{ form_widget(article.theoricalQuantity, { 'attr': {'style': 'display: none;'} }) }}
                 {{ form_widget(article.gap, { 'attr': {'style': 'display: none;'} }) }}
-                {{ form_widget(article.totalQuantity, { 'attr': {'style': 'display: none;'} }) }}
+                {{ form_widget(article.totalQuantity, { 'attr': {'style': 'display: none;'} }) }} #}
 
 
 
