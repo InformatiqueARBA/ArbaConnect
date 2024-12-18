@@ -47,7 +47,7 @@ class RequestOdbcDeliveryDateService
     public function getOrders(): String
     {
         $sql = "
-       select distinct
+            select distinct
             ENT_CMD.NOBON as ID 
             ,trim(CLI.NOCLI) as CORPORATIONID
             ,case
@@ -75,6 +75,22 @@ class RequestOdbcDeliveryDateService
             else 'ARBA' end as SELLER
             ,trim(ENT_CMD.COMED) as COMMENT -- TODO: À supprimer/modifier ce champ sur la V2
             ,ADR.CPOLV as ZIPCODE
+            ,case
+                when ENT_CMD.ENTD6 = 'NON' then 0
+                else 1 end as LIVRAISONPARTIELLE
+            ,ADR.NOMLV as nom_chantier
+            ,ADR.AD1LV as ADR1_chantier
+            ,ADR.AD2LV as ADR2_chantier
+            ,ADR.RUELV as ADR3_chantier
+            ,ADR.CPOLV as CP_chantier
+            ,ADR.BURLV as VIL_chantier
+            ,CLI.NOMCL as nom_siege_social
+            ,CLI.AD1CL as ADR1_siege_social
+            ,CLI.AD2CL as ADR2_siege_social
+            ,CLI.RUECL as ADR3_siege_social
+            ,CLI.CPCLF as CP_siege_social
+            ,CLI.BURCL as VIL_siege_social
+
         from
             AQAGESTCOM.AENTBOP1 ENT_CMD
         inner join
@@ -84,8 +100,9 @@ class RequestOdbcDeliveryDateService
         left outer join
             AQAGESTCOM.ALIVADP1 ADR ON ADR.NOCLI = ENT_CMD.NOCLI and ADR.NOLIV  = ENT_CMD.NOLIV
         where 
+    
         /* Récupère les commandes non éditées */
-
+    
             (
 			CLDI1 = 'AD' -- ADH uniquement
             and ETCLE != 'S' -- ADH ACTIF

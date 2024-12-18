@@ -205,8 +205,9 @@ class RequestOdbcInventoryService
     ART.SERST as SERVED_FROM_STOCK,
     STO.QTINV as QUANTITE_THEORIQUE,
     trim(ART.ACTIV) as ACT,
-    PX_ACH.PNRVT as PX_ACHAT,
-    PX_ACH.PRV61 as UN_ACHAT
+    INV.INVVF as PX_ACHAT,
+    INV.LUSTO as UN_STOCK
+    
 from
     AQAGESTCOM.AARTICP1 ART
     inner join AQAGESTCOM.AINVENP1 INV on ART.NOART = INV.INVAR
@@ -214,8 +215,6 @@ from
     left outer join AQAGESTCOM.ASTOCKP1 STO on ART.NOART = STO.NOART and ART.ARTL3 = STO.DEPOT
     left outer join AQAGESTCOM.AINVLOP1 INVLO on ART.NOART = INVLO.INLAR
     left outer join AQAGESTCOM.ATAB15P1 UNI on ART.ARTD4 = UNI.LIRPR
-    left outer join AQAGESTCOM.ATARPAP1 PX_ACH on ART.NOART = PX_ACH.NOART and ART.FOUR1 = PX_ACH.PAFOU
-    and UNI.TYPPR = 'UNI'
 where
 (   
     ART.ART32 = 'ART'
@@ -225,8 +224,6 @@ where
     ART.ETARE <> 'S'
     and -- Non suspendu
     INV.LOCAL <> ''
-    and
-    PX_ACH.PRV03 ='E' 
     and
     INV.INVNO = '$inventoryNumber'
 )
@@ -245,9 +242,7 @@ where
     LOT.LOLOT = INVLO.INLLO
     and 
     LOINV > 0.000
-    --and
-    --PX_ACH.PRV03 ='E' 
-    and 
+    and
     INV.INVNO = '$inventoryNumber'
 )
 order by

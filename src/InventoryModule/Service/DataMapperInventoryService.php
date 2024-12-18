@@ -82,7 +82,7 @@ class DataMapperInventoryService
                 $inventoryArticle->setActivity($result['ACT']);
                 if ($inventoryArticle->getTypeArticle() === 'ART') {
                     $inventoryArticle->setPurchasePrice($result['PX_ACHAT']);
-                    $inventoryArticle->setPurchaseUnity($result['UN_ACHAT']);
+                    $inventoryArticle->setPurchaseUnity($result['UN_STOCK']);
                 }
                 $inventoryArticle->setinputCounter(0);
 
@@ -112,7 +112,7 @@ class DataMapperInventoryService
                 $inventoryArticle->setActivity($result['ACT']);
                 if ($inventoryArticle->getTypeArticle() === 'ART') {
                     $inventoryArticle->setPurchasePrice($result['PX_ACHAT']);
-                    $inventoryArticle->setPurchaseUnity($result['UN_ACHAT']);
+                    $inventoryArticle->setPurchaseUnity($result['UN_STOCK']);
                 }
                 $inventoryArticle->setinputCounter(0);
 
@@ -143,7 +143,7 @@ class DataMapperInventoryService
                 $inventoryArticle->setActivity($result['ACT']);
                 if ($inventoryArticle->getTypeArticle() === 'ART') {
                     $inventoryArticle->setPurchasePrice($result['PX_ACHAT']);
-                    $inventoryArticle->setPurchaseUnity($result['UN_ACHAT']);
+                    $inventoryArticle->setPurchaseUnity($result['UN_STOCK']);
                 }
                 $inventoryArticle->setinputCounter(0);
 

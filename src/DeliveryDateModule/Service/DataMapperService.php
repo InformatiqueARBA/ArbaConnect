@@ -83,8 +83,25 @@ class DataMapperService
             $order->setSeller($result['SELLER']);
             $order->setComment($result['COMMENT']);
             $order->setZipCode($result['ZIPCODE']);
+            $order->setPartialDelivery($result['LIVRAISONPARTIELLE']);
+
+            // Mapping des nouveaux champs chantier et siege_social
+            if ($result['NOM_CHANTIER'] != null) {
+                $order->setNomChantier($result['NOM_CHANTIER']);
+                $order->setAdr1Chantier($result['ADR1_CHANTIER']);
+                $order->setAdr2Chantier($result['ADR2_CHANTIER']);
+                $order->setAdr3Chantier($result['ADR3_CHANTIER']);
+                $order->setCpChantier($result['CP_CHANTIER']);
+                $order->setVilChantier($result['VIL_CHANTIER']);
+            }
 
 
+            $order->setNomSiegeSocial($result['NOM_SIEGE_SOCIAL']);
+            $order->setAdr1SiegeSocial($result['ADR1_SIEGE_SOCIAL']);
+            $order->setAdr2SiegeSocial($result['ADR2_SIEGE_SOCIAL']);
+            $order->setAdr3SiegeSocial($result['ADR3_SIEGE_SOCIAL']);
+            $order->setCpSiegeSocial($result['CP_SIEGE_SOCIAL']);
+            $order->setVilSiegeSocial($result['VIL_SIEGE_SOCIAL']);
 
             $em->persist($order);
         }
