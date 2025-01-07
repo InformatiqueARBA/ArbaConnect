@@ -174,7 +174,7 @@ class InventoryController extends AbstractController
                 $unitTabs = ['M2', 'M3', 'ML', 'PCES'];
                 foreach ($articleIdentiquesList as $articlesGroup) { // Parcourt chaque groupe d'articles identiques
                     foreach ($articlesGroup as $article2) { // Parcourt chaque article dans un groupe
-                        if ($article2->getQuantityLocation1() != null && $article2->getLocation() &&  in_array($article2->getPreparationUnit(), $unitTabs)) { // Vérifie que la clé existe
+                        if ($article2->getQuantityLocation1() != null && $article2->getLocation() != $article->getLocation() &&  in_array($article2->getPreparationUnit(), $unitTabs)) { // Vérifie que la clé existe
                             $article2->setGapValue(($article2->getPurchasePrice() * $article2->getPackaging()) * $article2->getGap());
                             $em->persist($article2);
                         } else {
@@ -185,6 +185,16 @@ class InventoryController extends AbstractController
                 }
 
                 $article->setGap($article->getTotalQuantity() - $article->getTheoricalQuantity());
+
+                if ($article->getQuantityLocation1() != null  &&  in_array($article->getPreparationUnit(), $unitTabs)) { // Vérifie que la clé existe
+                    $article->setGapValue(($article->getPurchasePrice() * $article->getPackaging()) * $article->getGap());
+                    $em->persist($article);
+                } else {
+                    $article->setGapValue($article->getPurchasePrice() * $article->getGap());
+                    $em->persist($article);
+                }
+
+
                 $article->setinputCounter(1);
                 $em->persist($article);
             }

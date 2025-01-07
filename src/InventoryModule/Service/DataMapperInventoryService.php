@@ -164,6 +164,9 @@ class DataMapperInventoryService
     {
         $unitTabs = ['M2', 'M3', 'ML', 'PCES'];
 
+        if ($article->getPackaging() == 0) {
+            return $theoricalQuantity;
+        }
 
         if (
             in_array($article->getPreparationUnit(), $unitTabs) && $article->getTypeArticle() === 'ART' ||

@@ -80,10 +80,13 @@
 			Module date de livraison
 			<img src="{{ asset('images/delivery.ico') }}" alt="Delivery Icon">
 		</a>
+
+		{% if is_granted('ROLE_ADMIN') %}
 		<a href="{{ path('app_selection') }}" class="custom-btn button-icon button-space">
 			Module inventaire
 			<img src="{{ asset('images/barcode.ico') }}" alt="Barcode Icon">
 		</a>
+		{% endif %}
 	</div>
 </div>
 {% endblock %}
