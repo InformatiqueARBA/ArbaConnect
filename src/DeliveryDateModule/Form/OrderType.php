@@ -82,57 +82,65 @@ class OrderType extends AbstractType
                 'attr'     => ['class' => 'toggle-checkbox'],
             ])
 
-            // ->add('nomChantier', TextType::class, [
-            //     'label' => 'Nom chantier',
-            //     'required' => false,
-            // ])
-            // ->add('adr1Chantier', TextType::class, [
-            //     'label' => 'Adresse 1 chantier',
-            //     'required' => false,
-            // ])
-            // ->add('adr2Chantier', TextType::class, [
-            //     'label' => 'Adresse 2 chantier',
-            //     'required' => false,
-            // ])
-            // ->add('adr3Chantier', TextType::class, [
-            //     'label' => 'Adresse 3 chantier',
-            //     'required' => false,
-            // ])
-            // ->add('cpChantier', TextType::class, [
-            //     'label' => 'Code postal chantier',
-            //     'required' => false,
-            // ])
-            // ->add('vilChantier', TextType::class, [
-            //     'label' => 'Ville chantier',
-            //     'required' => false,
-            // ])
-            ->add('nomSiegeSocial', TextType::class, [
-                'label' => 'Nom siège social',
+            ->add('nomChantier', TextType::class, [
+                'label' => 'Nom',
                 'required' => false,
                 'disabled' => true,
             ])
+            ->add('adr1Chantier', TextType::class, [
+                'label' => 'Adresse',
+                'required' => false,
+                'disabled' => true,
+            ])
+            ->add('adr2Chantier', TextType::class, [
+                'label' => false,
+                'required' => false,
+                'disabled' => true,
+            ])
+            ->add('adr3Chantier', TextType::class, [
+                'label' => false,
+                'required' => false,
+                'disabled' => true,
+            ])
+            ->add('cpChantier', TextType::class, [
+                'label' => false,
+                'required' => false,
+                'disabled' => true,
+            ])
+            ->add('vilChantier', TextType::class, [
+                'label' => false,
+                'required' => false,
+                'disabled' => true,
+            ])
+
+            ->add('nomSiegeSocial', TextType::class, [
+                'label' => 'Nom',
+                'required' => false,
+                'disabled' => true,
+                'disabled' => true,
+            ])
             ->add('adr1SiegeSocial', TextType::class, [
-                'label' => 'Adresse 1 siège social',
+                'label' => 'Adresse',
                 'required' => false,
                 'disabled' => true,
             ])
             ->add('adr2SiegeSocial', TextType::class, [
-                'label' => 'Adresse 2 siège social',
+                'label' => false,
                 'required' => false,
                 'disabled' => true,
             ])
             ->add('adr3SiegeSocial', TextType::class, [
-                'label' => 'Adresse 3 siège social',
+                'label' => false,
                 'required' => false,
                 'disabled' => true,
             ])
             ->add('cpSiegeSocial', TextType::class, [
-                'label' => 'Code postal siège social',
+                'label' => false,
                 'required' => false,
                 'disabled' => true,
             ])
             ->add('vilSiegeSocial', TextType::class, [
-                'label' => 'Ville siège social',
+                'label' => false,
                 'required' => false,
                 'disabled' => true,
             ])
