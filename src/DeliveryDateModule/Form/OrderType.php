@@ -109,26 +109,32 @@ class OrderType extends AbstractType
             ->add('nomSiegeSocial', TextType::class, [
                 'label' => 'Nom siège social',
                 'required' => false,
+                'disabled' => true,
             ])
             ->add('adr1SiegeSocial', TextType::class, [
                 'label' => 'Adresse 1 siège social',
                 'required' => false,
+                'disabled' => true,
             ])
             ->add('adr2SiegeSocial', TextType::class, [
                 'label' => 'Adresse 2 siège social',
                 'required' => false,
+                'disabled' => true,
             ])
             ->add('adr3SiegeSocial', TextType::class, [
                 'label' => 'Adresse 3 siège social',
                 'required' => false,
+                'disabled' => true,
             ])
             ->add('cpSiegeSocial', TextType::class, [
                 'label' => 'Code postal siège social',
                 'required' => false,
+                'disabled' => true,
             ])
             ->add('vilSiegeSocial', TextType::class, [
                 'label' => 'Ville siège social',
                 'required' => false,
+                'disabled' => true,
             ])
 
             ->add('submit', SubmitType::class, [
