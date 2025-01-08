@@ -105,6 +105,7 @@ class OrderController extends AbstractController
     {
         $em = $databaseSwitcherService->getEntityManager();
         $order = $em->getRepository(Order::class)->find($id);
+
         $emSecurity = $managerRegistry->getManager('security');
         // dd($order);
         if ($order->getZipCode() != null) {
@@ -126,6 +127,7 @@ class OrderController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+
 
             $date = $order->getDeliveryDate();
             $isValid = true;

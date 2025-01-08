@@ -43,6 +43,7 @@ class CsvGeneratorService
                 'SNTLIM',
                 'SNTLIJ',
                 'SNTB40',
+                'SNTLPA',
                 'SNTROF'
             ];
         } else {
@@ -56,6 +57,7 @@ class CsvGeneratorService
                 'SNTLIA',
                 'SNTLIM',
                 'SNTLIJ',
+                'SNTLPA',
                 'SNTROF'
             ];
         }
@@ -80,7 +82,7 @@ class CsvGeneratorService
 
         $corporationId = $order->getCorporation()->getId();
         $deliveryDateString = $order->getDeliveryDate()->format('d-m-Y');
-
+        $partialDelivery = ($order->isPartialDelivery()) ? 'OUI' : 'NON';
         //Génère les lignes du fichier CSV avec le type de bon si une ORA a été modifiée
         if ($orderType == 'ORC') {
             $data = [
@@ -93,6 +95,7 @@ class CsvGeneratorService
                 substr($deliveryDateString, 8, 2),
                 substr($deliveryDateString, 3, 2),
                 substr($deliveryDateString, 0, 2),
+                $partialDelivery,
                 'ORC',
                 'R'
             ];
@@ -107,6 +110,7 @@ class CsvGeneratorService
                 substr($deliveryDateString, 8, 2),
                 substr($deliveryDateString, 3, 2),
                 substr($deliveryDateString, 0, 2),
+                $partialDelivery,
                 'R'
             ];
         }

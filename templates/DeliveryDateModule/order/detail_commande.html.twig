@@ -16,11 +16,6 @@
 			{{ form_widget(form.id, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
 		</div>
 
-		<div class="form-group">
-			{{ form_widget(form.orderStatus, {'attr': {'class': 'form-control custom-typography', 'disabled':
-			'disabled'}}) }}
-		</div>
-
 		<div class="form-group mt-3">
 			{{ form_label(form.reference, 'Référence', {'label_attr': {'class': 'custom-typography'}}) }}
 			{{ form_widget(form.reference, {'attr': {'class': 'form-control custom-typography', 'disabled':
@@ -39,67 +34,64 @@
 			'placeholder': 'Sélectionner une date', 'data-date-format': 'd/m/Y'}}) }}
 		</div>
 
-		<div class="form-group toggle-group mt-3">
-			{{ form_label(form.partialDelivery, 'Livraison partielle', {'label_attr': {'class': 'custom-typography'}})
-			}}
-			<div class="toggle-switch">
-				{{ form_widget(form.partialDelivery, {'attr': {'class': 'custom-toggle'}}) }}
+		<div class="form-group toggle-group mt-3 d-flex align-items-center gap-3">
+			<p class="switch-label mb-0">Livraison totale exigée</p>
+			{{ form_label(form.partialDelivery, 'Livraison partielle', {'label_attr': {'class': 'form-check-label
+			custom-typography'}}) }}
+			<div class="form-check form-switch">
+				{{ form_widget(form.partialDelivery, {'attr': {'class': 'form-check-input'}}) }}
 			</div>
-
-		</div>
-		<div class="form-group">
-			{{ form_widget(form.type, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}}) }}
+			<p class="switch-label mb-0">Livraison partielle acceptée</p>
 		</div>
 
 		<div class="form-group mt-3">
 			{{ form_label(form.seller, 'Vendeur', {'label_attr': {'class': 'custom-typography'}}) }}
-			{{ form_widget(form.seller, {'attr': {'class': 'form-control custom-typography', 'disabled': 'disabled'}})
+			{{ form_widget(form.seller, {'attr': {'class': 'form-control custom-typography', 'disabled':
+			'disabled'}})
 			}}
 		</div>
 
-		<div class="form-group">
-			{{ form_widget(form.corporation, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
+		{# Initialise des booléens en fonction de l'adresse de livraison associée à la commande #}
+		{% set chantierIsActive = form.nomChantier.vars.value is not empty %}
+		{% set siegeIsActive = not chantierIsActive %}
+
+		{# Affichage l'adresse chantier, d'atelier ou du siège social en fonction des booléens #}
+		{% for field in [form.nomChantier, form.adr1Chantier, form.adr2Chantier, form.adr3Chantier, form.cpChantier,
+		form.vilChantier] %}
+		{% if field.vars.name in ['adr2Chantier', 'adr3Chantier'] and field.vars.value|trim is empty %}
+		<div class="form-group mt-3" style='display: none;'>
+			{{ form_label(field, null, {'label_attr': {'class': 'custom-typography'}}) }}
+			{{ form_widget(field, {'attr': {'class': 'form-control custom-typography'}}) }}
+		</div>
+		{% else %}
+		<div class="form-group mt-3" {% if siegeIsActive %}style="display: none;" {% endif %}>
+			{{ form_label(field, null, {'label_attr': {'class': 'custom-typography'}}) }}
+			{{ form_widget(field, {'attr': {'class': 'form-control custom-typography'}}) }}
+		</div>
+		{% endif %}
+		{% endfor %}
+
+		{# Affichage l'adresse chantier, d'atelier ou du siège social en fonction des booléens #}
+		{% for field in [form.nomSiegeSocial, form.adr1SiegeSocial, form.adr2SiegeSocial, form.adr3SiegeSocial,
+		form.cpSiegeSocial, form.vilSiegeSocial] %}
+		{% if field.vars.name in ['adr2SiegeSocial', 'adr3SiegeSocial'] and field.vars.value|trim is empty %}
+		<div class="form-group mt-3" style='display: none;'>
+			{{ form_label(field, null, {'label_attr': {'class': 'custom-typography'}}) }}
+			{{ form_widget(field, {'attr': {'class': 'form-control custom-typography'}}) }}
+		</div>
+		{% else %}
+		<div class="form-group mt-3" {% if chantierIsActive %}style="display: none;" {% endif %}>
+			{{ form_label(field, null, {'label_attr': {'class': 'custom-typography'}}) }}
+			{{ form_widget(field, {'attr': {'class': 'form-control custom-typography'}}) }}
 		</div>
 
-         {# Initialise des booléens en fonction de l'adresse de livraison associée à la commande #}
-        {% set chantierIsActive = form.nomChantier.vars.value is not empty %}
-        {% set siegeIsActive = not chantierIsActive %}
+		{% endif %}
+		{% endfor %}
 
-        {# Affichage l'adresse chantier, d'atelier ou du siège social en fonction des booléens #}
-        {% for field in [form.nomChantier, form.adr1Chantier, form.adr2Chantier, form.adr3Chantier, form.cpChantier, form.vilChantier] %}
-            {% if field.vars.name in ['adr2Chantier', 'adr3Chantier'] and field.vars.value|trim is empty %}
-                <div class="form-group mt-3" style='display: none;'>
-                    {{ form_label(field, null, {'label_attr': {'class': 'custom-typography'}}) }}
-                    {{ form_widget(field, {'attr': {'class': 'form-control custom-typography'}}) }}
-					</div>
-            {% else %}
-                <div class="form-group mt-3" style="{{ siegeIsActive ? 'display: none;' : '' }}">
-                    {{ form_label(field, null, {'label_attr': {'class': 'custom-typography'}}) }}
-                    {{ form_widget(field, {'attr': {'class': 'form-control custom-typography'}}) }}
-                </div>
-            {% endif %}
-        {% endfor %}
-
-        {# Affichage l'adresse chantier, d'atelier ou du siège social en fonction des booléens #}
-        {% for field in [form.nomSiegeSocial, form.adr1SiegeSocial, form.adr2SiegeSocial, form.adr3SiegeSocial, form.cpSiegeSocial, form.vilSiegeSocial] %}
-            {% if field.vars.name in ['adr2SiegeSocial', 'adr3SiegeSocial'] and field.vars.value|trim is empty %}
-                                <div class="form-group mt-3" style='display: none;'>
-                    {{ form_label(field, null, {'label_attr': {'class': 'custom-typography'}}) }}
-                    {{ form_widget(field, {'attr': {'class': 'form-control custom-typography'}}) }}
-                </div>
-            {% else %}
-                <div class="form-group mt-3" style="{{ chantierIsActive ? 'display: none;' : '' }}">
-                    {{ form_label(field, null, {'label_attr': {'class': 'custom-typography'}}) }}
-                    {{ form_widget(field, {'attr': {'class': 'form-control custom-typography'}}) }}
-                </div>
-            {% endif %}
-        {% endfor %}
-
-        <div class="form-group mt-3 w-100">
-            {{ form_widget(form.submit, {'attr': {'class': 'form-control custom-btn btn btn-lg'}}) }}
-        </div>
-
-        {{ form_end(form) }}
+		<div class="form-group mt-3 w-100">
+			{{ form_widget(form.submit, {'attr': {'class': 'form-control custom-btn btn btn-lg'}}) }}
+		</div>
+		{{ form_end(form) }}
 	</div>
 </div>
 
@@ -127,6 +119,5 @@
 {% endif %}
 
 {% endif %}
-
 <script src="{{ asset('order_detail.js') }}"></script>
 {% endblock %}

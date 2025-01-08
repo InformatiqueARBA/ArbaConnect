@@ -36,8 +36,6 @@ class OrderType extends AbstractType
                 'disabled' => true,
                 'label' => 'Date de commande'
             ])
-
-
             ->add('deliveryDate', DateType::class, [
                 'widget' => 'single_text',
                 'html5' => false, // Disable HTML5 date input
@@ -55,8 +53,6 @@ class OrderType extends AbstractType
                 //     new DeliveryDate(),
                 // ],
             ])
-
-
             ->add('type', null, [
                 'disabled' => true,
                 'attr' => ['style' => 'display:none;'],
@@ -77,9 +73,9 @@ class OrderType extends AbstractType
                 'attr' => ['style' => 'display:none;'],
             ])
             ->add('partialDelivery', CheckboxType::class, [
-                'label'    => 'Livraison partielle',
+                'label' => false,
                 'required' => false,
-                'attr'     => ['class' => 'toggle-checkbox'],
+                'attr' => ['class' => 'toggle-checkbox'],
             ])
 
             ->add('nomChantier', TextType::class, [
