@@ -20,13 +20,18 @@ class ArbaTourRepository extends ServiceEntityRepository
 
     public function findTourCodeByZipCode(string $zipCode): ?string
     {
-        return $this->createQueryBuilder('a')
-            ->select('a.TourCode')
-            ->where('a.zipCode = :zipCode')
-            ->setParameter('zipCode', $zipCode)
-            ->getQuery()
-            ->getSingleScalarResult();
+        try {
+            return $this->createQueryBuilder('a')
+                ->select('a.TourCode')
+                ->where('a.zipCode = :zipCode')
+                ->setParameter('zipCode', $zipCode)
+                ->getQuery()
+                ->getSingleScalarResult();
+        } catch (\Doctrine\ORM\NoResultException | \Doctrine\ORM\NonUniqueResultException $e) {
+            return null;
+        }
     }
+
 
 
     //    /**

@@ -66,12 +66,20 @@ class DataMapperSecurityService
                     $user->setPassword($this->hasher->hashPassword($user, '0000'));
 
                     $this->em->persist($user);
-                    // màj si changement de mail
-                } elseif ($existingUser && $result['STATUS'] != 'S' && $result['MAIL'] != $existingUser->getMail()) {
+                    // SI changement d'une donnée courante dans Rubis, MaJ sur l'appli
+                } elseif (
+                    $existingUser && $result['STATUS'] != 'S'
+                    &&  ($result['MAIL'] != $existingUser->getMail()
+                        || $result['MAIL_AR'] != $existingUser->getMailAR()
+                        || $result['ENTERPRISE'] != $existingUser->getEnterprise()
+                        || $result['TOUR_CODE'] != $existingUser->getTourCode())
+                ) {
                     $existingUser->setMail($result['MAIL']);
-                    // màj si changement de mail AR
-                } elseif ($existingUser && $result['STATUS'] != 'S' && $result['MAIL_AR'] != $existingUser->getMailAR()) {
                     $existingUser->setMailAR($result['MAIL_AR']);
+                    $existingUser->setEnterprise($result['ENTERPRISE']);
+                    $existingUser->setTourCode($result['TOUR_CODE']);
+
+                    $this->em->persist($existingUser);
                     // si suspendu Rubis suppression de l'utilisateur
                 } elseif ($existingUser && $result['STATUS'] == 'S') {
                     $this->em->remove($existingUser);

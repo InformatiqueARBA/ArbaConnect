@@ -107,12 +107,23 @@ class OrderController extends AbstractController
         $order = $em->getRepository(Order::class)->find($id);
 
         $emSecurity = $managerRegistry->getManager('security');
-        // dd($order);
+
+
+        $user = $this->getUser();
+
+        // Check if user is an instance of User class
+        if (!$user instanceof User) {
+            throw new \LogicException('The user is not valid.');
+        }
+
         if ($order->getZipCode() != null) {
-            $zipCode = $emSecurity->getRepository(ArbaTour::class)->findTourCodeByZipCode($order->getZipCode());
+            $zipCode = $emSecurity->getRepository(ArbaTour::class)->findTourCodeByZipCode($order->getZipCode()) ?: $user->getTourCode();
         } else {
             $zipCode = '';
         }
+
+
+
         $orderDetails = $em->getRepository(OrderDetail::class)->findByOrderId($id);
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
