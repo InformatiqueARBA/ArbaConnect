@@ -239,7 +239,7 @@ class OrderController extends AbstractController
 
 
 
-    #[Route('/commandes/odbc', name: 'odbc_index')]
+    #[Route('/admin/odbc', name: 'odbc_index')]
     public function odbc(OdbcService $odbcService, RequestOdbcDeliveryDateService $requestOdbcDeliveryDateService): JsonResponse
     {
         $sql = $requestOdbcDeliveryDateService->getCoporations();
@@ -256,7 +256,7 @@ class OrderController extends AbstractController
 
 
 
-    #[Route('/commandes/testDelete', name: 'delete')]
+    #[Route('/admin/testDelete', name: 'delete')]
     public function delete(
         PopulateAcdbService $populateAcdbService,
         DataMapperService $dataMapperService,
@@ -275,7 +275,7 @@ class OrderController extends AbstractController
 
 
 
-    #[Route('/commandes/userUpdate', name: 'userUpdate')]
+    #[Route('/admin/userUpdate', name: 'userUpdate')]
     public function deuxdex(DataMapperSecurityService $dataMapperSecurityService): Response
     {
         $dataMapperSecurityService->userMapper();
@@ -285,7 +285,7 @@ class OrderController extends AbstractController
 
 
 
-    #[Route('/commandes/orderDetail', name: 'orderDetail')]
+    #[Route('/admin/orderDetail', name: 'orderDetail')]
     public function orderDetail(DataMapperService $dataMapperService, DatabaseSwitcherService $databaseSwitcherService, OdbcService $odbcService, RequestOdbcDeliveryDateService $requestOdbcDeliveryDateService): Response
     {
         $dataMapperService->orderDetailMapper($databaseSwitcherService, $odbcService, $requestOdbcDeliveryDateService,);
@@ -295,7 +295,7 @@ class OrderController extends AbstractController
 
 
 
-    #[Route('/arba/commandes/code', name: 'code')]
+    #[Route('/admin/code', name: 'code')]
     public function code(TourCodeService $tourCodeService): Response
     {
         $tourCodeService->getCodeTour();
