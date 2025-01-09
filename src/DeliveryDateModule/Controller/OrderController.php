@@ -116,11 +116,15 @@ class OrderController extends AbstractController
             throw new \LogicException('The user is not valid.');
         }
 
-        if ($order->getZipCode() != null) {
+        // prends en priorité le code postal de l'adresse de livraison et le code postal de l'adh si pas d'adresse de livraison
+        if ($order->getZipCode() != null || $order->getZipCode() != '') {
             $zipCode = $emSecurity->getRepository(ArbaTour::class)->findTourCodeByZipCode($order->getZipCode()) ?: $user->getTourCode();
+        } elseif ($order->getZipCode() == null || $order->getZipCode() == '') {
+            $zipCode = $user->getTourCode();
         } else {
             $zipCode = '';
         }
+
 
 
 

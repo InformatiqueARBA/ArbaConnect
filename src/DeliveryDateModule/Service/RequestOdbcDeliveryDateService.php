@@ -78,18 +78,18 @@ class RequestOdbcDeliveryDateService
             ,case
                 when ENT_CMD.ENTD6 = 'NON' then 0
                 else 1 end as LIVRAISONPARTIELLE
-            ,ADR.NOMLV as nom_chantier
-            ,ADR.AD1LV as ADR1_chantier
-            ,ADR.AD2LV as ADR2_chantier
-            ,ADR.RUELV as ADR3_chantier
-            ,ADR.CPOLV as CP_chantier
-            ,ADR.BURLV as VIL_chantier
-            ,CLI.NOMCL as nom_siege_social
-            ,CLI.AD1CL as ADR1_siege_social
-            ,CLI.AD2CL as ADR2_siege_social
-            ,CLI.RUECL as ADR3_siege_social
-            ,CLI.CPCLF as CP_siege_social
-            ,CLI.BURCL as VIL_siege_social
+            ,trim(ADR.NOMLV) as nom_chantier
+            ,trim(ADR.AD1LV) as ADR1_chantier
+            ,trim(ADR.AD2LV) as ADR2_chantier
+            ,trim(ADR.RUELV) as ADR3_chantier
+            ,trim(ADR.CPOLV) as CP_chantier
+            ,trim(ADR.BURLV) as VIL_chantier
+            ,trim(CLI.NOMCL) as nom_siege_social
+            ,trim(CLI.AD1CL) as ADR1_siege_social
+            ,trim(CLI.AD2CL) as ADR2_siege_social
+            ,trim(CLI.RUECL) as ADR3_siege_social
+            ,trim(CLI.CPCLF) as CP_siege_social
+            ,trim(CLI.BURCL) as VIL_siege_social
 
         from
             AQAGESTCOM.AENTBOP1 ENT_CMD
@@ -267,91 +267,6 @@ class RequestOdbcDeliveryDateService
     ";
         return $sql;
     }
-    // public function getDetailOrders(): String
-    // {
-    //     $sql = "
-    // -- Retourne les lignes de commandes client et la notion fournisseur confirmée
-    // SELECT DISTINCT
-    //      trim(DET_CMD.NOBON) NUM_BON
-    //     ,trim(DET_CMD.NOCLI) NUM_CLI
-    //     ,trim(DET_CMD.NOLIG) NUM_LIG
-    //     ,trim(DET_CMD.CODAR) NUM_ART
-    //     ,trim(DET_CMD.DS1DB) || trim(DET_CMD.DS2DB) DESI
-    //     ,trim(DET_CMD.QTESA) QTE
-    //     ,trim(DET_CMD.LUSTO) UNI
-    //     ,trim(DET_CMD.NBOFO) NUM_BON_FOU
-    //     ,trim(DET_FOU.CFCOD) CONF_FOU
-    //     ,trim(DET_CMD.DET27) TYP_LIG
-    //     ,DET_CMD.DSBCS ||DET_CMD.DSBCA ||'-'||DET_CMD.DSBCM ||'-'|| DET_CMD.DSBCJ DATE_COMMANDE 
-    //     ,DET_FOU.CFDLS ||DET_FOU.CFDLA  ||'-'||DET_FOU.CFDLM ||'-'|| DET_FOU.CFDLJ DATE_RECEPTION
-    // FROM
-    //     AQAGESTCOM.ADETBOP1 DET_CMD
-    // INNER JOIN
-    //     AQAGESTCOM.AENTBOP1 ENT_CMD
-    // ON
-    //     ENT_CMD.NOBON = DET_CMD.NOBON
-    // INNER JOIN
-    //     AQAGESTCOM.ACLIENP1 CLI
-    // ON
-    //     CLI.NOCLI = DET_CMD.NOCLI
-    // LEFT OUTER JOIN
-    //     AQAGESTCOM.ACFDETP1 DET_FOU
-    // ON
-    //     DET_FOU.CFBON = DET_CMD.NBOFO
-    // AND
-    //     DET_FOU.CFCLL = DET_CMD.NOLIG
-
-    //  where /* Clause identique à celle des entêtes de commande  */
-
-    //             (
-    //             CLDI1 = 'AD' -- ADH uniquement
-    //             and ETCLE != 'S' -- ADH ACTIF
-    //             and ETSBE != 'ANN' -- LIGNE ACTIVE
-    //             and CODAR != '' -- Hors ligne commentaire
-    //             and DTZAB != 'O' -- Hors ligne reprise/avoir
-    //             and ETSEE != 'ANN' -- BON ACTIF
-    //             and ENT30 like '%R%' -- Bon à préparer
-    //             and DET27 ='R' -- Ligne à préparer
-    //             and PREDI ='N' -- Bon préparation non édité
-    //             )
-
-    //         OR  /* Récupère les commandes en cours de moins de 3 mois non livrées pour statuts 'non modifiable', 'annulée', 'préparé' */
-
-    //             (
-    //             CLDI1 = 'AD' -- ADH uniquement
-    //             and trim(ENT30) <> 'F'
-    //             and ETCLE != 'S' -- ADH ACTIF
-    //             and ETSEE != 'ANN' -- BON INACTIF
-    //             and CODAR != '' -- Hors ligne commentaire
-    //             and DTZAB != 'O' -- Hors ligne reprise/avoir
-    //             and TIMESTAMP_FORMAT(CONCAT(CONCAT(CONCAT(DSECS, DSECA), DSECM), DSECJ), 'YYYYMMDD') >= CURRENT_DATE - 3 MONTHS
-    //             and ENT_CMD.FACSB != 'OUI'
-    //             )
-
-    //         OR  /* Récupère les commandes livrées depuis 1 semaine ou moins /!\ NOBON='934807', certaines commandes sont manuellement passées en livrée sans BL associé */
-
-    //             (
-    //             CLDI1 = 'AD' -- ADH uniquement
-    //             and  trim(ENT30) = 'F'
-    //             and ETCLE != 'S' -- ADH ACTIF
-    //             and CODAR != '' -- Hors ligne commentaire
-    //             and DTZAB != 'O' -- Hors ligne reprise/avoir
-    //             and BLVSB ='OUI'
-    //             and TIMESTAMP_FORMAT(CONCAT(CONCAT(CONCAT(DLSSB, DLASB), DLMSB), DLJSB), 'YYYYMMDD') >= CURRENT_DATE -7 DAYS
-    //             )
-
-    //     OR  /* Récupère les commandes annulées depuis 1 semaine ou moins */
-
-    //             (
-    //             CLDI1 = 'AD' -- ADH uniquement
-    //             and ETCLE != 'S' -- ADH ACTIF
-    //             and CODAR != '' -- Hors ligne commentaire
-    //             and ETSEE = 'ANN' -- BON INACTIF
-    //             and TIMESTAMP_FORMAT(CONCAT(CONCAT(CONCAT(DSECS, DSECA), DSECM), DSECJ), 'YYYYMMDD') >= CURRENT_DATE -7 DAYS
-    //             )      
-    // ";
-    //     return $sql;
-    // }
 
 
 
@@ -422,25 +337,7 @@ class RequestOdbcDeliveryDateService
         return $sql;
     }
 
-    /* Requête pour prendre en compte les heures limites de passation de commande 
-        select 
-            trim(CTTOU) TOURCODE
-            ,CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CTDLS,CTDLA), '-'),CTDLM),'-'),CTDLJ) as DELIVERYDATE
-			,TIMESTAMP_FORMAT(CTDCS || CTDCA || CTDCM || CTDCJ || LPAD(CTHHC, 2, '0') || LPAD(CTMNC, 2, '0'),'YYYYMMDDHH24MI') as LIMITDATE
-        from
-            AQAGESTCOM.ACALTOP1
-        where
-            TIMESTAMP_FORMAT(CONCAT(CONCAT(CONCAT(CTDLS, CTDLA), CTDLM), CTDLJ), 'YYYYMMDD') > CURRENT_DATE 
-################################################## ANCIENNE REQUETE #################################################################
-        select 
-            trim(CTTOU) TOURCODE
-            ,CONCAT(CONCAT(CONCAT(CONCAT(CONCAT(CTDLS,CTDLA), '-'),CTDLM),'-'),CTDLJ) as DELIVERYDATE
-        from
-        AQAGESTCOM.ACALTOP1
-        where
-             TIMESTAMP_FORMAT(CONCAT(CONCAT(CONCAT(CTDLS, CTDLA), CTDLM), CTDLJ), 'YYYYMMDD') > CURRENT_DATE + 2 DAYS
-    
-    */
+
 
     public function getInfosAdh(): String
     { //Récupérer les infos de la fiche client & de l'adresse ATEL : 
