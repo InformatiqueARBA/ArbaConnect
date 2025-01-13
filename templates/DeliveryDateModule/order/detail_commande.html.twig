@@ -33,7 +33,7 @@
 			{{ form_widget(form.deliveryDate, {'attr': {'class': 'form-control custom-typography flatpickr-input',
 			'placeholder': 'Sélectionner une date', 'data-date-format': 'd/m/Y'}}) }}
 		</div><br>
-			<p class="switch-label mb-0">Livraison partielle</p>
+		<p class="switch-label mb-0">Livraison partielle</p>
 		<div class="form-group toggle-group mt-3 d-flex align-items-center gap-3">
 
 			<p class="mb-0" style="margin-left: 20px;">NON</p>
@@ -96,10 +96,21 @@
 	</div>
 </div>
 
+
+
+
+
+
 <div class="button-container">
+	{% if is_granted('ROLE_ADMIN') %}
+	<a href="{{ path('app_dates_livraisons') }}" class="btn btn-primary return-btn custom-btn">
+		Retour
+	</a>
+	{% elseif is_granted('ROLE_USER') %}
 	<a href="{{ path('app_dates_livraisons_adherent') }}" class="btn btn-primary return-btn custom-btn">
 		Retour
 	</a>
+	{% endif %}
 </div>
 
 <div class="bottom-left-image-douchette">
