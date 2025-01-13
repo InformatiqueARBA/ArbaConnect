@@ -32,16 +32,17 @@
 			{{ form_label(form.deliveryDate, 'Date de livraison', {'label_attr': {'class': 'custom-typography'}}) }}
 			{{ form_widget(form.deliveryDate, {'attr': {'class': 'form-control custom-typography flatpickr-input',
 			'placeholder': 'Sélectionner une date', 'data-date-format': 'd/m/Y'}}) }}
-		</div>
-
+		</div><br>
+			<p class="switch-label mb-0">Livraison partielle</p>
 		<div class="form-group toggle-group mt-3 d-flex align-items-center gap-3">
-			<p class="switch-label mb-0">Livraison totale exigée</p>
+
+			<p class="mb-0" style="margin-left: 20px;">NON</p>
 			{{ form_label(form.partialDelivery, 'Livraison partielle', {'label_attr': {'class': 'form-check-label
 			custom-typography'}}) }}
 			<div class="form-check form-switch">
 				{{ form_widget(form.partialDelivery, {'attr': {'class': 'form-check-input'}}) }}
 			</div>
-			<p class="switch-label mb-0">Livraison partielle acceptée</p>
+			<p class="switch-label mb-0">OUI</p>
 		</div>
 
 		<div class="form-group mt-3">
@@ -108,13 +109,13 @@
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
 
-{% if zipCode is empty %}
+{% if tourCode is empty %}
 <script>
 	var tc = "{{ app.user.tourCode }}";
 </script>
 {% else %}
 <script>
-	var tc = "{{ zipCode }}";
+	var tc = "{{ tourCode }}";
 </script>
 {% endif %}
 

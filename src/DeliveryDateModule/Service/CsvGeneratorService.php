@@ -24,7 +24,7 @@ class CsvGeneratorService
 
 
     // TODO: finaliser le csv.
-    public function deliveryDateCsv(Order $order)
+    public function deliveryDateCsv(Order $order, string $tourCode)
     {
 
         $timestamp = date('_H:i:s');
@@ -44,6 +44,7 @@ class CsvGeneratorService
                 'SNTLIJ',
                 'SNTB40',
                 'SNTLPA',
+                'SNTTOU',
                 'SNTROF'
             ];
         } else {
@@ -58,6 +59,7 @@ class CsvGeneratorService
                 'SNTLIM',
                 'SNTLIJ',
                 'SNTLPA',
+                'SNTTOU',
                 'SNTROF'
             ];
         }
@@ -97,6 +99,7 @@ class CsvGeneratorService
                 substr($deliveryDateString, 0, 2),
                 $partialDelivery,
                 'ORC',
+                $tourCode,
                 'R'
             ];
         } else {
@@ -111,6 +114,7 @@ class CsvGeneratorService
                 substr($deliveryDateString, 3, 2),
                 substr($deliveryDateString, 0, 2),
                 $partialDelivery,
+                $tourCode,
                 'R'
             ];
         }

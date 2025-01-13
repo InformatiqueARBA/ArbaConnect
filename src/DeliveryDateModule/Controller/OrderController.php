@@ -118,11 +118,11 @@ class OrderController extends AbstractController
 
         // prends en priorité le code postal de l'adresse de livraison et le code postal de l'adh si pas d'adresse de livraison
         if ($order->getZipCode() != null || $order->getZipCode() != '') {
-            $zipCode = $emSecurity->getRepository(ArbaTour::class)->findTourCodeByZipCode($order->getZipCode()) ?: $user->getTourCode();
+            $tourCode = $emSecurity->getRepository(ArbaTour::class)->findTourCodeByZipCode($order->getZipCode()) ?: $user->getTourCode();
         } elseif ($order->getZipCode() == null || $order->getZipCode() == '') {
-            $zipCode = $user->getTourCode();
+            $tourCode = $user->getTourCode();
         } else {
-            $zipCode = '';
+            $tourCode = '';
         }
 
 
@@ -207,12 +207,12 @@ class OrderController extends AbstractController
                 throw new \LogicException('The user is not valid.');
             }
 
-            $allowedLogins = ['016253', '016FICTIF', '016god'];
+            $allowedLogins = ['016253', '016FICTIF', 'ADMIN'];
             $login = $user->getLogin();
 
             //dd($this->getParameter(('kernel.environment')));
             if (in_array($login, $allowedLogins) || $this->getParameter('kernel.environment') === 'dev') {
-                $csvG->deliveryDateCsv($order);
+                $csvG->deliveryDateCsv($order, $tourCode);
             }
 
             if (in_array('ROLE_ADMIN', $user->getRoles())) {
@@ -227,7 +227,7 @@ class OrderController extends AbstractController
         return $this->render('DeliveryDateModule/order/detail_commande.html.twig', [
             'form' => $form,
             'order' => $order,
-            'zipCode' => $zipCode
+            'tourCode' => $tourCode
         ]);
     }
 
