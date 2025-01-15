@@ -2,3 +2,9 @@ artgris_maintenance:
   enable: false # Activer/Désactiver la maintenance - par défaut: false
   ips: ["10.211.19.99"] # IPs autorisées (prod) - par défaut: []
   response: 503 # Code HTTP de la page de maintenance - par défaut: 503
+
+# ATTENTION, lors d'une mise en maintenance, effectuer les commandes suivantes :
+
+# symfony console cache:clear
+# sudo chown -R dave:www-data /var/www/ArbaConnect/var/cache/
+# sudo chmod -R 775 /var/www/ArbaConnect/var/cache/
