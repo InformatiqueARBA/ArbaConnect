@@ -210,8 +210,7 @@ class OrderController extends AbstractController
             $allowedLogins = ['016253', '016FICTIF', 'ADMIN'];
             $login = $user->getLogin();
 
-            //dd($this->getParameter(('kernel.environment')));
-            if (in_array($login, $allowedLogins) || $this->getParameter('kernel.environment') === 'dev') {
+            if (in_array(strtoupper($login), $allowedLogins) || $this->getParameter('kernel.environment') === 'dev') {
                 $csvG->deliveryDateCsv($order, $tourCode);
             }
 

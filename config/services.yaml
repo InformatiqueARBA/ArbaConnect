@@ -13,7 +13,7 @@ parameters:
   jwt_secret: "%env(JWT_SECRET)%"
   mail_pwd_dev: "%env(MAIL_PWD_DEV)%"
   env_app: "%env(APP_ENV)"
-  erp_dir_prod_ac: "%env(ERP_DIRECTORY_PROD_AC)%"
+  erp_dir_prod_ac: "%env(ERP_DIRECTORY_PROD)%"
   erp_dir_prod_inv: "%env(ERP_DIRECTORY_PROD_INV)%"
 
 services:
