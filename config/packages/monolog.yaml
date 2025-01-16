@@ -38,7 +38,7 @@ when@test:
         type: symfony_mailer
         from_email: "developpement@arba.coop"
         to_email: "developpement@arba.coop"
-        subject: "Environnement Prod | Une erreur critique est survenue : %%message%%"
+        subject: "Environnement Recette | Une erreur critique est survenue : %%message%%"
         level: critical
         formatter: monolog.formatter.html
         content_type: text/html
