@@ -59,8 +59,6 @@ class PopulateAcdbService
 
             // Réactiver les contraintes de clés étrangères
             $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
-
-            $this->logger->critical('************************TRUNCATE SUCCESSFUL **************************** ');
         } catch (\Exception $e) {
             // En cas d'erreur, réactiver les contraintes (par précaution)
             $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 1');

@@ -56,7 +56,7 @@ class PasswordController extends AbstractController
 
                 //Génération du mail & injection du lien sécurisé
                 $subject = 'ARBA | Changement de mot de passe';
-                $content =  "Bonjour, <br><br> Voici le lien pour réinitialiser votre mot de passe : <br> <a href=$resetUrl> ARBA.COOP</a>";
+                $content =  "Bonjour, <br><br> Voici le lien pour réinitialiser votre mot de passe : <br><br> <a href=$resetUrl> ArbaConnect</a>";
 
                 //Expédition du mail
                 $mailer->sendMail($email, $subject, $content);

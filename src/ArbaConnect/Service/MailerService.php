@@ -2,45 +2,48 @@
 
 namespace App\ArbaConnect\Service;
 
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
-
-/*
-Service sollicité pour l'envoi des mails
-*/
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\Multipart\RelatedPart;
 
 class MailerService
 {
-    private $mailer;
+    private MailerInterface $mailer;
 
     public function __construct(MailerInterface $mailer)
     {
         $this->mailer = $mailer;
     }
 
-
-    public function sendMail(String $to, String $subject, String $content)
+    private function getSignature(): string
     {
+        $signaturePath = '/var/www/ArbaConnect/public/signature/signature.html';
 
-        $email = (new Email())
-            // TODO: definir le mail expéditeur
-            ->from('informatique@arba.coop')
-            ->to($to)
-            ->subject($subject)
-            ->html($content);
+        if (file_exists($signaturePath)) {
+            return file_get_contents($signaturePath);
+        }
 
-        $this->mailer->send($email);
+        // si la signature ne fonctionne pas
+        return '<p>Coopérative ARBA</p>';
     }
 
 
-    public function sendMailWithAttachment(String $from, String $to, String $subject, String $html, String $attachmentPath)
+    public function sendMail(string $to, string $subject, string $content): void
     {
+        $signature = $this->getSignature();
+        $emailContent = $content . '<br><br>' . $signature;
+
         $email = (new Email())
-            ->from($from)
+            ->from('cooperativearba@arba.coop')
             ->to($to)
             ->subject($subject)
-            ->html($html)
-            ->attachFromPath($attachmentPath);
+            ->embed(fopen('/var/www/ArbaConnect/public/signature/artipole_signature.png', 'r'), 'artipole_signature.png')
+            ->embed(fopen('/var/www/ArbaConnect/public/signature/logoArba_signature.png', 'r'), 'logoArba_signature.png')
+            ->embed(fopen('/var/www/ArbaConnect/public/signature/salleExpo_signature.png', 'r'), 'salleExpo_signature.png')
+            ->embed(fopen('/var/www/ArbaConnect/public/signature/linkedin_signature.png', 'r'), 'linkedin_signature.png')
+            ->html($emailContent);
 
 
         $this->mailer->send($email);
